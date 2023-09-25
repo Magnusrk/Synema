@@ -24,64 +24,34 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.synema.ui.theme.SynemaTheme
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            SynemaTheme {
+            val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-                LoginPage()
+                NavHost(navController = navController, startDestination = "login") {
+                    composable("login") { LoginScreen(navController) }
+                    composable("test") { TestScreen() }
+
             }
         }
     }
-    @Composable
-    fun LoginPage() {
-
-        val brush = Brush.verticalGradient(
-            listOf(
-                Color(0xFF430B3D),
-                Color(0xFF16202F)
-            ))
-                // A surface container using the 'background' color from the theme
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(brush=brush)
 
 
-                    , ) {
-                    Logo();
-                }
-    }
 
-    @Composable
-    fun Logo() {
-        val textGrad = Brush.verticalGradient(
-            listOf(
-                Color(0xFF5531E5),
-                Color(0xFFD49721)
-            )
-        )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(300.dp)
-                .padding(30.dp)
 
-        ) {
-            Text(
-                "SYNEMA",
-                modifier = Modifier.graphicsLayer(alpha = 0.99f)
-                    .drawWithCache {
-                        onDrawWithContent {
-                            drawContent()
-                            drawRect(textGrad, blendMode = BlendMode.SrcAtop)
-                        }
-                    },
-                fontSize = 48.sp
-            )
 
-        }
-    }
+
+
 
 }
