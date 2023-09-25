@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-                NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
                     composable("test") { TestScreen() }
 
