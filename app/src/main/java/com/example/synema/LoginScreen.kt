@@ -6,23 +6,31 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -35,6 +43,7 @@ import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.KeyEventDispatcher.Component
@@ -47,8 +56,7 @@ import coil.request.ImageRequest
 import com.example.synema.ui.theme.SynemaTheme
 
 
-
-    @Composable
+@Composable
      fun LoginScreen(navController : NavHostController) {
         GradientBox(){
             ContentContainer();
@@ -77,7 +85,7 @@ import com.example.synema.ui.theme.SynemaTheme
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(19.dp)
+                .padding(14.dp)
             ){
             SynHeader()
             MovieDisplay();
@@ -88,24 +96,52 @@ import com.example.synema.ui.theme.SynemaTheme
 
     @Composable
     private fun MovieDisplay(){
-        MoviePosterFrame()
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+
+        ){
+            MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
+            MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
+            MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
+        }
+
         /*
-        AsyncImage(
-            model = "https://i.scdn.co/image/ab6761610000e5ebba025c8f62612b2ca6bfa375",
-            contentDescription = null,
-            modifier = Modifier.size(100.dp)
-        )
+
          */
     }
 
     @Composable
-    private fun MoviePosterFrame(){
-        Box(
-            modifier = Modifier.size(width = 106.dp, height = 161.dp)
-                .background(color= Color.LightGray)
-                .border(5.dp, SolidColor(Color.LightGray), shape = RoundedCornerShape(5.dp))
+    private fun MoviePosterFrame(arrangement : Arrangement.Vertical, img : String){
+        Column(
+            verticalArrangement = arrangement,
+            modifier = Modifier.fillMaxHeight(),
 
-        )
+        ) {
+
+            Card(
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .size(width = 106.dp, height = 161.dp)
+
+
+
+
+
+
+
+            ){
+                AsyncImage(
+                    model = img,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+        }
+
 
     }
 
