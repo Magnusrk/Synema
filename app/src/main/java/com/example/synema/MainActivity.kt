@@ -33,6 +33,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
 import com.example.synema.Data.Datasource
+import com.example.synema.view.screens.HomeScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "home") {
                     composable("login") { LoginScreen(navController) }
                     composable("home") { HomeScreen(navController) }
 
