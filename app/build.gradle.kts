@@ -68,4 +68,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     val nav_version = "2.5.0"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.3")
+    implementation("io.coil-kt:coil-compose:2.0.0-rc03")
+    implementation("io.coil-kt:coil:2.0.0-rc03")
+
+
 }
