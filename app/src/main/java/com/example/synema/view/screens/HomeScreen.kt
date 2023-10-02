@@ -50,8 +50,8 @@ public fun HomeScreen(navController : NavHostController) {
 @Composable
 fun MoviesApp() {
     Column {
-        TopBar("My Watchlist", Alignment.Center, 30.sp)
-        //TopBar("SYNEMA", Alignment.CenterStart, 20.sp)
+        //TopBar("My Watchlist", Alignment.Center, 30.sp)
+        TopBar("SYNEMA", Alignment.CenterStart, 20.sp)
 
         MovieList(
             movieList = Datasource().loadMovies(),
