@@ -44,66 +44,10 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
             NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MoviesApp()
-                }
+                    composable("home") { HomeScreen(navController) }
+
             }
         }
-    }
-
-}
-
-
-@Preview
-@Composable
-private fun MovieCardPreview() {
-    MovieCard(Movie(R.string.movie1, R.drawable.image1))
-}
-
-@Preview
-@Composable
-fun MoviesApp() {
-    MovieList(
-        movieList = Datasource().loadMovies(),
-    )
-}
-
-@Composable
-fun MovieList(movieList: List<Movie>, modifier: Modifier = Modifier) {
-    LazyRow(modifier = modifier) {
-        items(movieList) { movie ->
-            MovieCard(
-                movie = movie,
-                modifier = Modifier.padding(8.dp)
-            )
-
-        }
-    }
-}
-
-
-@Composable
-fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
-    Card (modifier = modifier) {
-        Column {
-            Image(
-                painter = painterResource(movie.imageResourceId),
-                contentDescription = stringResource(movie.stringResourceId),
-                modifier = Modifier
-                    .width(95.dp)
-                    .height(135.dp),
-                contentScale = ContentScale.FillBounds
-            )
-            Text(
-                text = LocalContext.current.getString(movie.stringResourceId),
-                modifier = Modifier.padding(15.dp),
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
-
     }
 
 }
