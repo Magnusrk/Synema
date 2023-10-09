@@ -64,8 +64,8 @@ fun MoviesApp() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        //TopBar("My Watchlist", Alignment.Center, 30.sp)
-        TopBar("SYNEMA", Alignment.CenterStart, 20.sp)
+        //TopBar("My Watchlist", Alignment.Center, 30.sp, true, false)
+        TopBar("SYNEMA", Alignment.CenterStart, 20.sp, false, true)
 
         MovieList(
             movieList = Datasource().loadMovies(),

@@ -32,6 +32,8 @@ fun TopBar(
     title: String? = null,
     alignment: Alignment = Alignment.CenterStart,
     fontSize: TextUnit = 20.sp,
+    backArrow: Boolean,
+    search: Boolean
 
 ){
     Box(modifier = Modifier
@@ -39,6 +41,16 @@ fun TopBar(
         .height(103.dp)
         .background(color = Color.Red.copy(0.0f))
     ){
+        if (backArrow) {
+            Image(
+                painter = painterResource(id = R.drawable.arrow),
+                contentDescription = null,
+                modifier = Modifier.padding(16.dp)
+                    .align(Alignment.CenterStart)
+                    .size(24.dp)
+            )
+        }
+
             if (!title.isNullOrBlank()) {
                 Text(
                     title,
@@ -51,6 +63,7 @@ fun TopBar(
                 )
             }
 
+        if (search) {
             Image(
                 painter = painterResource(id = R.drawable.magniglas),
                 contentDescription = null,
@@ -58,6 +71,7 @@ fun TopBar(
                     .align(Alignment.CenterEnd)
                     .size(30.dp)
             )
+        }
 
     }
 }
