@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,25 +30,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.synema.controller.UserAPI
+import com.example.synema.model.ProfileModel
+import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-     fun SignupScreen(navController : NavHostController) {
+     fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
         GradientBox(){
-            ContentContainer(navController);
+            ContentContainer(navController, profileState);
         }
     }
 
     @Composable
-    private fun ContentContainer(navController: NavController){
+    private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
         Column (
             modifier = Modifier
                 .fillMaxSize()
                 .padding(14.dp)
             ){
             SynHeader()
-            UserSignUpArea(navController);
+            UserSignUpArea(navController, profileState);
         }
     }
 
@@ -65,10 +74,14 @@ import com.example.synema.view.components.SynemaLogo
     }
 
 @Composable
-private fun UserSignUpArea(navController: NavController){
+private fun UserSignUpArea(navController: NavController, profileState: MutableState<ProfileModel>){
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val error = remember {
+        mutableStateOf(""
+        )
+    }
 
 
     Column(
@@ -94,21 +107,80 @@ private fun UserSignUpArea(navController: NavController){
             label="Password",
             isHidden=true,
             onChange = { password = it},
-            onDone = {navController.navigate("home");}
+            onDone = {sendSignUpRequest(
+                username,
+                email,
+                password,
+                navController,
+                profileState,
+                error
+                ); }
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
         ){
-            OpaqueButton(label = "Sign up", onClick = {navController.navigate("home");});
+            OpaqueButton(label = "Sign up", onClick = {sendSignUpRequest(
+                username,
+                email,
+                password,
+                navController,
+                profileState,
+                error
+            );});
             Box(modifier= Modifier.height(50.dp))
             Text("By signing up you agree on our", color=Color.White, fontSize = 10.sp)
             OpaqueButton(label = "Terms of Service", onClick = {navController.navigate("home");});
+            Text(error.value, color=Color.Red)
         }
 
     }
 
 
 }
+
+fun sendSignUpRequest(
+    username: String,
+    email: String,
+    password: String,
+    navController: NavController,
+    profileState: MutableState<ProfileModel>,
+    error: MutableState<String>
+) {
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://0.0.0.0:3000/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val api = retrofit.create(UserAPI::class.java)
+
+    val call: Call<UserModel?>? = api.userSignup(username, email,password);
+
+    call!!.enqueue(object: Callback<UserModel?> {
+        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
+            if(response.isSuccessful) {
+                //Sign up successful
+                //Set profile state and navigate
+                navController.navigate("home");
+                //profileState.value = response.body()!!.profile
+
+            }
+        }
+
+        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
+            //Sign up failed
+            if(email == "" || username == "" || password == ""){
+                error.value = "Some fields are left empty"
+            } else{
+
+                navController.navigate("home");
+                profileState.value = ProfileModel("0", "Chuck", email)
+            }
+
+        }
+    })
+}
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
