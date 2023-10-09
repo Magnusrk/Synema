@@ -1,13 +1,10 @@
 package com.example.synema.view.screens
 
 import GradientBox
-import MoviePosterFrame
 import com.example.synema.view.components.OpaqueButton
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.synema.controller.UserAPI
@@ -44,42 +42,26 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-     fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+     fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
         GradientBox(){
             ContentContainer(navController, profileState);
         }
     }
 
     @Composable
-    private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
+    private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
         Column (
             modifier = Modifier
                 .fillMaxSize()
                 .padding(14.dp)
             ){
             SynHeader()
-            MovieDisplay();
-            UserLoginArea(navController, profileState);
+            UserSignUpArea(navController, profileState);
         }
     }
 
 
-    @Composable
-    private fun MovieDisplay(){
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
-
-        ){
-            MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
-            MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
-            MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
-        }
-    }
-
-    @Composable
+@Composable
     private fun SynHeader() {
         Box(
             modifier = Modifier
@@ -92,10 +74,10 @@ import retrofit2.converter.gson.GsonConverterFactory
     }
 
 @Composable
-private fun UserLoginArea(navController: NavController, profileState : MutableState<ProfileModel>){
+private fun UserSignUpArea(navController: NavController, profileState: MutableState<ProfileModel>){
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     val error = remember {
         mutableStateOf(""
         )
@@ -110,6 +92,12 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
     ) {
         LoginInputField(
+            label="Username",
+            isHidden= false,
+            onChange = { username = it},
+            onDone = {}
+        );
+        LoginInputField(
             label="Email",
             isHidden= false,
             onChange = { email = it},
@@ -119,13 +107,29 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
             label="Password",
             isHidden=true,
             onChange = { password = it},
-            onDone = {navController.navigate("home");}
+            onDone = {sendSignUpRequest(
+                username,
+                email,
+                password,
+                navController,
+                profileState,
+                error
+                ); }
 
         );
-        Column (horizontalAlignment = Alignment.CenterHorizontally
+        Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
         ){
-            OpaqueButton(label = "Log In", onClick = { sendLoginRequest(email, password, navController, profileState, error)});
-            OpaqueButton(label = "Get started now", onClick = {navController.navigate("signup");});
+            OpaqueButton(label = "Sign up", onClick = {sendSignUpRequest(
+                username,
+                email,
+                password,
+                navController,
+                profileState,
+                error
+            );});
+            Box(modifier= Modifier.height(50.dp))
+            Text("By signing up you agree on our", color=Color.White, fontSize = 10.sp)
+            OpaqueButton(label = "Terms of Service", onClick = {navController.navigate("home");});
             Text(error.value, color=Color.Red)
         }
 
@@ -134,7 +138,8 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
 }
 
-fun sendLoginRequest(
+fun sendSignUpRequest(
+    username: String,
     email: String,
     password: String,
     navController: NavController,
@@ -148,12 +153,12 @@ fun sendLoginRequest(
 
     val api = retrofit.create(UserAPI::class.java)
 
-    val call: Call<UserModel?>? = api.userLogin(email,password);
+    val call: Call<UserModel?>? = api.userSignup(username, email,password);
 
     call!!.enqueue(object: Callback<UserModel?> {
         override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
             if(response.isSuccessful) {
-                //Login successful
+                //Sign up successful
                 //Set profile state and navigate
                 navController.navigate("home");
                 //profileState.value = response.body()!!.profile
@@ -162,17 +167,20 @@ fun sendLoginRequest(
         }
 
         override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-            //Login failed
-            if(email == "" || email == "chuck"){
+            //Sign up failed
+            if(email == "" || username == "" || password == ""){
+                error.value = "Some fields are left empty"
+            } else{
+
                 navController.navigate("home");
                 profileState.value = ProfileModel("0", "Chuck", email)
-            } else{
-                error.value = "Incorrect email or password"
             }
 
         }
     })
 }
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
