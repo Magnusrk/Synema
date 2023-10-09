@@ -34,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
 import com.example.synema.Data.Datasource
 import com.example.synema.view.screens.HomeScreen
+import com.example.synema.view.screens.MediaDetails
+import com.example.synema.view.screens.WatchList
 
 
 class MainActivity : ComponentActivity() {
@@ -43,9 +45,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = "mediadetails") {
                     composable("login") { LoginScreen(navController) }
                     composable("home") { HomeScreen(navController) }
+                composable("watchlist") { WatchList(navController) }
+                composable("mediadetails") { MediaDetails() }
 
             }
         }

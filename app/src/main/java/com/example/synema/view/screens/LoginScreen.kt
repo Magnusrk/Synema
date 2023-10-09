@@ -4,7 +4,6 @@ import GradientBox
 import MoviePosterFrame
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +43,7 @@ import com.example.synema.view.components.SynemaLogo
     }
 
     @Composable
-    private fun ContentContainer(navController: NavController){
+    fun ContentContainer(navController: NavController){
         Column (
             modifier = Modifier
                 .fillMaxSize()
