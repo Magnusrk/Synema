@@ -2,6 +2,7 @@ package com.example.synema.view.screens
 
 import GradientBox
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,25 +43,26 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.TopBar
 
+/*
 @Preview
 @Composable
 private fun MovieCardPreview() {
     MovieCard(MovieModel(R.string.movie1, R.drawable.image1))
 }
-
+*/
 @Composable
 public fun HomeScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
     SynemaTheme {
         // A surface container using the 'background' color from the theme
             GradientBox() {
-                MoviesApp()
+                MoviesApp(navController, profileState)
             }
     }
 }
 
-@Preview
+
 @Composable
-fun MoviesApp() {
+fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
 
     Column(
         modifier = Modifier
@@ -67,30 +70,34 @@ fun MoviesApp() {
             .verticalScroll(rememberScrollState())
     ) {
         //TopBar("My Watchlist", Alignment.Center, 30.sp, true, false)
-        TopBar("SYNEMA", Alignment.CenterStart, 20.sp, false, true)
+        TopBar("SYNEMA", Alignment.CenterStart, 20.sp, false, true, true)
 
         MovieList(
             movieList = Datasource().loadMovies(),
-            header = "For you"
+            header = "For you",
+            navController = navController
         )
         MovieList(
             movieList = Datasource().loadMovies(),
-            header = "Trending"
+            header = "Trending",
+            navController = navController
         )
         MovieList(
             movieList = Datasource().loadMovies(),
-            header = "Horror"
+            header = "Horror",
+            navController = navController
         )
         MovieList(
             movieList = Datasource().loadMovies(),
-            header = "Anime"
+            header = "Anime",
+            navController = navController
         )
     }
 
 }
 
 @Composable
-fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String) {
+fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
     Column(
         modifier = Modifier
@@ -109,7 +116,8 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
             items(movieList) { movie ->
                 MovieCard(
                     movie = movie,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
+                    navController
                 )
 
             }
@@ -119,7 +127,7 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
 
 
 @Composable
-fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier) {
+fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
@@ -134,7 +142,9 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier) {
                 contentDescription = stringResource(movie.stringResourceId),
                 modifier = Modifier
                     .width(95.dp)
-                    .height(135.dp),
+                    .height(135.dp)
+                    .clickable { navController.navigate("mediaDetails/"+movie.id) }
+                ,
                 contentScale = ContentScale.FillBounds
             )
             Spacer(modifier =  Modifier.height(5.dp))
@@ -148,4 +158,8 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier) {
 
     }
 
+
+
 }
+
+

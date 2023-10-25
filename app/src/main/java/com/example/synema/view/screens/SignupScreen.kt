@@ -130,6 +130,7 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
             Box(modifier= Modifier.height(50.dp))
             Text("By signing up you agree on our", color=Color.White, fontSize = 10.sp)
             OpaqueButton(label = "Terms of Service", onClick = {navController.navigate("home");});
+            OpaqueButton(label = "Login instead", onClick = {navController.navigate("login");});
             Text(error.value, color=Color.Red)
         }
 

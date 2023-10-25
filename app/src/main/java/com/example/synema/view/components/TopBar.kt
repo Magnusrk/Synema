@@ -33,13 +33,16 @@ fun TopBar(
     alignment: Alignment = Alignment.CenterStart,
     fontSize: TextUnit = 20.sp,
     backArrow: Boolean,
-    search: Boolean
+    search: Boolean,
+    transparent : Boolean
 
 ){
+    var alpha = 1f;
+    if(transparent) alpha = 0.0f;
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(103.dp)
-        .background(color = Color.Red.copy(0.0f))
+        .background(color = Color(0xFF430B3D).copy(alpha))
     ){
         if (backArrow) {
             Image(
