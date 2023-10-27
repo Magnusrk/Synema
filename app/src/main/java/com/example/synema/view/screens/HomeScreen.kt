@@ -70,7 +70,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
             .verticalScroll(rememberScrollState())
     ) {
         //TopBar("My Watchlist", Alignment.Center, 30.sp, true, false)
-        TopBar("SYNEMA", Alignment.CenterStart, 20.sp, false, true, true)
+        TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
 
         MovieList(
             movieList = Datasource().loadMovies(),

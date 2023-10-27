@@ -111,9 +111,7 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
     ) {
         LoginInputField(
             label="Email",
-            isHidden= false,
             onChange = { email = it},
-            onDone = {}
         );
         LoginInputField(
             label="Password",
@@ -177,7 +175,7 @@ fun sendLoginRequest(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginInputField(label : String, isHidden : Boolean, onChange : (String) -> Unit, onDone : () -> Unit){
+private fun LoginInputField(label : String, isHidden : Boolean = false, onChange : (String) -> Unit, onDone : () -> Unit = {}){
     var text by remember { mutableStateOf("") }
 
     if(!isHidden){

@@ -4,11 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class ProfileModel(
-    var id: String,
-    var name: String,
-    var email: String,
+    val id: String,
+    val name: String,
+    val email: String,
 )
 
 data class UserModel(
-    var profile: ProfileModel
+    val profile: ProfileModel
 )

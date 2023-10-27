@@ -15,11 +15,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -32,10 +38,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.synema.Data.Datasource
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
+import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
@@ -45,7 +56,7 @@ fun InteractionPane(){
     val size = Size();
     Row(modifier = Modifier
         .fillMaxWidth()
-        .height((size.height() / 6).dp)){
+        .height((size.height() / 7).dp)){
         SaveButton()
         RatingPanel()
     }
@@ -57,7 +68,7 @@ fun SaveButton(){
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
-            .padding(15.dp)
+            .padding(horizontal = 15.dp)
             .fillMaxHeight()
             ,
         verticalArrangement = Arrangement.Center
@@ -79,7 +90,7 @@ fun RatingPanel(){
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
-            .padding(15.dp)
+            .padding(horizontal = 15.dp)
             .fillMaxHeight(),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Center
@@ -87,11 +98,13 @@ fun RatingPanel(){
     ) {
         Button( onClick = {},
             shape = RoundedCornerShape(20),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D))
             ){
             Text("Stars")
         }
         Button( onClick = {},
             shape = RoundedCornerShape(20),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D))
             ){
             Text("Review")
         }
@@ -112,18 +125,62 @@ fun DescriptionSection(){
 
 
     Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(color = Color.Black))
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(1.dp)
+        .background(color = Color.Black))
     Text(desc, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
 
 }
 
 @Composable
-fun UserReviewSection(){
-
-
+fun UserReviewSection(reviewList: List<ReviewModel>){
 
     Text("User reviews", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(color = Color.Black))
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(1.dp)
+        .background(color = Color.Black))
+
+    Column(){
+        reviewList.forEach(){review -> UserReviewCard(review)}
+    }
+
+}
+
+@Composable
+fun UserReviewCard(review : ReviewModel){
+    Box(modifier= Modifier
+        .fillMaxWidth()
+        .defaultMinSize(70.dp)
+        .padding(horizontal = 15.dp, vertical = 10.dp)
+    )
+    {
+        Box(modifier= Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
+
+        ){
+            InnerReviewContainer(review)
+        }
+
+    }
+
+
+}
+
+@Composable
+fun InnerReviewContainer(review : ReviewModel){
+    Column(
+        modifier = Modifier.padding(10.dp)
+    ) {
+        Text(modifier = Modifier.height(30.dp), text= review.owner.name, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+        Text(review.reviewText,  color = Color.White, overflow = TextOverflow.Ellipsis, maxLines = 3)
+        Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
+            OpaqueButton(label = "More", onClick = { }, Modifier.defaultMinSize(minHeight = 5.dp))
+        }
+
+    }
 
 }
 
@@ -138,16 +195,16 @@ fun MediaDetails(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-        ,
-        ) {
-        TopBar("", Alignment.CenterStart, 20.sp, true, false, false)
+            .verticalScroll(rememberScrollState()),
+    ) {
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
         TitleFont()
         val bitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.intersteller)
         val imageBitmap: ImageBitmap = bitmap.asImageBitmap()
         MovieClip(bitmap = imageBitmap)
         InteractionPane()
         DescriptionSection()
-        UserReviewSection()
+        UserReviewSection(Datasource().loadReviews())
     }
 }
 
