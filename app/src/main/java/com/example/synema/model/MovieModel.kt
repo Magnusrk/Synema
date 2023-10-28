@@ -6,5 +6,6 @@ import androidx.annotation.StringRes
 data class MovieModel(
     @StringRes val stringResourceId: Int,
     @DrawableRes val imageResourceId: Int,
-    val id : Int
+    val id : Int,
+    val rating : Float
 )

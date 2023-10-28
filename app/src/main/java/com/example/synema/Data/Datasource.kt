@@ -7,12 +7,18 @@ import com.example.synema.model.ReviewModel
 
 
 class Datasource() {
+
+    fun loadMovie(): MovieModel{
+        return MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f)
+
+    }
+
     fun loadMovies(): List<MovieModel>{
         return listOf<MovieModel>(
-            MovieModel(R.string.movie1, R.drawable.image1, 1),
-            MovieModel(R.string.movie2, R.drawable.image2, 2),
-            MovieModel(R.string.movie2, R.drawable.image2 , 2),
-            MovieModel(R.string.movie2, R.drawable.image2, 2)
+            MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f),
+            MovieModel(R.string.movie2, R.drawable.image2, 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2, 2, 3.2f)
         )
     }
 
@@ -28,7 +34,7 @@ class Datasource() {
                     |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
                 """.trimMargin(),
                 5,
-                MovieModel(R.string.movie1, R.drawable.image1, 1)
+                MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f)
                 ),
             ReviewModel(
                 ProfileModel(
@@ -38,7 +44,7 @@ class Datasource() {
                 ),
                 "Mid",
                 3,
-                MovieModel(R.string.movie1, R.drawable.image1, 1)
+                MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f)
 
             ),
             ReviewModel(
@@ -49,7 +55,7 @@ class Datasource() {
                 ),
                 "I liked the black hole part!",
                 4,
-                MovieModel(R.string.movie1, R.drawable.image1, 1)
+                MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f)
             )
         )
 

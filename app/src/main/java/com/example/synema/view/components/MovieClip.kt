@@ -1,4 +1,6 @@
 package com.example.synema.view.components
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,11 +10,15 @@ import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.synema.R
 
 
 @Composable
-fun MovieClip(bitmap: ImageBitmap) {
+fun MovieClip(movieClip : Int) {
         Card(
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
@@ -20,7 +26,7 @@ fun MovieClip(bitmap: ImageBitmap) {
                 .height(150.dp)
         ) {
             Image(
-                bitmap = bitmap,
+                painter = painterResource(R.drawable.intersteller),
                 contentDescription = "NULL",
                 modifier = Modifier.fillMaxSize()
             )
