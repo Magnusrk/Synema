@@ -11,9 +11,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.synema.model.ProfileModel
-import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.HomeScreen
+import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.MediaDetails
+import com.example.synema.view.screens.SearchScreen
 import com.example.synema.view.screens.SignupScreen
 
 
@@ -32,10 +33,11 @@ class MainActivity : ComponentActivity() {
             }
 
             // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "search") {
                     composable("login") { LoginScreen(navController, profileState) }
                     composable("signup") { SignupScreen(navController, profileState) }
                     composable("home") { HomeScreen(navController, profileState) }
+                    composable("search") {SearchScreen(navController, profileState)}
                     composable("mediaDetails/{movieID}",
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
                         { backStackEntry ->
