@@ -15,8 +15,8 @@ fun GradientBox(boxContent : @Composable () -> Unit){
         ))
     // A surface container using the 'background' color from the theme
     Box(modifier = Modifier
-        .fillMaxSize()
         .background(brush = brush)
+        .fillMaxSize()
         , ){
         boxContent.invoke()
     }

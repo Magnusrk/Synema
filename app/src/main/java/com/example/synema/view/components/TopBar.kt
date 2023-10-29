@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,9 +51,11 @@ fun TopBar(
         .background(color = Color(0xFF430B3D).copy(alpha))
     ){
         if (backArrow) {
-            Surface(color = Color(0,0,0,0),
+            Surface(modifier = Modifier.fillMaxHeight(),
+                color = Color(0,0,0,0),
                 onClick = {navController?.popBackStack()}
-                ) {
+
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.arrow),
                     contentDescription = null,

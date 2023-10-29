@@ -14,7 +14,9 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.MediaDetails
+import com.example.synema.view.screens.Profile
 import com.example.synema.view.screens.SignupScreen
+import com.example.synema.view.screens.WatchList
 
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +38,8 @@ class MainActivity : ComponentActivity() {
                     composable("login") { LoginScreen(navController, profileState) }
                     composable("signup") { SignupScreen(navController, profileState) }
                     composable("home") { HomeScreen(navController, profileState) }
+                    composable("watchlists") { WatchList(navController, profileState) }
+                    composable("profile") { Profile(navController, profileState) }
                     composable("mediaDetails/{movieID}",
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
                         { backStackEntry ->
