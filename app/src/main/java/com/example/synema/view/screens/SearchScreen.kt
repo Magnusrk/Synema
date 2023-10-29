@@ -49,11 +49,14 @@ fun MovieList(navController: NavHostController, profileState: MutableState<Profi
             .verticalScroll(rememberScrollState())
     ) {
         TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true)
+        /*
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp)
         ){
 
         }
+
+         */
     }
 }
 
