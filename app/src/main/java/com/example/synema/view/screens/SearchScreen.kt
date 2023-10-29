@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,25 +48,12 @@ fun MovieList(navController: NavHostController, profileState: MutableState<Profi
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false)
-        var text by remember { mutableStateOf("") }
-        
-        TextField(
-            value = text,
-            onValueChange = { text = it ; onChange(text)},
-            //label = { Text("") },
-            modifier = Modifier.padding(7.dp),
-            singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0,0,0,0),
-                textColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFC5AC29),
-                focusedIndicatorColor = Color(0xFF811C77),
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true)
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 128.dp)
+        ){
 
-                )
-        )
+        }
     }
 }
 
