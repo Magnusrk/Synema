@@ -41,7 +41,10 @@ import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
+import com.example.synema.view.components.BottomBar
+import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
+import com.example.synema.view.utils.Size
 
 /*
 @Preview
@@ -57,6 +60,8 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
             GradientBox() {
                 MoviesApp(navController, profileState)
             }
+
+
     }
 }
 
@@ -64,37 +69,38 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
 @Composable
 fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        //TopBar("My Watchlist", Alignment.Center, 30.sp, true, false)
-        TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
 
-        MovieList(
-            movieList = Datasource().loadMovies(),
-            header = "For you",
-            navController = navController
-        )
-        MovieList(
-            movieList = Datasource().loadMovies(),
-            header = "Trending",
-            navController = navController
-        )
-        MovieList(
-            movieList = Datasource().loadMovies(),
-            header = "Horror",
-            navController = navController
-        )
-        MovieList(
-            movieList = Datasource().loadMovies(),
-            header = "Anime",
-            navController = navController
-        )
+    Column (modifier = Modifier.fillMaxSize()){
+        MainContainer(hasBottomNav = true) {
+            TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
+            MovieList(
+                movieList = Datasource().loadMovies(),
+                header = "For you",
+                navController = navController
+            )
+            MovieList(
+                movieList = Datasource().loadMovies(),
+                header = "Trending",
+                navController = navController
+            )
+            MovieList(
+                movieList = Datasource().loadMovies(),
+                header = "Horror",
+                navController = navController
+            )
+            MovieList(
+                movieList = Datasource().loadMovies(),
+                header = "Anime",
+                navController = navController
+            )
+        }
+        BottomBar(navController)
     }
 
+
 }
+
+
 
 @Composable
 fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
@@ -143,7 +149,7 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : 
                 modifier = Modifier
                     .width(95.dp)
                     .height(135.dp)
-                    .clickable { navController.navigate("mediaDetails/"+movie.id) }
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
                 ,
                 contentScale = ContentScale.FillBounds
             )

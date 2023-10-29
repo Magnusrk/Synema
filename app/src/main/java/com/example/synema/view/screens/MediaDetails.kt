@@ -54,6 +54,7 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.InlineIcon
+import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
@@ -70,11 +71,7 @@ fun MediaDetails(
 
     val testMovie : MovieModel = Datasource().loadMovie()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-    ) {
+    MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
             TitleFont()
             MovieClip(testMovie.imageResourceId)
