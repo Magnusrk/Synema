@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.users.UserAPISource
 import com.example.synema.controller.UserAPI
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
@@ -139,7 +141,7 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
 
 }
 
-fun sendSignUpRequest(
+private fun sendSignUpRequest(
     username: String,
     email: String,
     password: String,
@@ -147,38 +149,16 @@ fun sendSignUpRequest(
     profileState: MutableState<ProfileModel>,
     error: MutableState<String>
 ) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://0.0.0.0:3000/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    val source = DependencyProvider.getInstance().getUserSource();
+    val result = source.signupUser(username, email, password);
 
-    val api = retrofit.create(UserAPI::class.java)
+    if(result.successful()){
+        profileState.value = result.getResult()?.profile!!;
+        navController.navigate("home")
+        return;
+    }
 
-    val call: Call<UserModel?>? = api.userSignup(username, email,password);
-
-    call!!.enqueue(object: Callback<UserModel?> {
-        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
-            if(response.isSuccessful) {
-                //Sign up successful
-                //Set profile state and navigate
-                navController.navigate("home");
-                //profileState.value = response.body()!!.profile
-
-            }
-        }
-
-        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-            //Sign up failed
-            if(email == "" || username == "" || password == ""){
-                error.value = "Some fields are left empty"
-            } else{
-
-                navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
-            }
-
-        }
-    })
+    error.value = (result.getStatus())
 }
 
 

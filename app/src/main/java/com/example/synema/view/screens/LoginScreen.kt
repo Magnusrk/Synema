@@ -32,15 +32,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.synema.controller.UserAPI
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.users.UserAPISource
+import com.example.synema.model.ApiResponse
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
@@ -132,44 +129,23 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
 }
 
-fun sendLoginRequest(
+private fun sendLoginRequest(
     email: String,
     password: String,
     navController: NavController,
     profileState: MutableState<ProfileModel>,
     error: MutableState<String>
 ) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://0.0.0.0:3000/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    val source = DependencyProvider.getInstance().getUserSource();
+    val result = source.LoginUser(email, password);
 
-    val api = retrofit.create(UserAPI::class.java)
+    if(result.successful()){
+        profileState.value = result.getResult()?.profile!!;
+        navController.navigate("home")
+        return;
+    }
 
-    val call: Call<UserModel?>? = api.userLogin(email,password);
-
-    call!!.enqueue(object: Callback<UserModel?> {
-        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
-            if(response.isSuccessful) {
-                //Login successful
-                //Set profile state and navigate
-                navController.navigate("home");
-                //profileState.value = response.body()!!.profile
-
-            }
-        }
-
-        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-            //Login failed
-            if(email == "" || email == "chuck"){
-                navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
-            } else{
-                error.value = "Incorrect email or password"
-            }
-
-        }
-    })
+    error.value = (result.getStatus())
 }
 
 

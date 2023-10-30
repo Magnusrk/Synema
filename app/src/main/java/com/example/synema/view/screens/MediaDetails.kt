@@ -7,15 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.synema.view.components.MovieClip
 import com.example.synema.view.components.TitleFont
-import androidx.compose.foundation.layout.Spacer
 import com.example.synema.R
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.Icon
-import android.util.Range
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,31 +18,20 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.synema.Data.Datasource
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.movies.MockMovieDataSource
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -68,8 +50,9 @@ fun MediaDetails(
     movieID: String?
 ) {
 
+    val source = DependencyProvider.getInstance().getMovieSource();
 
-    val testMovie : MovieModel = Datasource().loadMovie()
+    val testMovie : MovieModel = source.loadMovie("test")
 
     MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
@@ -77,7 +60,7 @@ fun MediaDetails(
             MovieClip(testMovie.imageResourceId)
             InteractionPane(testMovie)
             DescriptionSection()
-            UserReviewSection(Datasource().loadReviews())
+            UserReviewSection(source.loadReviews())
         }
 
 

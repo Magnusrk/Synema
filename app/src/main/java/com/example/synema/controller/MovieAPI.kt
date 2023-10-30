@@ -16,4 +16,10 @@ public interface MovieAPI {
     )
     @GET("movies/{id}")
     abstract fun getMovieById(@Path("id") id: String): Call<MovieModel?>?
+
+    @Headers(
+        "Accept: application/json"
+    )
+    @GET("movies")
+    abstract fun getMovies(): Call<MovieModel?>?
 }

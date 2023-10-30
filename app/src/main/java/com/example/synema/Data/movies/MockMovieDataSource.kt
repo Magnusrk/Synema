@@ -1,19 +1,20 @@
-package com.example.synema.Data
+package com.example.synema.Data.movies
 
 import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.model.UserModel
 
 
-class Datasource() {
+class MockMovieDataSource : MovieDataSource {
 
-    fun loadMovie(): MovieModel{
+    override fun loadMovie(id: String): MovieModel{
         return MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f)
 
     }
 
-    fun loadMovies(): List<MovieModel>{
+    override fun loadMovies(): List<MovieModel>{
         return listOf<MovieModel>(
             MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f),
             MovieModel(R.string.movie2, R.drawable.image2, 2, 3.2f),
@@ -27,7 +28,7 @@ class Datasource() {
         )
     }
 
-    fun loadReviews() : List <ReviewModel>{
+    override fun loadReviews() : List <ReviewModel>{
         return listOf(
             ReviewModel(
                 ProfileModel(
@@ -65,4 +66,5 @@ class Datasource() {
         )
 
     }
+
 }

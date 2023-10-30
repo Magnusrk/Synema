@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
@@ -23,6 +24,9 @@ import com.example.synema.view.screens.WatchList
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val DEBUG = true;
+        DependencyProvider.getInstance().create(DEBUG);
 
         setContent {
             val navController = rememberNavController()
