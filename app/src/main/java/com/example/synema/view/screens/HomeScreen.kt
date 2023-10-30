@@ -3,7 +3,6 @@ package com.example.synema.view.screens
 import GradientBox
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,24 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.synema.Data.Datasource
-import com.example.synema.R
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.movies.MockMovieDataSource
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
 
 /*
 @Preview
@@ -69,27 +60,28 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
 @Composable
 fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
 
+    val dataSource = DependencyProvider.getInstance().getMovieSource();
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
             TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
             MovieList(
-                movieList = Datasource().loadMovies(),
+                movieList = dataSource.loadMovies(),
                 header = "For you",
                 navController = navController
             )
             MovieList(
-                movieList = Datasource().loadMovies(),
+                movieList = dataSource.loadMovies(),
                 header = "Trending",
                 navController = navController
             )
             MovieList(
-                movieList = Datasource().loadMovies(),
+                movieList = dataSource.loadMovies(),
                 header = "Horror",
                 navController = navController
             )
             MovieList(
-                movieList = Datasource().loadMovies(),
+                movieList = dataSource.loadMovies(),
                 header = "Anime",
                 navController = navController
             )
