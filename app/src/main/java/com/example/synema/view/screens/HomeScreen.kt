@@ -64,7 +64,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
-            TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
+            TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true, navController = navController)
             MovieList(
                 movieList = dataSource.loadMovies(),
                 header = "For you",
