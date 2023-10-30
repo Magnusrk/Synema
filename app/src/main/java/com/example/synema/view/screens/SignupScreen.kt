@@ -150,15 +150,18 @@ private fun sendSignUpRequest(
     error: MutableState<String>
 ) {
     val source = DependencyProvider.getInstance().getUserSource();
-    val result = source.signupUser(username, email, password);
+    source.signupUser(username, email, password) {
+        if (it.successful()) {
+            profileState.value = it.getResult()?.profile!!;
+            navController.navigate("home")
+        } else{
+            error.value = (it.getStatus())
+        }
+    };
 
-    if(result.successful()){
-        profileState.value = result.getResult()?.profile!!;
-        navController.navigate("home")
-        return;
-    }
 
-    error.value = (result.getStatus())
+
+
 }
 
 

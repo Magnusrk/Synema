@@ -30,7 +30,9 @@ class DependencyProvider private constructor() {
             movieSource = MockMovieDataSource();
             userSource = MockUserDataSource();
         } else{
-            movieSource = MovieApiSource()
+
+            //movieSource = MovieApiSource() For now
+            movieSource = MockMovieDataSource()
             userSource = UserAPISource()
         }
     }

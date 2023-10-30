@@ -25,8 +25,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val DEBUG = true;
-        DependencyProvider.getInstance().create(DEBUG);
+        val useMOCKApi = false;
+        DependencyProvider.getInstance().create(useMOCKApi)
 
         setContent {
             val navController = rememberNavController()
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController, profileState) }
                     composable("signup") { SignupScreen(navController, profileState) }
                     composable("home") { HomeScreen(navController, profileState) }

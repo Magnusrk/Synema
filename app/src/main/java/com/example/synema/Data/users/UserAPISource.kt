@@ -1,5 +1,6 @@
 package com.example.synema.Data.users
 
+import android.util.Log
 import com.example.synema.R
 import com.example.synema.controller.UserAPI
 import com.example.synema.model.ApiResponse
@@ -16,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class UserAPISource() : UserDataSource {
 
-    val BASE_URL = "https://0.0.0.0:3000/";
+    private val BASE_URL = "http://192.168.0.154:8000";
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
@@ -24,50 +25,51 @@ class UserAPISource() : UserDataSource {
         .build()
 
 
-    override fun LoginUser(email: String, password: String ): ApiResponse<UserModel> {
+    override fun LoginUser(email: String, password: String, callback : (ApiResponse<UserModel>) -> Unit ) {
 
         val api = retrofit.create(UserAPI::class.java)
-        val call: Call<UserModel?>? = api.userLogin(email, password);
-        var result : ApiResponse<UserModel> = ApiResponse(null, true, "Couldn't login");
+        val call: Call<UserModel> = api.userLogin(email, password);
 
-        call!!.enqueue(object : Callback<UserModel?> {
+        call.enqueue(object: Callback<UserModel?> {
             override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
-                if (response.isSuccessful) {
-                    //Login successful
-
-                    result = ApiResponse(response.body()!!);
+                if(response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                }
+                else{
+                    callback(ApiResponse(null, true, "Couldn't sign up"))
                 }
             }
 
             override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-                //Failure
+                Log.e("Main", "Login failed " + t.message.toString())
+                callback(ApiResponse(null, true, t.message!!));
 
             }
-        }
-        )
-        return result;
+        })
     }
 
-    override fun signupUser(username: String, email: String, password: String): ApiResponse<UserModel> {
+    override fun signupUser(username: String, email: String, password: String, callback: (ApiResponse<UserModel>) -> Unit){
         val api = retrofit.create(UserAPI::class.java)
         val call: Call<UserModel?>? = api.userSignup(username, email, password)
-        var result : ApiResponse<UserModel> = ApiResponse(null, true, "Couldn't sign up");
+
 
         call!!.enqueue(object : Callback<UserModel?> {
             override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
                 if (response.isSuccessful) {
-                    //Login successful
 
-                    result = ApiResponse(response.body()!!);
+                    callback(ApiResponse(response.body()!!))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't sign up"))
                 }
             }
 
             override fun onFailure(call: Call<UserModel?>, t: Throwable) {
                 //Failure
+                callback(ApiResponse(null, true, "Couldn't sign up"))
 
             }
         }
         )
-        return result;
     }
 }
