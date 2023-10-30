@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.synema.Data.Datasource
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
@@ -43,7 +43,7 @@ import com.example.synema.view.components.TopBar
  fun SearchScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
     SynemaTheme {
         GradientBox() {
-            MovieList(navController, profileState, movieList = Datasource().loadMovies())
+            MovieList(navController, profileState, movieList = DependencyProvider.getInstance().getMovieSource().loadMovies())
         }
     }
 }
