@@ -29,7 +29,7 @@ import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
 
 @Composable
-fun List(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun MyListScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     var movieList = Datasource().loadMovies()
     GradientBox(){
         Column {
