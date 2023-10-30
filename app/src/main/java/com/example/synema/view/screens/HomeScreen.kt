@@ -125,7 +125,6 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
                     modifier = Modifier.padding(8.dp),
                     navController
                 )
-
             }
         }
     }

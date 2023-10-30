@@ -18,7 +18,12 @@ class Datasource() {
             MovieModel(R.string.movie1, R.drawable.image1, 1, 4.5f),
             MovieModel(R.string.movie2, R.drawable.image2, 2, 3.2f),
             MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
-            MovieModel(R.string.movie2, R.drawable.image2, 2, 3.2f)
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f),
+            MovieModel(R.string.movie2, R.drawable.image2 , 2, 3.2f)
+
         )
     }
 

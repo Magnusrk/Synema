@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "search") {
                     composable("login") { LoginScreen(navController, profileState) }
                     composable("signup") { SignupScreen(navController, profileState) }
                     composable("home") { HomeScreen(navController, profileState) }
