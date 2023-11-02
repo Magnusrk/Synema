@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class UserAPISource() : UserDataSource {
 
-    private val BASE_URL = "http://192.168.0.154:8000";
+    private val BASE_URL = "http://10.209.225.17:8000";
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
