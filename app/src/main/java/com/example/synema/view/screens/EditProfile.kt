@@ -92,14 +92,14 @@ private fun EditBio(){
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BioInputField(label : String, onChange : (String) -> Unit, onDone : () -> Unit = {}, startval : (String)){
+private fun BioInputField(label : String, onChange : (String) -> Unit, onDone : (String) -> Unit = {}, startval : (String)){
     Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
         .fillMaxWidth()){
     var text by remember { mutableStateOf(startval) }
 
     TextField(
         value = text,
-        onValueChange = { text = it ; onChange(text)},
+        onValueChange = { text = it ; onChange(text) ; onDone(text)},
         label = { Text(label) },
         modifier = Modifier.padding(7.dp),
         singleLine = true,
