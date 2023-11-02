@@ -42,12 +42,10 @@ import coil.compose.rememberImagePainter
 import com.example.synema.R
 import com.example.synema.view.screens.onChange
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TrendTopBar(
-    image: Int? = null,
-    backArrow: Boolean = false,
-    search: Boolean = false,
+   // search: Boolean = false,
     navController: NavController? = null
 ) {
     Box(
