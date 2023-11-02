@@ -4,4 +4,5 @@ data class WatchlistModel (
     val name: String,
     val id: Int,
     val userid: Int,
+    val movieID: Int
 )
