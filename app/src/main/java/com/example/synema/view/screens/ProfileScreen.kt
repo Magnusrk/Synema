@@ -57,6 +57,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 FriendsButton()
                 WatchlistsButton()
                 ReviewsButton()
+                LogoutButton(navController)
             };
             BottomBar(navController = navController)
         }
@@ -132,6 +133,14 @@ private fun ReviewsButton(){
     Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
         .fillMaxWidth()){
         OpaqueButton("Reviews", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+    }
+}
+@Composable
+private fun LogoutButton(navController: NavController){
+    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()){
+        OpaqueButton("Log out", onClick = {navController.navigate("login");}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
     }
 }
 
