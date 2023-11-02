@@ -28,6 +28,7 @@ class Datasource() {
                 ProfileModel(
                     "test",
                     "Chuck Norris",
+                    "",
                     ""
                     ),
                 """Amazing, Nolan is finally back and he's so hot!
@@ -40,6 +41,7 @@ class Datasource() {
                 ProfileModel(
                     "test2",
                     "Steve Jobs",
+                    "",
                     ""
                 ),
                 "Mid",
@@ -51,6 +53,7 @@ class Datasource() {
                 ProfileModel(
                     "test3",
                     "Carl Sagan",
+                    "",
                     ""
                 ),
                 "I liked the black hole part!",

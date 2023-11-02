@@ -174,7 +174,7 @@ fun sendSignUpRequest(
             } else{
 
                 navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
+                profileState.value = ProfileModel("0", "Chuck", email,"")
             }
 
         }

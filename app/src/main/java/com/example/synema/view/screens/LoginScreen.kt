@@ -163,7 +163,7 @@ fun sendLoginRequest(
             //Login failed
             if(email == "" || email == "chuck"){
                 navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
+                profileState.value = ProfileModel("0", "Chuck", email, "bio")
             } else{
                 error.value = "Incorrect email or password"
             }

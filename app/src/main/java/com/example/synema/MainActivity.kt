@@ -16,6 +16,7 @@ import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.MediaDetails
 import com.example.synema.view.screens.SearchScreen
 import com.example.synema.view.screens.Profile
+import com.example.synema.view.screens.EditProfile
 import com.example.synema.view.screens.SignupScreen
 import com.example.synema.view.screens.WatchList
 
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(ProfileModel(
                     id = "-1",
                     name = "",
-                    email = ""
+                    email = "",
+                    ""
                 ))
             }
 
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     composable("search") {SearchScreen(navController, profileState)}
                     composable("watchlists") { WatchList(navController, profileState) }
                     composable("profile") { Profile(navController, profileState) }
+                    composable("edit") { EditProfile(navController, profileState) }
                     composable("mediaDetails/{movieID}",
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
                         { backStackEntry ->
