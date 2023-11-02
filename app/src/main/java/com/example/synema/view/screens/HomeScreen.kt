@@ -30,12 +30,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.Data.movies.MockMovieDataSource
+import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
+import com.example.synema.view.components.TrendTopBar
 
 /*
 @Preview
@@ -64,7 +66,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
-            TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true)
+            TrendTopBar(R.drawable.intersteller, search = true, backArrow = true, navController = navController)
             MovieList(
                 movieList = dataSource.loadMovies(),
                 header = "For you",

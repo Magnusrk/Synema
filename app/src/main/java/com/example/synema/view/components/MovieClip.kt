@@ -34,7 +34,6 @@ fun MovieClip(movieClip : Int) {
         ) {
             val imageModifier = Modifier
                 .size(400.dp)
-                .background(Color.White)
             Image(
                 painter = painterResource(R.drawable.intersteller),
                 contentDescription = "NULL",
