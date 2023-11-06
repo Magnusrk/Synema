@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     id = "-1",
                     name = "",
                     email = "",
-                    ""
+                    bio = ""
                 ))
             }
 
