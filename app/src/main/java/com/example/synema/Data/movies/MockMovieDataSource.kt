@@ -64,8 +64,8 @@ class MockMovieDataSource : MovieDataSource {
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    ""
-                    ),
+                    "",
+                    "bio"),
                 """Amazing, Nolan is finally back and he's so hot!
                     |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
                 """.trimMargin(),
@@ -83,8 +83,8 @@ class MockMovieDataSource : MovieDataSource {
                 ProfileModel(
                     "test2",
                     "Steve Jobs",
-                    ""
-                ),
+                    "",
+                    "bio"),
                 "Mid",
                 3,
                 MovieModel(
@@ -101,8 +101,8 @@ class MockMovieDataSource : MovieDataSource {
                 ProfileModel(
                     "test3",
                     "Carl Sagan",
-                    ""
-                ),
+                    "",
+                    "bio"),
                 "I liked the black hole part!",
                 4,
                 MovieModel(
