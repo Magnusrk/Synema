@@ -57,7 +57,7 @@ fun MediaDetails(
     MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
             TitleFont()
-            MovieClip(testMovie.imageResourceId)
+            MovieClip(testMovie.poster_url)
             InteractionPane(testMovie)
             DescriptionSection()
             UserReviewSection(source.loadReviews())
@@ -141,10 +141,10 @@ fun RatingPanel(movie : MovieModel){
 }
 
 @Composable
-fun RatingStars(rating : Float){
+fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
-            if(rating >= n.toFloat()){
+            if(rating.toFloat() >= n.toFloat()){
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(0xFF4399FF))
             } else{
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
