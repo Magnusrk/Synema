@@ -1,7 +1,8 @@
 package com.example.synema.view.screens
 
 import GradientBox
-import MoviePosterFrame
+import com.example.synema.R
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,13 +11,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,34 +33,53 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
 
+
 @Composable
-fun MyListScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-    var movieList = Datasource().loadMovies()
-    GradientBox(){
+fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
+    val movieList = Datasource().loadMovies()
+
+    GradientBox() {
         Column {
-            MainContainer(hasBottomNav = true){
+            MainContainer(hasBottomNav = true) {
                 TopBar(title = "My List", alignment = Alignment.Center)
-                Column{
-                    movieList.forEach(){movie->
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(color = Color(0xFF191825))
-                        ){ Text(
+
+                movieList.forEach { movie ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().background(color = Color(0xFF191825)),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(movie.imageResourceId),
+                            contentDescription = stringResource(movie.stringResourceId),
+                            modifier = Modifier.size(95.dp, 98.dp),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Text(
                             text = LocalContext.current.getString(movie.stringResourceId),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-                        )}
+                            modifier = Modifier.size(200.dp, 98.dp)
+                        )
+
+                        Row(
+                            modifier = Modifier.size(65.dp, 98.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // implement heart like button (Heart)
+                            //LikeButton()
+
+                            // implement edit/more button (Three Dots)
+                            // MoreButton()
+                        }
                     }
                 }
-            };
+            }
+
             BottomBar(navController = navController)
         }
-
     }
 }
-
-
-
-
