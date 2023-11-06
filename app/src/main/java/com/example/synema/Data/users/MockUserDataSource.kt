@@ -25,8 +25,8 @@ class MockUserDataSource() : UserDataSource {
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    "chuck@norris.com"
-                )
+                    "chuck@norris.com",
+                    "bio")
             )
         ))
     }
@@ -37,8 +37,8 @@ class MockUserDataSource() : UserDataSource {
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    "chuck@norris.com"
-                )
+                    "chuck@norris.com",
+                    "bio")
             )
         ))
     }
