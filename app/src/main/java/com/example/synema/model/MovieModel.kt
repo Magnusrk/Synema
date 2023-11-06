@@ -4,8 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class MovieModel(
-    @StringRes val stringResourceId: Int,
-    @DrawableRes val imageResourceId: Int,
     val id : Int,
-    val rating : Float
+    val poster_url : String,
+    val title : String,
+    val description : String,
+    val rating : Number,
+    val release_date : String,
 )

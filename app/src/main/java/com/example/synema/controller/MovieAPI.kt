@@ -22,4 +22,7 @@ public interface MovieAPI {
     )
     @GET("movies")
     abstract fun getMovies(): Call<MovieModel?>?
+
+    @GET("movies/discover")
+    abstract fun discoverMovies(): Call<List<MovieModel>>
 }
