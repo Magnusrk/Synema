@@ -1,16 +1,12 @@
 package com.example.synema.view.screens
 
 import GradientBox
-import com.example.synema.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +27,6 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
 
 
 @Composable
