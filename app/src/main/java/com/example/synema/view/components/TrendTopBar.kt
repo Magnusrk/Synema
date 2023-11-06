@@ -3,6 +3,7 @@ package com.example.synema.view.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -21,8 +22,8 @@ val moviePosters = listOf(
 
 @Composable
 fun TrendTopBar(
-    movieImg: List<Int>
-    // search: Boolean = false,
+    movieImg: List<Int>,
+    search: Boolean = false
 ) {
     //var selectedImageIndex by remember {mutableStateOf(0)}
 
@@ -37,7 +38,6 @@ fun TrendTopBar(
             val imageModifier = Modifier
                 .size(400.dp)
             val painter = painterResource(id = movieImg)
-
             Image(
                 //adds image
                 painter = painter,
@@ -46,6 +46,16 @@ fun TrendTopBar(
                 modifier = imageModifier // apply the image modifier to the image
             )
         }
+    }
+    if (search) {
+        Image(
+            painter = painterResource(id = R.drawable.magniglas),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(16.dp)
+                //.align(Alignment.TopEnd)
+                .size(30.dp)
+        )
     }
 }
 

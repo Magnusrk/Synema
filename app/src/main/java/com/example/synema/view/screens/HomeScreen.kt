@@ -57,7 +57,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
-            TrendTopBar(moviePosters)
+            TrendTopBar(moviePosters,search=true)
             MovieList(
                 movieList = dataSource.loadMovies(),
                 header = "For you",
