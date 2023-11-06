@@ -24,15 +24,28 @@ class MovieApiSource : MovieDataSource {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    override fun loadMovie(id: String): MovieModel{
-        return MovieModel(
-            507089,
-            "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-            "Five Nights at Freddy's",
-            "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-            8.4/2,
-            "2023-10-25"
-        )
+    override fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit){
+
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<MovieModel> = api.getMovieById(id);
+
+        call.enqueue(object: Callback<MovieModel> {
+            override fun onResponse(
+                call: Call<MovieModel>,
+                response: Response<MovieModel>
+            ) {
+                if(response.isSuccessful) {
+                    callback(ApiResponse(response.body()!!))
+                }else{
+                    callback(ApiResponse(null, true, "Couldn't find movie"))
+                }
+            }
+
+            override fun onFailure(call: Call<MovieModel>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
 
 
 
@@ -88,7 +101,14 @@ class MovieApiSource : MovieDataSource {
                     |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
                 """.trimMargin(),
                 5,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
             ),
             ReviewModel(
                 ProfileModel(
@@ -98,7 +118,14 @@ class MovieApiSource : MovieDataSource {
                 ),
                 "Mid",
                 3,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
 
             ),
             ReviewModel(
@@ -109,16 +136,23 @@ class MovieApiSource : MovieDataSource {
                 ),
                 "I liked the black hole part!",
                 4,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
             )
         )
 
     }
 
-    override fun loadDiscoverMovies(callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+    override fun loadDiscoverMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
 
         val api = retrofit.create(MovieAPI::class.java)
-        val call: Call<List<MovieModel>> = api.discoverMovies();
+        val call: Call<List<MovieModel>> = api.discoverMovies(genres);
 
         call.enqueue(object: Callback<List<MovieModel>> {
             override fun onResponse(
@@ -129,7 +163,7 @@ class MovieApiSource : MovieDataSource {
                     Log.d("Main", "success!" + response.body().toString())
                     callback(ApiResponse(response.body()!!))
                 }else{
-                    callback(ApiResponse(null, true, "Couldn't sign up"))
+                    callback(ApiResponse(null, true, "Couldn't load movies"))
                 }
             }
 

@@ -69,12 +69,37 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
 fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
 
     val dataSource = DependencyProvider.getInstance().getMovieSource();
+
     var discoverList : List<MovieModel> by remember {
         mutableStateOf(listOf())
     }
-    dataSource.loadDiscoverMovies {
-        discoverList = it.getResult()!!;
+    var comedyList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
     }
+
+    var horrorList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    var animeList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    dataSource.loadDiscoverMovies (){
+        discoverList = it.getResult()!!;
+
+
+    }
+    dataSource.loadDiscoverMovies(genres = "35") {
+        comedyList = it.getResult()!!;
+    }
+    dataSource.loadDiscoverMovies(genres = "27") {
+        horrorList = it.getResult()!!;
+    }
+    dataSource.loadDiscoverMovies(genres = "16") {
+        animeList = it.getResult()!!;
+    }
+
+
+
 
 
     Column (modifier = Modifier.fillMaxSize()){
@@ -86,18 +111,18 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
-                header = "Trending",
+                movieList = comedyList,
+                header = "Comedy",
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
+                movieList = horrorList,
                 header = "Horror",
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
-                header = "Anime",
+                movieList = animeList,
+                header = "Animation",
                 navController = navController
             )
         }
