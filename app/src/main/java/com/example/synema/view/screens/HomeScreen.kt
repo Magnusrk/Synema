@@ -83,10 +83,11 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
     var animeList : List<MovieModel> by remember {
         mutableStateOf(listOf())
     }
+    var historyList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
     dataSource.loadDiscoverMovies (){
         discoverList = it.getResult()!!;
-
-
     }
     dataSource.loadDiscoverMovies(genres = "35") {
         comedyList = it.getResult()!!;
@@ -96,6 +97,9 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
     }
     dataSource.loadDiscoverMovies(genres = "16") {
         animeList = it.getResult()!!;
+    }
+    dataSource.loadDiscoverMovies(genres = "36") {
+        historyList = it.getResult()!!;
     }
 
 
@@ -123,6 +127,11 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
             MovieList(
                 movieList = animeList,
                 header = "Animation",
+                navController = navController
+            )
+            MovieList(
+                movieList = historyList,
+                header = "History",
                 navController = navController
             )
         }

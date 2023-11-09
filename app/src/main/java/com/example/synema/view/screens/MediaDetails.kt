@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -60,6 +61,7 @@ fun MediaDetails(
         mutableStateOf(MovieModel(
             0,
             "",
+            "",
             "Loading...",
             "Loading...",
             0,
@@ -78,7 +80,7 @@ fun MediaDetails(
     MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
             TitleFont(movie.title)
-            MovieClip(movie.poster_url)
+            MovieClip(movie.backdrop_url)
             InteractionPane(movie)
             DescriptionSection(movie.description)
             UserReviewSection(source.loadReviews())
@@ -94,13 +96,13 @@ fun InteractionPane(movie : MovieModel){
     Row(modifier = Modifier
         .fillMaxWidth()
         .height((size.height() / 7).dp)){
-        SaveButton()
+        SaveButton(movie.release_date)
         RatingPanel(movie)
     }
 }
 
 @Composable
-fun SaveButton(){
+fun SaveButton(releaseDate: String){
     val size = Size();
     Column(
         modifier = Modifier
@@ -111,6 +113,10 @@ fun SaveButton(){
         verticalArrangement = Arrangement.Center
 
     ) {
+        Text(text = releaseDate,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(start = 4.dp, top = 10.dp,bottom = 10.dp))
         Button( onClick = {},
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
             shape = RoundedCornerShape(20),
@@ -181,15 +187,12 @@ fun RatingStars(rating : Number){
 @Composable
 fun DescriptionSection(desc : String){
 
-
-
-
     Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(1.dp)
         .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
+    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
 
 }
 

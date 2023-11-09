@@ -27,13 +27,13 @@ fun MovieClip(movieClip : String) {
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(220.dp)
         ) {
             AsyncImage(
                 model = movieClip,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.FillHeight
             )
 
         }
