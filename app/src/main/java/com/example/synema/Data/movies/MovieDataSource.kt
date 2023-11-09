@@ -8,11 +8,11 @@ import com.example.synema.model.UserModel
 
 interface MovieDataSource {
 
-    fun loadMovie(id : String): MovieModel;
+    fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit);
     fun loadMovies() : List<MovieModel>;
     fun loadReviews() : List<ReviewModel>;
 
-    fun loadDiscoverMovies(callback : (ApiResponse<List<MovieModel>>) -> Unit);
+    fun loadDiscoverMovies(genres : String = "", callback : (ApiResponse<List<MovieModel>>) -> Unit);
 
 
 

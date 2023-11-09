@@ -5,6 +5,7 @@ import MoviePosterFrame
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
@@ -47,14 +49,15 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
         Column {
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Profile", Alignment.Center)
-                EditProfileButton()
+                EditProfileButton(navController)
                 ProfileNameHeader(name = profileState.value.name)
                 ProfilePicture();
                 FollowersReviewsStatus(76, 88);
-
-
-
-
+                //ProfileBio(text = profileState.value.bio)
+                FriendsButton()
+                WatchlistsButton()
+                ReviewsButton()
+                LogoutButton(navController)
             };
             BottomBar(navController = navController)
         }
@@ -74,7 +77,9 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
 @Composable
 private fun ProfilePicture(){
 
-    Row (modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.Center){
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp), horizontalArrangement = Arrangement.Center){
         Image(
             painter = painterResource(R.drawable.profile_picture_placeholder),
             contentDescription = null,
@@ -96,14 +101,48 @@ private fun ProfileNameHeader(name : String){
     }
 }
 @Composable
-private fun EditProfileButton(){
+private fun EditProfileButton(navController: NavController){
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()){
-        OpaqueButton("Edit profile", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+        OpaqueButton("Edit profile", onClick = {navController.navigate("edit");}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
     }
 }
-
+@Composable
+private fun ProfileBio(text : String){
+    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()){
+        Text(text =text, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+    }
+}
+@Composable
+private fun FriendsButton(){
+    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+        .fillMaxWidth()){
+        OpaqueButton("Friends", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+    }
+}
+@Composable
+private fun WatchlistsButton(){
+    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+        .fillMaxWidth()){
+        OpaqueButton("Watchlists", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+    }
+}
+@Composable
+private fun ReviewsButton(){
+    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+        .fillMaxWidth()){
+        OpaqueButton("Reviews", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+    }
+}
+@Composable
+private fun LogoutButton(navController: NavController){
+    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()){
+        OpaqueButton("Log out", onClick = {navController.navigate("login");}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+    }
+}
 
 @Composable
 private fun MovieDisplay(){

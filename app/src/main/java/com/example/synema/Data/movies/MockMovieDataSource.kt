@@ -10,19 +10,15 @@ import com.example.synema.model.UserModel
 
 class MockMovieDataSource : MovieDataSource {
 
-    override fun loadMovie(id: String): MovieModel{
-        return MovieModel(
+    override fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit){
+        callback(ApiResponse(MovieModel(
             507089,
-        "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-        "Five Nights at Freddy's",
-        "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-        8.4/2,
-        "2023-10-25"
-        )
-
-
-
-
+            "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+            "Five Nights at Freddy's",
+            "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+            8.4/2,
+            "2023-10-25"
+        )))
     }
 
     override fun loadMovies(): List<MovieModel>{
@@ -68,40 +64,61 @@ class MockMovieDataSource : MovieDataSource {
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    ""
-                    ),
+                    "",
+                    "bio"),
                 """Amazing, Nolan is finally back and he's so hot!
                     |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
                 """.trimMargin(),
                 5,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
                 ),
             ReviewModel(
                 ProfileModel(
                     "test2",
                     "Steve Jobs",
-                    ""
-                ),
+                    "",
+                    "bio"),
                 "Mid",
                 3,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
 
             ),
             ReviewModel(
                 ProfileModel(
                     "test3",
                     "Carl Sagan",
-                    ""
-                ),
+                    "",
+                    "bio"),
                 "I liked the black hole part!",
                 4,
-                loadMovie("2")
+                MovieModel(
+                    507089,
+                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                    "Five Nights at Freddy's",
+                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                    8.4/2,
+                    "2023-10-25"
+                )
             )
         )
 
     }
 
-    override fun loadDiscoverMovies(callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+    override fun loadDiscoverMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
         callback(ApiResponse(
             loadMovies()
         ))

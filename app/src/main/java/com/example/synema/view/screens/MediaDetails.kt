@@ -24,6 +24,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -52,14 +56,31 @@ fun MediaDetails(
 
     val source = DependencyProvider.getInstance().getMovieSource();
 
-    val testMovie : MovieModel = source.loadMovie("test")
+    var movie : MovieModel by remember {
+        mutableStateOf(MovieModel(
+            0,
+            "",
+            "Loading...",
+            "Loading...",
+            0,
+            ""
+        )
+        )
+    }
+    if (movieID != null) {
+        source.loadMovie(movieID){
+            movie = it.getResult()!!;
+        }
+    }
+
+    //val movie : MovieModel = source.loadMovie(movieID.toString())
 
     MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
-            TitleFont()
-            MovieClip(testMovie.poster_url)
-            InteractionPane(testMovie)
-            DescriptionSection()
+            TitleFont(movie.title)
+            MovieClip(movie.poster_url)
+            InteractionPane(movie)
+            DescriptionSection(movie.description)
             UserReviewSection(source.loadReviews())
         }
 
@@ -144,7 +165,7 @@ fun RatingPanel(movie : MovieModel){
 fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
-            if(rating.toFloat() >= n.toFloat()){
+            if(rating.toFloat()/2 >= n.toFloat()){
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(0xFF4399FF))
             } else{
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
@@ -158,15 +179,9 @@ fun RatingStars(rating : Number){
 
 
 @Composable
-fun DescriptionSection(){
+fun DescriptionSection(desc : String){
 
-    val desc = """
-        "Interstellar" is a mind-bending sci-fi epic directed by Christopher Nolan.
-        In a desperate bid to save humanity,
-        a group of astronauts embarks on a perilous journey through a wormhole to find a new habitable planet.
-        It's a visually stunning and emotionally charged exploration of love, time dilation,
-        and the resilience of the human spirit.
-    """.trimIndent()
+
 
 
     Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
