@@ -57,7 +57,7 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
     SynemaTheme {
         // A surface container using the 'background' color from the theme
             GradientBox() {
-                MoviesApp(navController, profileState)
+               MoviesApp(navController, profileState)
             }
 
 
@@ -67,6 +67,7 @@ public fun HomeScreen(navController : NavHostController, profileState : MutableS
 
 @Composable
 fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+
 
     val dataSource = DependencyProvider.getInstance().getMovieSource();
 
@@ -87,21 +88,31 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         mutableStateOf(listOf())
     }
     dataSource.loadDiscoverMovies (){
-        discoverList = it.getResult()!!;
+        it.getResult()?.let {movieModel ->
+            discoverList = movieModel
+        }
+
     }
     dataSource.loadDiscoverMovies(genres = "35") {
-        comedyList = it.getResult()!!;
+        it.getResult()?.let {movieModel ->
+            comedyList = movieModel
+        }
     }
     dataSource.loadDiscoverMovies(genres = "27") {
-        horrorList = it.getResult()!!;
+        it.getResult()?.let {movieModel ->
+            horrorList = movieModel
+        }
     }
     dataSource.loadDiscoverMovies(genres = "16") {
-        animeList = it.getResult()!!;
+        it.getResult()?.let {movieModel ->
+            animeList = movieModel
+        }
     }
     dataSource.loadDiscoverMovies(genres = "36") {
-        historyList = it.getResult()!!;
+        it.getResult()?.let {movieModel ->
+            historyList = movieModel
+        }
     }
-
 
 
 
@@ -137,7 +148,6 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         }
         BottomBar(navController)
     }
-
 
 }
 

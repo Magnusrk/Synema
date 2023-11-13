@@ -18,7 +18,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MovieApiSource : MovieDataSource {
 
-    private val BASE_URL = "https://cwjtedqahp.eu10.qoddiapp.com/";
+    //private val BASE_URL = "localhost:8000"
+
+    private val BASE_URL = "https://cwjtedqahp.eu10.qoddiapp.com/"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
