@@ -27,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -52,14 +53,32 @@ fun MediaDetails(
 
     val source = DependencyProvider.getInstance().getMovieSource();
 
-    val testMovie : MovieModel = source.loadMovie("test")
+    var movie : MovieModel by remember {
+        mutableStateOf(MovieModel(
+            0,
+            "",
+            "",
+            "Loading...",
+            "Loading...",
+            0,
+            ""
+        )
+        )
+    }
+    if (movieID != null) {
+        source.loadMovie(movieID){
+            movie = it.getResult()!!;
+        }
+    }
+
+    //val movie : MovieModel = source.loadMovie(movieID.toString())
 
     MainContainer {
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
-            TitleFont()
-            MovieClip(testMovie.imageResourceId)
-            InteractionPane(testMovie)
-            DescriptionSection()
+            TitleFont(movie.title)
+            MovieClip(movie.backdrop_url)
+            InteractionPane(movie)
+            DescriptionSection(movie.description)
             UserReviewSection(source.loadReviews())
         }
 
@@ -73,13 +92,13 @@ fun InteractionPane(movie : MovieModel){
     Row(modifier = Modifier
         .fillMaxWidth()
         .height((size.height() / 7).dp)){
-        SaveButton()
+        SaveButton(movie.release_date)
         RatingPanel(movie)
     }
 }
 
 @Composable
-fun SaveButton(){
+fun SaveButton(releaseDate: String){
     val size = Size();
     Column(
         modifier = Modifier
@@ -90,6 +109,10 @@ fun SaveButton(){
         verticalArrangement = Arrangement.Center
 
     ) {
+        Text(text = releaseDate,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(start = 4.dp, top = 10.dp,bottom = 10.dp))
         Button( onClick = {},
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
             shape = RoundedCornerShape(20),
@@ -141,10 +164,10 @@ fun RatingPanel(movie : MovieModel){
 }
 
 @Composable
-fun RatingStars(rating : Float){
+fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
-            if(rating >= n.toFloat()){
+            if(rating.toFloat()/2 >= n.toFloat()){
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(0xFF4399FF))
             } else{
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
@@ -158,15 +181,9 @@ fun RatingStars(rating : Float){
 
 
 @Composable
-fun DescriptionSection(){
+fun DescriptionSection(desc : String){
 
-    val desc = """
-        "Interstellar" is a mind-bending sci-fi epic directed by Christopher Nolan.
-        In a desperate bid to save humanity,
-        a group of astronauts embarks on a perilous journey through a wormhole to find a new habitable planet.
-        It's a visually stunning and emotionally charged exploration of love, time dilation,
-        and the resilience of the human spirit.
-    """.trimIndent()
+
 
 
     Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
@@ -174,7 +191,7 @@ fun DescriptionSection(){
         .fillMaxWidth()
         .height(1.dp)
         .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
+    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
 
 }
 

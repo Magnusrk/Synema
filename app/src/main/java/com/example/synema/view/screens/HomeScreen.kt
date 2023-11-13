@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -55,27 +58,78 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     val dataSource = DependencyProvider.getInstance().getMovieSource();
 
+    var discoverList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    var comedyList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    var horrorList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    var animeList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    var historyList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+    dataSource.loadDiscoverMovies (){
+        it.getResult()?.let {movieModel ->
+            discoverList = movieModel
+        }
+
+    }
+    dataSource.loadDiscoverMovies(genres = "35") {
+        it.getResult()?.let {movieModel ->
+            comedyList = movieModel
+        }
+    }
+    dataSource.loadDiscoverMovies(genres = "27") {
+        it.getResult()?.let {movieModel ->
+            horrorList = movieModel
+        }
+    }
+    dataSource.loadDiscoverMovies(genres = "16") {
+        it.getResult()?.let {movieModel ->
+            animeList = movieModel
+        }
+    }
+    dataSource.loadDiscoverMovies(genres = "36") {
+        it.getResult()?.let {movieModel ->
+            historyList = movieModel
+        }
+    }
+
+
+
+
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
             TrendTopBar(moviePosters,search=true)
             MovieList(
-                movieList = dataSource.loadMovies(),
+                movieList = discoverList,
                 header = "For you",
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
-                header = "Trending",
+                movieList = comedyList,
+                header = "Comedy",
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
+                movieList = horrorList,
                 header = "Horror",
                 navController = navController
             )
             MovieList(
-                movieList = dataSource.loadMovies(),
-                header = "Anime",
+                movieList = animeList,
+                header = "Animation",
+                navController = navController
+            )
+            MovieList(
+                movieList = historyList,
+                header = "History",
                 navController = navController
             )
         }
@@ -110,7 +164,6 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
                     modifier = Modifier.padding(8.dp),
                     navController
                 )
-
             }
         }
     }
@@ -126,11 +179,12 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : 
     ) {
         Column (
             //verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
         ){
-            Image(
-                painter = painterResource(movie.imageResourceId),
-                contentDescription = stringResource(movie.stringResourceId),
+            AsyncImage(
+                model = movie.poster_url,
+                contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
                     .height(135.dp)
@@ -138,12 +192,18 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : 
                 ,
                 contentScale = ContentScale.FillBounds
             )
+
             Spacer(modifier =  Modifier.height(5.dp))
             Text(
-                text = LocalContext.current.getString(movie.stringResourceId),
-                fontSize = 15.sp,
+                text = movie.title,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center
+
             )
         }
 
