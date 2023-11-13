@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.synema.R
 import com.example.synema.model.MovieModel
@@ -27,7 +28,8 @@ val moviePosters = listOf(
 @Composable
 fun TrendTopBar(
     movies:List<MovieModel>,
-    search: Boolean = false
+    search: Boolean = false,
+    navController: NavController
 ) {
     //var selectedImageIndex by remember {mutableStateOf(0)}
 
@@ -41,8 +43,9 @@ fun TrendTopBar(
         items(movies) {movie ->
             val imageModifier = Modifier
                 .size(400.dp)
+                .clickable { navController.navigate("mediaDetails/" + movie.id) }
             AsyncImage(
-                model = movie.poster_url,
+                model = movie.backdrop_url,
                 contentDescription = null,
                 modifier = imageModifier,
                 contentScale = ContentScale.Crop

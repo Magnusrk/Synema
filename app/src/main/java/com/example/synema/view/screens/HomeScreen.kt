@@ -111,7 +111,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
-            TrendTopBar(discoverList,search=true)
+            TrendTopBar(discoverList,search=true, navController)
             MovieList(
                 movieList = discoverList,
                 header = "For you",
