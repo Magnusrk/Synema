@@ -19,27 +19,27 @@ class MockUserDataSource() : UserDataSource {
 
 
 
-    override fun LoginUser(email: String, password: String ): ApiResponse<UserModel> {
-        return ApiResponse(
+    override fun LoginUser(email: String, password: String, callback : (ApiResponse<UserModel>) -> Unit )  {
+        callback(ApiResponse(
             UserModel(
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    "chuck@norris.com"
-                )
+                    "chuck@norris.com",
+                    "bio")
             )
-        )
+        ))
     }
 
-    override fun signupUser(username: String, email: String, password: String): ApiResponse<UserModel> {
-        return ApiResponse(
+    override fun signupUser(username: String, email: String, password: String, callback: (ApiResponse<UserModel>) -> Unit)  {
+        callback(ApiResponse(
             UserModel(
                 ProfileModel(
                     "test",
                     "Chuck Norris",
-                    "chuck@norris.com"
-                )
+                    "chuck@norris.com",
+                    "bio")
             )
-        )
+        ))
     }
 }

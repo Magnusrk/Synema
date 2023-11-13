@@ -44,36 +44,36 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-     fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-        GradientBox(){
-            ContentContainer(navController, profileState);
-        }
+fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    GradientBox(){
+        ContentContainer(navController, profileState);
     }
+}
 
-    @Composable
-    private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp)
-            ){
-            SynHeader()
-            UserSignUpArea(navController, profileState);
-        }
+@Composable
+private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(14.dp)
+    ){
+        SynHeader()
+        UserSignUpArea(navController, profileState);
     }
+}
 
 
 @Composable
-    private fun SynHeader() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 50.dp)
+private fun SynHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 50.dp)
 
-        ) {
-            SynemaLogo()
-        }
+    ) {
+        SynemaLogo()
     }
+}
 
 @Composable
 private fun UserSignUpArea(navController: NavController, profileState: MutableState<ProfileModel>){
@@ -116,7 +116,7 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
                 navController,
                 profileState,
                 error
-                ); }
+            ); }
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
@@ -150,15 +150,18 @@ private fun sendSignUpRequest(
     error: MutableState<String>
 ) {
     val source = DependencyProvider.getInstance().getUserSource();
-    val result = source.signupUser(username, email, password);
+    source.signupUser(username, email, password) {
+        if (it.successful()) {
+            profileState.value = it.getResult()?.profile!!;
+            navController.navigate("home")
+        } else{
+            error.value = (it.getStatus())
+        }
+    };
 
-    if(result.successful()){
-        profileState.value = result.getResult()?.profile!!;
-        navController.navigate("home")
-        return;
-    }
 
-    error.value = (result.getStatus())
+
+
 }
 
 
@@ -171,22 +174,22 @@ private fun LoginInputField(label : String, isHidden : Boolean, onChange : (Stri
 
     if(!isHidden){
 
-    TextField(
-        value = text,
-        onValueChange = { text = it ; onChange(text)},
-        label = { Text(label) },
-        modifier = Modifier.padding(7.dp),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0,0,0,0),
-            textColor = Color.White,
-            unfocusedLabelColor = Color.White,
-            focusedLabelColor = Color.White,
-            unfocusedIndicatorColor = Color(0xFFC5AC29),
-            focusedIndicatorColor = Color(0xFF811C77),
+        TextField(
+            value = text,
+            onValueChange = { text = it ; onChange(text)},
+            label = { Text(label) },
+            modifier = Modifier.padding(7.dp),
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0,0,0,0),
+                textColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedIndicatorColor = Color(0xFF811C77),
 
+                )
         )
-    )
     } else{
         TextField(
             value = text,
@@ -210,4 +213,3 @@ private fun LoginInputField(label : String, isHidden : Boolean, onChange : (Stri
         )
     }
 }
-

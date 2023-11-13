@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val DEBUG = true;
+        val DEBUG = false;
         DependencyProvider.getInstance().create(DEBUG);
 
         setContent {
@@ -34,7 +34,8 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(ProfileModel(
                     id = "-1",
                     name = "",
-                    email = ""
+                    email = "",
+                    bio = ""
                 ))
             }
 

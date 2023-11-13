@@ -84,7 +84,7 @@ class MockMovieDataSource : MovieDataSource {
                     8.4/2,
                     "2023-10-25"
                 )
-                ),
+            ),
             ReviewModel(
                 ProfileModel(
                     "test2",

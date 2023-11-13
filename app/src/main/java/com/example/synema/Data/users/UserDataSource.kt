@@ -9,7 +9,7 @@ import com.example.synema.model.UserModel
 
 
 interface UserDataSource {
-    fun LoginUser(email : String, password : String) : ApiResponse<UserModel>;
+    fun LoginUser(email : String, password : String, callback : (ApiResponse<UserModel>) -> Unit);
 
-    fun signupUser(username : String, email: String,password: String) : ApiResponse<UserModel>;
+    fun signupUser(username : String, email: String,password: String, callback : (ApiResponse<UserModel>) -> Unit);
 }
