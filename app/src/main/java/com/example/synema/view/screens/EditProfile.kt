@@ -62,12 +62,12 @@ fun EditProfile(navController : NavHostController, profileState: MutableState<Pr
                 TopBar("" , Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
                 ChangePicture()
                 EditBio()
-                BioInputField(
+                /*BioInputField(
                     label="Edit bio",
                     onChange = {bio = it},
                     onDone = {profileState.value.bio = bio},
                     startval = profileState.value.bio
-                );
+                );*/
                 ChangeEmail()
                 ChangePassword()
             };

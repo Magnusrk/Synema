@@ -53,7 +53,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 ProfileNameHeader(name = profileState.value.name)
                 ProfilePicture();
                 FollowersReviewsStatus(76, 88);
-                ProfileBio(text = profileState.value.bio)
+                //ProfileBio(text = profileState.value.bio)
                 FriendsButton()
                 WatchlistsButton()
                 ReviewsButton()
