@@ -71,7 +71,7 @@ fun MediaDetails(
     }
     if (movieID != null) {
         source.loadMovie(movieID){
-            movie = it.getResult()!!;
+            movie = it.getResult()!!
         }
     }
 
@@ -186,10 +186,6 @@ fun RatingStars(rating : Number){
 
 @Composable
 fun DescriptionSection(desc : String){
-
-
-
-
     Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
     Box(modifier = Modifier
         .fillMaxWidth()

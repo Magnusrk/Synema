@@ -47,10 +47,6 @@ class MovieApiSource : MovieDataSource {
             }
 
         })
-
-
-
-
     }
 
     override fun loadMovies(): List<MovieModel>{
