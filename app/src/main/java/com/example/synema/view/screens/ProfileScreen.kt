@@ -61,7 +61,6 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
             };
             BottomBar(navController = navController)
         }
-
     }
 }
 
