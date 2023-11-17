@@ -9,9 +9,12 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.MovieModel
 import org.junit.Test
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
 
 import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.runner.RunWith
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,33 +23,9 @@ import org.junit.Rule
  */
 class ExampleUnitTest {
 
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
-    @Test
-    @Composable
-    fun Tester(){
-        val source = DependencyProvider.getInstance().getMovieSource()
-
-        var movie : MovieModel by remember {
-            mutableStateOf(MovieModel(
-                    0,
-                    "",
-                    "",
-                    "Loading...",
-                    "Loading...",
-                    0,
-                    ""
-            )
-            )
-        }
-
-        source.loadMovie("872585"){
-            movie = it.getResult()!!
-        }
-        assertEquals("Oppenheimer", movie.title)
-    }
-
-
 }

@@ -53,12 +53,13 @@ android {
 
 dependencies {
 
-    /*
-    // Test rules and transitive dependencies:
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:2023.03.00")
-// Needed for createAndroidComposeRule, but not createComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:2023.03.00")
-*/
+
+
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
+    //androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
+
+
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
