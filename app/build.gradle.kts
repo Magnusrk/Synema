@@ -59,6 +59,12 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
     //androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
 
+    androidTestImplementation ("io.cucumber:cucumber-android:7.14.0")
+    androidTestImplementation ("io.cucumber:cucumber-junit:7.14.0")
+
+
+
+
 
 
     implementation("androidx.core:core-ktx:1.9.0")

@@ -10,6 +10,7 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.MovieModel
 
 import androidx.compose.ui.test.junit4.createComposeRule
+import io.cucumber.junit.CucumberOptions
 
 
 import org.junit.Test
@@ -34,6 +35,8 @@ class ExampleInstrumentedTest {
 
 
 }
+
+
 
 @RunWith(AndroidJUnit4::class)  // To indicate that we've to run it with AndroidJUnit runner
 class ExampleUnitTest {
