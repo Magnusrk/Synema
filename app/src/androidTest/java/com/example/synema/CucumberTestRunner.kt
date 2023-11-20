@@ -6,9 +6,10 @@ import org.junit.runner.RunWith
 
 
 @RunWith(Cucumber::class)
-@CucumberOptions(
-    features = ["app/src/androidTest/java/com/example/synema/Steps/resources"],
-    glue = ["com.example.synema.Steps"]
-)
-class CucumberTestRunner {
-}
+@CucumberOptions()
+class CucumberTestRunner
+
+/*
+    features = [""],
+    glue = ["com.example.synema"]
+ */

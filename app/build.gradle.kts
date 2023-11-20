@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,11 @@ plugins {
 android {
     namespace = "com.example.synema"
     compileSdk = 33
+
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 
     defaultConfig {
         applicationId = "com.example.synema"
@@ -56,13 +63,17 @@ dependencies {
 
 
     implementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("androidx.test.uiautomator:uiautomator:2.2.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
-    //androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
 
     androidTestImplementation ("io.cucumber:cucumber-android:7.14.0")
     androidTestImplementation ("io.cucumber:cucumber-junit:7.14.0")
 
 
+    testImplementation(platform("io.cucumber:cucumber-bom:7.14.0"))
+    testImplementation("io.cucumber:cucumber-junit-platform-engine")
+    testImplementation("io.cucumber:cucumber-java:7.14.0")
+    testImplementation("io.cucumber:cucumber-junit:7.14.0")
 
 
 
@@ -81,6 +92,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     val nav_version = "2.5.0"
