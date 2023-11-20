@@ -1,5 +1,4 @@
 package com.example.synema.view.screens
-
 import GradientBox
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +26,6 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
-
 
 @Composable
 fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
