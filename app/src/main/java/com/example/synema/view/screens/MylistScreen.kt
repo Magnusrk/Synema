@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.synema.Data.Datasource
+import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
@@ -38,7 +40,10 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
 
                 movieList.forEach { movie ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().background(color = Color(0xFF191825)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color(0xFF191825))
+                            .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -58,21 +63,29 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                         )
 
                         Row(
-                            modifier = Modifier.size(65.dp, 98.dp),
+                            modifier = Modifier
+                                .size(65.dp, 98.dp)
+                                .align(Alignment.CenterVertically),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // implement heart like button (Heart)
-                            //LikeButton()
+                            Image(
+                                painter = painterResource(id = R.drawable.heart),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
+                            )
 
-                            // implement edit/more button (Three Dots)
-                            // MoreButton()
+                            Image(
+                                painter = painterResource(id = R.drawable.edit_playlist),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
+                            )
                         }
                     }
                 }
-            }
 
-            BottomBar(navController = navController)
+                BottomBar(navController = navController)
+            }
         }
     }
 }
