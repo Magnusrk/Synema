@@ -80,7 +80,8 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(modifier = Modifier.fillMaxHeight(),
+                            Surface(
+                                modifier = Modifier.size(65.dp, 98.dp),
                                 color = Color(0, 0, 0, 0),
                                 onClick = { navController?.popBackStack() }) {
 
