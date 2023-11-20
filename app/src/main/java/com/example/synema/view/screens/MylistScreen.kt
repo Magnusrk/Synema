@@ -5,9 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,6 +32,7 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
     val movieList = Datasource().loadMovies()
@@ -42,8 +46,7 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(color = Color(0xFF191825))
-                            .padding(16.dp),
+                            .background(color = Color(0xFF191825)),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -53,6 +56,14 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                             modifier = Modifier.size(95.dp, 98.dp),
                             contentScale = ContentScale.Crop
                         )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
                         Text(
                             text = LocalContext.current.getString(movie.stringResourceId),
@@ -69,22 +80,31 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.heart),
-                                contentDescription = null,
-                                modifier = Modifier.size(30.dp)
-                            )
+                            Surface(modifier = Modifier.fillMaxHeight(),
+                                color = Color(0, 0, 0, 0),
+                                onClick = { navController?.popBackStack() }) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.edit_playlist),
-                                contentDescription = null,
-                                modifier = Modifier.size(30.dp)
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.heart),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(30.dp)
+                                )
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.edit_playlist),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(30.dp)
+                                )
+
+
+                            }
+
+
                         }
                     }
-                }
 
-                BottomBar(navController = navController)
+                    BottomBar(navController = navController)
+                }
             }
         }
     }
