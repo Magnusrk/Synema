@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 class CucumberTestRunner
 
 /*
-    features = [""],
+    features = ["resources"],
     glue = ["com.example.synema"]
+
  */
