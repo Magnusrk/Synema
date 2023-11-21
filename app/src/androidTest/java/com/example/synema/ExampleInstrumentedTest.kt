@@ -1,4 +1,4 @@
-package com.example.synema
+package com.example.synema.
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
