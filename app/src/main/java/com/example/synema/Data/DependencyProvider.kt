@@ -1,5 +1,7 @@
 package com.example.synema.Data
 
+import WatchlistAPISource
+import com.example.synema.Data.Watchlists.WatchlistDataSource
 import com.example.synema.Data.movies.MockMovieDataSource
 import com.example.synema.Data.movies.MovieApiSource
 import com.example.synema.Data.movies.MovieDataSource
@@ -16,6 +18,8 @@ class DependencyProvider private constructor() {
         private lateinit var movieSource : MovieDataSource;
 
         private lateinit var userSource : UserDataSource;
+
+        private lateinit var watchlistSource : WatchlistAPISource;
 
 
 
@@ -34,6 +38,7 @@ class DependencyProvider private constructor() {
             //movieSource = MovieApiSource() For now
             movieSource = MovieApiSource()
             userSource = UserAPISource()
+            watchlistSource =WatchlistAPISource()
         }
     }
 
@@ -43,6 +48,9 @@ class DependencyProvider private constructor() {
 
     fun getMovieSource() : MovieDataSource{
         return movieSource;
+    }
+    fun getWatchlistSource(): WatchlistDataSource{
+        return watchlistSource;
     }
 }
 
