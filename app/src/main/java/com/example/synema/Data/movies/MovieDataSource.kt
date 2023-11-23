@@ -14,6 +14,4 @@ interface MovieDataSource {
 
     fun loadDiscoverMovies(genres : String = "", callback : (ApiResponse<List<MovieModel>>) -> Unit);
 
-
-
 }

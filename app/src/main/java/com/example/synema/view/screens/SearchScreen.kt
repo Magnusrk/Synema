@@ -4,17 +4,14 @@ import GradientBox
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,13 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.synema.Data.DependencyProvider
-import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.TopBar
@@ -43,35 +36,29 @@ import com.example.synema.view.components.TopBar
  fun SearchScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
     SynemaTheme {
         GradientBox() {
-            MovieList(navController, profileState, movieList = DependencyProvider.getInstance().getMovieSource().loadMovies())
+            MovieList(navController, profileState)
         }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieList(navController: NavHostController, profileState: MutableState<ProfileModel>, movieList: List<MovieModel>) {
+fun MovieList(navController: NavHostController, profileState: MutableState<ProfileModel>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true)
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = navController)
+        /*
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            content = {
-                items(movieList.size) { index ->
-                        MovieCard(
-                            movie = movieList[index],
-                            modifier = Modifier.padding(8.dp),
-                            navController
-                        )
-                }
-            }
-        )
+            columns = GridCells.Adaptive(minSize = 128.dp)
+        ){
 
+        }
+
+         */
     }
 }
-
-
 
 fun onChange(text: String) {
 

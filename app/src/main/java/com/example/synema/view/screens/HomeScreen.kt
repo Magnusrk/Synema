@@ -44,30 +44,22 @@ import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
+import com.example.synema.view.components.TrendTopBar
 
-/*
-@Preview
+
 @Composable
-private fun MovieCardPreview() {
-    MovieCard(MovieModel(R.string.movie1, R.drawable.image1))
-}
-*/
-@Composable
-public fun HomeScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
+fun HomeScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
     SynemaTheme {
         // A surface container using the 'background' color from the theme
-            GradientBox() {
-               MoviesApp(navController, profileState)
+            GradientBox {
+                MoviesApp(navController, profileState)
             }
-
-
     }
 }
 
 
 @Composable
 fun MoviesApp(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-
 
     val dataSource = DependencyProvider.getInstance().getMovieSource();
 
@@ -119,7 +111,8 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
-            TopBar("SYNEMA", Alignment.CenterStart, 20.sp,  transparent = true, search = true, navController = navController)
+            TopBar("Synema", Alignment.CenterStart, 30.sp, search = true, navController = navController)
+            TrendTopBar(discoverList,search=true, navController)
             MovieList(
                 movieList = discoverList,
                 header = "For you",
@@ -148,6 +141,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         }
         BottomBar(navController)
     }
+
 
 }
 

@@ -43,52 +43,52 @@ import com.example.synema.view.components.SynemaLogo
 
 
 @Composable
-     fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-        GradientBox(){
-            ContentContainer(navController, profileState);
-        }
+fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    GradientBox(){
+        ContentContainer(navController, profileState);
     }
+}
 
-    @Composable
-    private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp)
-            ){
-            SynHeader()
-            MovieDisplay();
-            UserLoginArea(navController, profileState);
-        }
+@Composable
+private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(14.dp)
+    ){
+        SynHeader()
+        MovieDisplay();
+        UserLoginArea(navController, profileState);
     }
+}
 
 
-    @Composable
-    private fun MovieDisplay(){
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
+@Composable
+private fun MovieDisplay(){
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
 
-        ){
-            MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
-            MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
-            MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
-        }
+    ){
+        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
+        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
+        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
     }
+}
 
-    @Composable
-    private fun SynHeader() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 50.dp)
+@Composable
+private fun SynHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 50.dp)
 
-        ) {
-            SynemaLogo()
-        }
+    ) {
+        SynemaLogo()
     }
+}
 
 @Composable
 private fun UserLoginArea(navController: NavController, profileState : MutableState<ProfileModel>){
@@ -163,22 +163,22 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
 
     if(!isHidden){
 
-    TextField(
-        value = text,
-        onValueChange = { text = it ; onChange(text)},
-        label = { Text(label) },
-        modifier = Modifier.padding(7.dp),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0,0,0,0),
-            textColor = Color.White,
-            unfocusedLabelColor = Color.White,
-            focusedLabelColor = Color.White,
-            unfocusedIndicatorColor = Color(0xFFC5AC29),
-            focusedIndicatorColor = Color(0xFF811C77),
+        TextField(
+            value = text,
+            onValueChange = { text = it ; onChange(text)},
+            label = { Text(label) },
+            modifier = Modifier.padding(7.dp),
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0,0,0,0),
+                textColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedIndicatorColor = Color(0xFF811C77),
 
+                )
         )
-    )
     } else{
         TextField(
             value = text,
@@ -202,4 +202,3 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
         )
     }
 }
-

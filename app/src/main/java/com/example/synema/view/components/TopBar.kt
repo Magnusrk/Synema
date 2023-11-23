@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,10 @@ fun TopBar(
     navController: NavController? = null
 
 ){
+    val syncopateFamily = FontFamily(
+        Font(R.font.syncopate_regular, FontWeight.Normal),
+        Font(R.font.syncopate_bold, FontWeight.Bold)
+    )
     var alpha = 1f;
     if(transparent) alpha = 0.0f;
     Box(
@@ -82,6 +88,7 @@ fun TopBar(
             if (!title.isNullOrBlank()) {
                 Text(
                     title,
+                    fontFamily = syncopateFamily,
                     fontSize = fontSize,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -97,7 +104,7 @@ fun TopBar(
             TextField(
                 value = text,
                 onValueChange = { text = it; onChange(text) },
-                modifier = Modifier.padding(start = 60.dp, end = 60.dp).align(alignment),
+                modifier = Modifier.padding(start = 60.dp, end = 60.dp),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color(0, 0, 0, 0),
@@ -113,15 +120,14 @@ fun TopBar(
         if (search) {
             Surface(modifier = Modifier.fillMaxHeight().align(Alignment.CenterEnd),
                 color = Color(0,0,0,0),
-                onClick = {navController?.navigate("search") },
+                onClick = {navController?.navigate("search")},
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.magniglas),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(16.dp)
-                        .align(Alignment.CenterEnd)
-                        .size(30.dp)
+                        .size(35.dp)
                 )
             }
         }

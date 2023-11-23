@@ -1,5 +1,4 @@
 package com.example.synema.Data.movies
-
 import android.util.Log
 import com.example.synema.R
 import com.example.synema.controller.MovieAPI
@@ -48,10 +47,6 @@ class MovieApiSource : MovieDataSource {
             }
 
         })
-
-
-
-
     }
 
     override fun loadMovies(): List<MovieModel>{
