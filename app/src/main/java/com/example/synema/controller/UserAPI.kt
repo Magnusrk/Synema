@@ -16,7 +16,7 @@ import retrofit2.http.Path
 
 public interface UserAPI {
     @Headers(
-        "Accept: application/json"
+        "Accept: application/json",
     )
     @POST("user/login")
     @FormUrlEncoded

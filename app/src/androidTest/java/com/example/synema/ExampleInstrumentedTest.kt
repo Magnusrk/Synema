@@ -1,4 +1,4 @@
-package com.example.synema.
+package com.example.synema
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,6 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.MovieModel
 
 import androidx.compose.ui.test.junit4.createComposeRule
-import io.cucumber.junit.CucumberOptions
 
 
 import org.junit.Test

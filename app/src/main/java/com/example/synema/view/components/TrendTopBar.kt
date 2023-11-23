@@ -53,16 +53,6 @@ fun TrendTopBar(
         }
 
     }
-    if (search) {
-        Image(
-            painter = painterResource(id = R.drawable.magniglas),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(16.dp)
-                //.align(Alignment.TopEnd)
-                .size(30.dp)
-        )
-    }
 }
 
 

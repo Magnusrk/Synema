@@ -111,6 +111,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     Column (modifier = Modifier.fillMaxSize()){
         MainContainer(hasBottomNav = true) {
+            TopBar("Synema", Alignment.CenterStart, 20.sp, search = true, navController = navController)
             TrendTopBar(discoverList,search=true, navController)
             MovieList(
                 movieList = discoverList,

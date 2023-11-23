@@ -78,6 +78,8 @@ dependencies {
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     implementation("androidx.test.uiautomator:uiautomator:2.2.0")
     testImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
+
 
     testImplementation ("io.cucumber:cucumber-android:7.14.0")
     testImplementation ("io.cucumber:cucumber-junit:7.14.0")
