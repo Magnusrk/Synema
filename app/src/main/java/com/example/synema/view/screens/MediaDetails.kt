@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -167,6 +168,7 @@ fun RatingPanel(movie : MovieModel){
 
 }
 
+
 @Composable
 fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
@@ -176,11 +178,10 @@ fun RatingStars(rating : Number){
             } else{
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
             }
-
-
         }
     }
 }
+
 
 
 

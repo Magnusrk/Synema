@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val DEBUG = false;
+        val DEBUG = false
         DependencyProvider.getInstance().create(DEBUG);
 
         setContent {
