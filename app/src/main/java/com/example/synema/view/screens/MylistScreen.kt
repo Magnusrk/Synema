@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +38,7 @@ import com.example.synema.view.components.TopBar
 fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
     val movieList = Datasource().loadMovies()
 
-    GradientBox() {
+    GradientBox {
         Column {
             MainContainer(hasBottomNav = true) {
                 TopBar(title = "My List", alignment = Alignment.Center)
@@ -56,15 +57,6 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                             modifier = Modifier.size(95.dp, 98.dp),
                             contentScale = ContentScale.Crop
                         )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
                         Text(
                             text = LocalContext.current.getString(movie.stringResourceId),
                             fontSize = 15.sp,
@@ -72,40 +64,29 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                             color = Color.White,
                             modifier = Modifier.size(200.dp, 98.dp)
                         )
-
-                        Row(
-                            modifier = Modifier
-                                .size(65.dp, 98.dp)
-                                .align(Alignment.CenterVertically),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Surface(
-                                modifier = Modifier.size(65.dp, 98.dp),
-                                color = Color(0, 0, 0, 0),
-                                onClick = { navController?.popBackStack() }) {
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.heart),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp)
-                                )
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.edit_playlist),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp)
-                                )
-
-
-                            }
-
-
+                        Surface(
+                            modifier = Modifier.size(30.dp),
+                            color = Color(0, 0, 0, 0),
+                            onClick = { navController?.popBackStack() }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.heart),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
+                        Surface(
+                            modifier = Modifier.size(30.dp),
+                            color = Color(0, 0, 0, 0),
+                            onClick = { navController?.popBackStack() }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.edit_playlist),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
+                            )
                         }
                     }
-
-                    BottomBar(navController = navController)
                 }
+                BottomBar(navController = navController)
             }
         }
     }
