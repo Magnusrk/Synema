@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.users.UserAPISource
 import com.example.synema.controller.UserAPI
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
@@ -42,36 +44,36 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-     fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-        GradientBox(){
-            ContentContainer(navController, profileState);
-        }
+fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    GradientBox(){
+        ContentContainer(navController, profileState);
     }
+}
 
-    @Composable
-    private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp)
-            ){
-            SynHeader()
-            UserSignUpArea(navController, profileState);
-        }
+@Composable
+private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(14.dp)
+    ){
+        SynHeader()
+        UserSignUpArea(navController, profileState);
     }
+}
 
 
 @Composable
-    private fun SynHeader() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 50.dp)
+private fun SynHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 50.dp)
 
-        ) {
-            SynemaLogo()
-        }
+    ) {
+        SynemaLogo()
     }
+}
 
 @Composable
 private fun UserSignUpArea(navController: NavController, profileState: MutableState<ProfileModel>){
@@ -114,7 +116,7 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
                 navController,
                 profileState,
                 error
-                ); }
+            ); }
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
@@ -139,7 +141,7 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
 
 }
 
-fun sendSignUpRequest(
+private fun sendSignUpRequest(
     username: String,
     email: String,
     password: String,
@@ -147,38 +149,19 @@ fun sendSignUpRequest(
     profileState: MutableState<ProfileModel>,
     error: MutableState<String>
 ) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://0.0.0.0:3000/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val api = retrofit.create(UserAPI::class.java)
-
-    val call: Call<UserModel?>? = api.userSignup(username, email,password);
-
-    call!!.enqueue(object: Callback<UserModel?> {
-        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
-            if(response.isSuccessful) {
-                //Sign up successful
-                //Set profile state and navigate
-                navController.navigate("home");
-                //profileState.value = response.body()!!.profile
-
-            }
+    val source = DependencyProvider.getInstance().getUserSource();
+    source.signupUser(username, email, password) {
+        if (it.successful()) {
+            profileState.value = it.getResult()?.profile!!;
+            navController.navigate("home")
+        } else{
+            error.value = (it.getStatus())
         }
+    };
 
-        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-            //Sign up failed
-            if(email == "" || username == "" || password == ""){
-                error.value = "Some fields are left empty"
-            } else{
 
-                navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
-            }
 
-        }
-    })
+
 }
 
 
@@ -191,22 +174,22 @@ private fun LoginInputField(label : String, isHidden : Boolean, onChange : (Stri
 
     if(!isHidden){
 
-    TextField(
-        value = text,
-        onValueChange = { text = it ; onChange(text)},
-        label = { Text(label) },
-        modifier = Modifier.padding(7.dp),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0,0,0,0),
-            textColor = Color.White,
-            unfocusedLabelColor = Color.White,
-            focusedLabelColor = Color.White,
-            unfocusedIndicatorColor = Color(0xFFC5AC29),
-            focusedIndicatorColor = Color(0xFF811C77),
+        TextField(
+            value = text,
+            onValueChange = { text = it ; onChange(text)},
+            label = { Text(label) },
+            modifier = Modifier.padding(7.dp),
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0,0,0,0),
+                textColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedIndicatorColor = Color(0xFF811C77),
 
+                )
         )
-    )
     } else{
         TextField(
             value = text,
@@ -230,4 +213,3 @@ private fun LoginInputField(label : String, isHidden : Boolean, onChange : (Stri
         )
     }
 }
-

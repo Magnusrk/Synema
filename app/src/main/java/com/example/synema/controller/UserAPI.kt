@@ -16,19 +16,19 @@ import retrofit2.http.Path
 
 public interface UserAPI {
     @Headers(
-        "Accept: application/json"
+        "Accept: application/json",
     )
-    @POST("users/login")
+    @POST("user/login")
     @FormUrlEncoded
     fun userLogin(
         @Field("email") email: String,
         @Field("password") password: String,
-    ) : Call<UserModel?>?
+    ) : Call<UserModel>
 
     @Headers(
         "Accept: application/json"
     )
-    @POST("users/signup")
+    @POST("user/signup")
     @FormUrlEncoded
     fun userSignup(
         @Field("username") username: String,

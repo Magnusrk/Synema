@@ -48,7 +48,7 @@ fun MovieList(navController: NavHostController, profileState: MutableState<Profi
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true)
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = navController)
         /*
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp)

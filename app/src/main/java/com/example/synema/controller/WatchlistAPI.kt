@@ -1,23 +1,28 @@
 package com.example.synema.controller
 
 import com.example.synema.model.MovieModel
+import com.example.synema.model.WatchlistModel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-public interface MovieAPI {
+public interface WatchlistAPI {
     @Headers(
         "Accept: application/json"
     )
-    @GET("movies/{id}")
-    abstract fun getMovieById(@Path("id") id: String): Call<MovieModel>
+    @DELETE("/deletewatchlist/{watchlist_id}")
+    abstract fun delete_wathclist(@Path("watchlist_id") id: String): Call<WatchlistModel>
 
+    @POST("/watchlist")
+    fun createWatchlist(@Body watchlist: WatchlistModel): Call<WatchlistModel>
     @Headers(
         "Accept: application/json"
     )

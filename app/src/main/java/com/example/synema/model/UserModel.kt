@@ -7,6 +7,7 @@ data class ProfileModel(
     val id: String,
     val name: String,
     val email: String,
+    var bio: String,
 )
 
 data class UserModel(

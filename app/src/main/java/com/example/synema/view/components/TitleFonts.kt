@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.sp
 import com.example.synema.R
 
 @Composable
-fun TitleFont() {
+fun TitleFont(title : String) {
     val titleFont = FontFamily(
         Font(R.font.inter_bold, FontWeight.Bold)
     )
 
     Text(
-        "Interstellar",
+        title,
         fontFamily = titleFont,
         fontWeight = FontWeight.Bold,
         modifier = Modifier

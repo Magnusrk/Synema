@@ -2,6 +2,7 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
+import android.util.Log
 import com.example.synema.view.components.OpaqueButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,69 +34,67 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.synema.controller.UserAPI
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.Data.users.UserAPISource
+import com.example.synema.model.ApiResponse
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-     fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-        GradientBox(){
-            ContentContainer(navController, profileState);
-        }
+fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    GradientBox(){
+        ContentContainer(navController, profileState);
     }
+}
 
-    @Composable
-    private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp)
-            ){
-            SynHeader()
-            MovieDisplay();
-            UserLoginArea(navController, profileState);
-        }
+@Composable
+private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(14.dp)
+    ){
+        SynHeader()
+        MovieDisplay();
+        UserLoginArea(navController, profileState);
     }
+}
 
 
-    @Composable
-    private fun MovieDisplay(){
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
+@Composable
+private fun MovieDisplay(){
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
 
-        ){
-            MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
-            MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
-            MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
-        }
+    ){
+        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
+        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
+        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
     }
+}
 
-    @Composable
-    private fun SynHeader() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 50.dp)
+@Composable
+private fun SynHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 50.dp)
 
-        ) {
-            SynemaLogo()
-        }
+    ) {
+        SynemaLogo()
     }
+}
 
 @Composable
 private fun UserLoginArea(navController: NavController, profileState : MutableState<ProfileModel>){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
 
     val error = remember {
         mutableStateOf(""
@@ -132,44 +132,27 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
 }
 
-fun sendLoginRequest(
+private fun sendLoginRequest(
     email: String,
     password: String,
     navController: NavController,
     profileState: MutableState<ProfileModel>,
     error: MutableState<String>
 ) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://0.0.0.0:3000/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
 
-    val api = retrofit.create(UserAPI::class.java)
+    val source = DependencyProvider.getInstance().getUserSource();
+    source.LoginUser(email, password, callback = {
 
-    val call: Call<UserModel?>? = api.userLogin(email,password);
-
-    call!!.enqueue(object: Callback<UserModel?> {
-        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
-            if(response.isSuccessful) {
-                //Login successful
-                //Set profile state and navigate
-                navController.navigate("home");
-                //profileState.value = response.body()!!.profile
-
-            }
+        Log.d("Main", it.getStatus())
+        Log.d("Main", it.successful().toString())
+        if(it.successful()){
+            profileState.value = it.getResult()?.profile!!;
+            Log.d("Main", "navigating!")
+            navController.navigate("home")
+        } else{
+            error.value = (it.getStatus())
         }
-
-        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
-            //Login failed
-            if(email == "" || email == "chuck"){
-                navController.navigate("home");
-                profileState.value = ProfileModel("0", "Chuck", email)
-            } else{
-                error.value = "Incorrect email or password"
-            }
-
-        }
-    })
+    });
 }
 
 
@@ -180,22 +163,22 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
 
     if(!isHidden){
 
-    TextField(
-        value = text,
-        onValueChange = { text = it ; onChange(text)},
-        label = { Text(label) },
-        modifier = Modifier.padding(7.dp),
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0,0,0,0),
-            textColor = Color.White,
-            unfocusedLabelColor = Color.White,
-            focusedLabelColor = Color.White,
-            unfocusedIndicatorColor = Color(0xFFC5AC29),
-            focusedIndicatorColor = Color(0xFF811C77),
+        TextField(
+            value = text,
+            onValueChange = { text = it ; onChange(text)},
+            label = { Text(label) },
+            modifier = Modifier.padding(7.dp),
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0,0,0,0),
+                textColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedIndicatorColor = Color(0xFF811C77),
 
+                )
         )
-    )
     } else{
         TextField(
             value = text,
@@ -219,4 +202,3 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
         )
     }
 }
-
