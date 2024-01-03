@@ -33,11 +33,15 @@ class UserAPISource() : UserDataSource {
         call.enqueue(object: Callback<UserModel?> {
             override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
                 if(response.isSuccessful) {
-                    Log.d("Main", "success!" + response.body().toString())
-                    callback(ApiResponse(response.body()!!))
+                    if (response.code() == 200) {
+                        Log.d("Main", "success!" + response.body().toString())
+                        callback(ApiResponse(response.body()!!))
+                    } else {
+                        callback(ApiResponse(null, true, "User does not exists"))
+                    }
                 }
                 else{
-                    callback(ApiResponse(null, true, "Couldn't sign up"))
+                    callback(ApiResponse(null, true, "Couldn't log in"))
                 }
             }
 

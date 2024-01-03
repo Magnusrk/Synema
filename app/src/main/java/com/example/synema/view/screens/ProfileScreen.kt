@@ -51,10 +51,6 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 ProfileNameHeader(name = profileState.value.name)
                 ProfilePicture();
                 FollowersReviewsStatus(76, 88);
-
-
-
-
             };
             BottomBar(navController = navController)
         }
