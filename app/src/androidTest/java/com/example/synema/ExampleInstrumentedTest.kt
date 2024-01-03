@@ -11,7 +11,6 @@ import com.example.synema.model.MovieModel
 
 import androidx.compose.ui.test.junit4.createComposeRule
 
-
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -42,11 +41,6 @@ class ExampleUnitTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
     @Test
     fun testGettingMovieFromAPI() {
         composeTestRule.setContent {
