@@ -48,7 +48,30 @@ class WatchlistAPISource: WatchlistDataSource {
         })
     }
 
-    override fun read_db(callback: (ApiResponse<List<WatchlistModel>>?) -> Unit) {
+    override fun read_db(callback: (ApiResponse<List<WatchlistModel>>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
+
+        val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db()
+
+        getAllWatchlistsCall.enqueue(object : Callback<List<WatchlistModel>> {
+            override fun onResponse(call: Call<List<WatchlistModel>>, response: Response<List<WatchlistModel>>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = response.body()!!, statusMessage = "success"))
+                } else {
+                    // Failed to fetch watchlists
+                    callback(ApiResponse(result = null, statusMessage = "failed", error = true))
+                }
+            }
+
+            override fun onFailure(call: Call<List<WatchlistModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString(),error=true))
+            }
+        })
+    }
+
+
+
+     override fun getAllWatchlists(callback: (ApiResponse<List<WatchlistModel>>?) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
         val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db()
@@ -68,5 +91,29 @@ class WatchlistAPISource: WatchlistDataSource {
             }
         })
     }
+
+     override fun addMovieToWatchlist(watchlistId: String, movieId: String, callback: (ApiResponse<String>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
+
+        val addMovieCall: Call<String> = api.addMovieToWatchlist(watchlistId, movieId)
+
+        addMovieCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = "Movie added successfully", statusMessage = "success"))
+                } else {
+                    // Failed to add movie or watchlist not found
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
+
+
 
 }

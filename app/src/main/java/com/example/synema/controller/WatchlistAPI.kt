@@ -8,6 +8,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -34,4 +36,14 @@ public interface WatchlistAPI {
 
     @GET("/watchlist")
     abstract fun read_db(): Call<List<WatchlistModel>>
+
+    @GET("/watchlist/{watchlistId}")
+    abstract fun getWatchlistById(@Path("watchlistId") watchlistId: String): Call<WatchlistModel>
+
+    @POST("/watchlist/{watchlistId}/movies")
+    @FormUrlEncoded
+    abstract fun addMovieToWatchlist(
+        @Path("watchlistId") watchlistId: String,
+        @Field("movieId") movieId: String
+    ): Call<String>
 }
