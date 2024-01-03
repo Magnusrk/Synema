@@ -261,6 +261,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
         )
     }
 
+
 }
 
 
