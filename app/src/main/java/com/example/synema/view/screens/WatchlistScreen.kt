@@ -5,6 +5,7 @@ import MoviePosterFrame
 import WatchlistAPISource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,23 +33,35 @@ import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.controller.WatchlistAPI
-
+import com.example.synema.model.MovieModel
+import com.example.synema.model.WatchlistModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +72,17 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
     GradientBox(){
         Column {
             var watchlistName by remember { mutableStateOf("") }
+            var watchlistList : List<WatchlistModel> by remember {
+                mutableStateOf(listOf())
+            }
+            dataSource.read_db (){
+                if (it.successful()) {
+                    it.getResult()?.let {watchlistModel ->
+                        watchlistList = watchlistModel
+                    }
+                }
 
+            }
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
                 // Input field for watchlist name
@@ -90,6 +113,8 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 }
 
                 newWatchlist()
+                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
+
             };
             BottomBar(navController = navController)
         }
@@ -128,6 +153,10 @@ private fun SynHeader() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun newWatchlist(){
+    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+
+
+
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -153,6 +182,87 @@ private fun newWatchlist(){
         }
 
         }
+
+@Composable
+fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp)
+    ) {
+        Text(
+            text = header,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .padding(8.dp)
+        )
+        Column(modifier = modifier) {
+            watchlistList.forEach(){
+                watchlist -> watchlistCard(watchlist = watchlist, navController =navController )
+
+/*
+            items(watchlistList) { watchlist ->
+            watchlistCard(
+                    watchlist = watchlist,
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )*/
+
+                
+            }
+        }
+    }
+}
+
+@Composable
+fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+        color = Color(0x00000000) // Set the color to transparent
+    ) {
+        Column(
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
+
+        ) {
+            Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp))
+        }
+        /* AsyncImage(
+                model = movie.poster_url,
+                contentDescription = null,
+                modifier = Modifier
+                    .width(95.dp)
+                    .height(135.dp)
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
+                ,
+                contentScale = ContentScale.FillBounds
+            )
+*/
+
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = watchlist.name,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            lineHeight = 12.sp,
+            textAlign = TextAlign.Center
+
+        )
+    }
+
+}
+
 
 
 
