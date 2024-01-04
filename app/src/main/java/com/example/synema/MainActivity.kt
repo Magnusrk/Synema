@@ -51,13 +51,16 @@ class MainActivity : ComponentActivity() {
             }
 
             // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = "watchlists") {
                     composable("login") { LoginScreen(navController, profileState) }
                     composable("signup") { SignupScreen(navController, profileState) }
                     composable("home") { HomeScreen(navController, profileState) }
                     composable("search") {SearchScreen(navController, profileState)}
                     composable("watchlists") { WatchList(navController, profileState) }
-                    composable("mylistscreen") { MyListScreen(navController, profileState) }
+                    composable("watchlists/{watchlist_id}",
+                        arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType }))
+                        { backStackEntry ->
+                            MyListScreen(navController, profileState, backStackEntry.arguments?.getString("watchlist_id")) }
                     composable("profile") { Profile(navController, profileState) }
                     composable("mediaDetails/{movieID}",
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))

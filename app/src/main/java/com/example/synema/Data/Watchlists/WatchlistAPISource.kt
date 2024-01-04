@@ -71,7 +71,7 @@ class WatchlistAPISource: WatchlistDataSource {
 
 
 
-     override fun getAllWatchlists(callback: (ApiResponse<List<WatchlistModel>>?) -> Unit) {
+     override fun getAllWatchlists(callback: (ApiResponse<List<WatchlistModel>>) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
         val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db()

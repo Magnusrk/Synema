@@ -111,6 +111,11 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 ) {
                     Text("Create Watchlist")
                 }
+                Button(onClick = { navController.navigate("watchlists/53288ff9-b4cc-46ac-af6e-e8e80eb514b0") }, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)) { 
+                    Text(text = "NavTest")
+                }
 
                 newWatchlist()
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
