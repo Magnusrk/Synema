@@ -113,7 +113,28 @@ class WatchlistAPISource: WatchlistDataSource {
         })
     }
 
+    override fun deleteWatchlist(watchlistId: String, callback: (ApiResponse<String>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
 
+        val deleteWatchlistCall: Call<WatchlistModel> = api.delete_watchlist(watchlistId)
 
+        deleteWatchlistCall.enqueue(object : Callback<WatchlistModel> {
+            override fun onResponse(call: Call<WatchlistModel>, response: Response<WatchlistModel>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = "Watchlist deleted successfully", statusMessage = "success"))
+                } else {
+                    // If deletion of watchlist failed
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
 
+            override fun onFailure(call: Call<WatchlistModel>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
 }
+
+
+
+

@@ -18,5 +18,6 @@ interface WatchlistDataSource {
         movieId: String,
         callback: (ApiResponse<String>) -> Unit
     )
+    fun deleteWatchlist(watchlistId: String, callback: (ApiResponse<String>) -> Unit)
 }
 
