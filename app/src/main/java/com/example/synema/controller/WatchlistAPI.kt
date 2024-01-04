@@ -46,4 +46,8 @@ public interface WatchlistAPI {
         @Path("watchlistId") watchlistId: String,
         @Field("movieId") movieId: String
     ): Call<String>
+
+    @GET("/movies/new")
+    abstract fun newMovies(): Call<List<MovieModel>>
+
 }
