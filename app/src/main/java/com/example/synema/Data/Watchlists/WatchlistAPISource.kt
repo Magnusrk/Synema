@@ -27,7 +27,7 @@ class WatchlistAPISource: WatchlistDataSource {
         val api = retrofit.create(WatchlistAPI::class.java)
 
         val createWatchlistCall: Call<WatchlistModel> = api.createWatchlist(WatchlistModel(watchlistName,"","",
-            listOf()
+            listOf(), listOf()
         ))
 
         createWatchlistCall.enqueue(object : Callback<WatchlistModel> {

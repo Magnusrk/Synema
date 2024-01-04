@@ -40,11 +40,11 @@ public interface WatchlistAPI {
     @GET("/watchlist/{watchlistId}")
     abstract fun getWatchlistById(@Path("watchlistId") watchlistId: String): Call<WatchlistModel>
 
-    @POST("/watchlist/{watchlistId}/movies")
+    @POST("/watchlist/{watchlist_id}/movies")
     @FormUrlEncoded
     abstract fun addMovieToWatchlist(
-        @Path("watchlistId") watchlistId: String,
-        @Field("movieId") movieId: String
+        @Path("watchlist_id") watchlistId: String,
+        @Field("movie_id") movieId: String
     ): Call<String>
 
     @GET("/movies/new")

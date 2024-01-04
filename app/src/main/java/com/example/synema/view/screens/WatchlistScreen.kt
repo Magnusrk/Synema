@@ -104,7 +104,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
                 CreateWatchlistPopup(popupControl, watchlistName, navController);
                 newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
+                watchlistList(watchlistList = watchlistList, header ="" , navController = navController )
 
             };
             BottomBar(navController = navController)
@@ -297,7 +297,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
         }
 
 @Composable
-fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+private fun watchlistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
     Column(
         modifier = Modifier
@@ -333,7 +333,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
+private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

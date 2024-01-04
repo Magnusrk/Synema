@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.ProfileModel
+import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.MediaDetails
@@ -64,6 +65,12 @@ class MainActivity : ComponentActivity() {
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
                         { backStackEntry ->
                             MediaDetails(navController, profileState, backStackEntry.arguments?.getString("movieID")) }
+                    composable("mediaDetails/{movieID}/save",
+                        arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
+                    { backStackEntry ->
+                        AddMovieToWatchlist(navController, profileState, backStackEntry.arguments?.getString("movieID"))
+                    }
+
 
             }
         }
