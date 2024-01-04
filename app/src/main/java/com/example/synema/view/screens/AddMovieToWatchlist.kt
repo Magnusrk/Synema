@@ -23,6 +23,7 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
@@ -138,16 +139,17 @@ private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifi
             Box(
                 modifier = Modifier
                     .size(100.dp, 100.dp)
-                    .background(color = Color.White)
+                    .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
                     .clickable(onClick = {
                         val watchlistDataSource = DependencyProvider.getInstance().getWatchlistSource()
                         watchlistDataSource.addMovieToWatchlist(watchlist.watchlist_id, movie.id.toString()){
                             navController.popBackStack()
                         }
-                    })
-                ,
+                    })                    .padding(2.dp)
 
-            )
+            ) {
+                ImageCardRow(watchlist.icons)
+            }
             Text(
                 text = watchlist.name,
                 fontSize = 20.sp,
