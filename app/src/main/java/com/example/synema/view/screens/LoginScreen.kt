@@ -119,7 +119,7 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
             label="Password",
             isHidden=true,
             onChange = { password = it},
-            onDone = {navController.navigate("home");}
+            onDone = {sendLoginRequest(email, password, navController, profileState, error)}
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally
