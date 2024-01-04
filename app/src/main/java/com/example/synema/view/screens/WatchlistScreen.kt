@@ -2,10 +2,8 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
-import WatchlistAPISource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,8 +21,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.synema.model.ProfileModel
@@ -32,48 +28,34 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
-import com.example.synema.controller.WatchlistAPI
-import com.example.synema.model.MovieModel
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.OpaqueButton
-import okhttp3.internal.wait
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -192,7 +174,9 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 OpaqueButton(label = "Cancel", onClick = { openDialog.value = false}, modifier = Modifier.align(Alignment.Start))
             }
-            Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth()) {
+            Column(modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .fillMaxWidth()) {
                 Text("Create watchlist", color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally), fontSize = 20.sp)
             }
 
@@ -334,44 +318,102 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(100.dp, 100.dp)
+                .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
+                .clickable(onClick = { navController.popBackStack() })
+
+        ) {
+            ImageCardRow()
+
+        }
+        Text(
+            text = watchlist.name,
+            fontSize = 20.sp,
+            overflow = TextOverflow.Ellipsis,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .size(200.dp, 98.dp)
+                .padding(10.dp)
+        )
+
+        Surface(
+            modifier = Modifier.size(30.dp),
+            color = Color(0, 0, 0, 0),
+            onClick = {}) {
+            Image(
+                painter = painterResource(id = R.drawable.edit_playlist),
+                contentDescription = null,
+                modifier = Modifier.size(30.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ImageCard(imageResId: Int, modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .background(Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
+    ){
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop
+        )
+    }
+}
+@Composable
+fun ImageCardRow() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .weight(2F),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp, 100.dp)
-                    .background(color = Color.White)
-                    .clickable(onClick = { navController.popBackStack() })
-                ,
+            ImageCard(R.drawable.intersteller, modifier = Modifier.
+            weight(2F))
+            ImageCard(R.drawable.intersteller, modifier = Modifier
+                .weight(2F))
+        }
 
-            )
-            Text(
-                text = watchlist.name,
-                fontSize = 20.sp,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier
-                    .size(200.dp, 98.dp)
-                    .padding(10.dp)
-            )
-            Surface(
-                modifier = Modifier.size(30.dp),
-                color = Color(0, 0, 0, 0),
-                onClick = {}) {
-                Image(
-                    painter = painterResource(id = R.drawable.edit_playlist),
-                    contentDescription = null,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
+        Spacer(modifier = Modifier.height(2.dp))
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2F),
+            horizontalArrangement = Arrangement.SpaceBetween,
+
+        ){
+            ImageCard(R.drawable.intersteller, modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 2.dp))
+            ImageCard (R.drawable.intersteller, modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 2.dp))
         }
     }
+}
 
 /*
 Surface(
