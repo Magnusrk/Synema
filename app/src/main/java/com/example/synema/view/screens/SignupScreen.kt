@@ -158,10 +158,6 @@ private fun sendSignUpRequest(
             error.value = (it.getStatus())
         }
     };
-
-
-
-
 }
 
 

@@ -31,4 +31,8 @@ public interface WatchlistAPI {
 
     @GET("movies/discover")
     abstract fun discoverMovies(@Query("genres") genres: String): Call<List<MovieModel>>
+
+    @GET("/movies/new")
+    abstract fun newMovies(): Call<List<MovieModel>>
+
 }
