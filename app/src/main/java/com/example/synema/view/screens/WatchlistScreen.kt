@@ -71,6 +71,8 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.example.synema.view.components.InlineIcon
+import com.example.synema.view.components.OpaqueButton
 import okhttp3.internal.wait
 
 
@@ -130,18 +132,43 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
             // on the below line we are creating a box.
             Column(
-                // adding modifier to it.
-                Modifier
-                    .padding(top = 100.dp)
-                    .padding(horizontal = 10.dp)
-                    .background(Color(0xFF430B3D), RoundedCornerShape(10.dp))
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center
+
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top=250.dp)
                     // on below line we are adding border.
 
             ) {
                 PopUpHeader(openDialog = openDialog, navController = navController)
                 WatchlistCreationPane(openDialog = openDialog, watchlistName = watchlistName, navController = navController)
+                Row(modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .background(Color(0xFF430B3D)),
+                    horizontalArrangement = Arrangement.Center
+
+                    ){
+                    // Button to create watchlist
+                    Button( onClick = {
+                        val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+                        // Call your createWatchlist function here
+                        dataSource.createWatchlist(watchlistName.value){}
+                        openDialog.value = false
+                        navController.currentDestination?.let { navController.navigate(it.id) }
+                        // You might want to reset the watchlistName after creating a watchlist
+                        //watchlistName = ""
+
+                    },
+                        shape = RoundedCornerShape(20),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
+                    ){
+                        Row {
+                            Text("Done")
+                        }
+
+                    }
+                }
 
 
             }
@@ -154,7 +181,29 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 @Composable
 private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHostController){
-    Row (modifier = Modifier.fillMaxWidth().height(56.dp)){
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .height(56.dp)
+        .background(color = Color(0xFF63105B))
+        ,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ){
+        Row (){
+            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                OpaqueButton(label = "Cancel", onClick = { openDialog.value = false}, modifier = Modifier.align(Alignment.Start))
+            }
+            Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth()) {
+                Text("Create watchlist", color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally), fontSize = 20.sp)
+            }
+
+
+        }
+
+
+
+
+
+
 
     }
 
@@ -164,36 +213,21 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
 @Composable
 private fun WatchlistCreationPane(openDialog : MutableState<Boolean>, watchlistName: MutableState<String>, navController: NavHostController){
 
-    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
-    Row(){
-        TextField(
-            value = watchlistName.value,
-            onValueChange = { watchlistName.value = it },
-            label = { Text("Watchlist Name") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
-
-        // Button to create watchlist
-        Button(
-            onClick = {
-                // Call your createWatchlist function here
-                dataSource.createWatchlist(watchlistName.value){}
-                openDialog.value = false
-                navController.currentDestination?.let { navController.navigate(it.id) }
-                // You might want to reset the watchlistName after creating a watchlist
-                //watchlistName = ""
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
-            shape = RoundedCornerShape(20),
-            contentPadding = PaddingValues(horizontal = 10.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text("Done")
+    Row(modifier = Modifier
+        .height(100.dp)
+        .background(Color(0xFF430B3D))){
+        Row(){
+            TextField(
+                value = watchlistName.value,
+                onValueChange = { watchlistName.value = it },
+                label = { Text("Watchlist Name") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
         }
+
+
     }
 
 }
