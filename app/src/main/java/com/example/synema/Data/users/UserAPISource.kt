@@ -36,11 +36,10 @@ class UserAPISource() : UserDataSource {
                     if (response.code() == 200) {
                         Log.d("Main", "success!" + response.body().toString())
                         callback(ApiResponse(response.body()!!))
-                    } else {
-                        callback(ApiResponse(null, true, "User does not exists"))
                     }
-                }
-                else{
+                } else if(response.code() == 404){
+                    callback(ApiResponse(null, true, "User does not exist"))
+                } else{
                     callback(ApiResponse(null, true, "Couldn't log in"))
                 }
             }
@@ -61,9 +60,10 @@ class UserAPISource() : UserDataSource {
         call!!.enqueue(object : Callback<UserModel?> {
             override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
                 if (response.isSuccessful) {
-
                     callback(ApiResponse(response.body()!!))
-                } else{
+                } else if(response.code() == 306){
+                    callback(ApiResponse(null, true, "User already exists"))
+                }else{
                     callback(ApiResponse(null, true, "Couldn't sign up"))
                 }
             }
