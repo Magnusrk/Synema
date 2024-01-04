@@ -26,13 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.synema.Data.Datasource
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
@@ -91,3 +91,5 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
         }
     }
 }
+
+*/
