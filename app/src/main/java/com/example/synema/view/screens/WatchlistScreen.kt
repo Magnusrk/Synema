@@ -5,6 +5,7 @@ import MoviePosterFrame
 import WatchlistAPISource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -50,8 +52,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,6 +67,9 @@ import com.example.synema.R
 import com.example.synema.controller.WatchlistAPI
 import com.example.synema.model.MovieModel
 import com.example.synema.model.WatchlistModel
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import okhttp3.internal.wait
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,10 +79,13 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
     GradientBox(){
         Column {
-            var watchlistName by remember { mutableStateOf("") }
+
             var watchlistList : List<WatchlistModel> by remember {
                 mutableStateOf(listOf())
             }
+            val popupControl = remember { mutableStateOf(false) }
+            val watchlistName = remember { mutableStateOf("")}
+
             dataSource.read_db (){
                 if (it.successful()) {
                     it.getResult()?.let {watchlistModel ->
@@ -85,10 +96,54 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             }
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
-                // Input field for watchlist name
+
+
+                CreateWatchlistPopup(popupControl, watchlistName, navController);
+                newWatchlist(popupControl)
+                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
+
+            };
+            BottomBar(navController = navController)
+        }
+
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController){
+
+
+
+    if (openDialog.value) {
+        Popup(
+            // on below line we are adding
+            // alignment and properties.
+            onDismissRequest = { openDialog.value = false },
+            properties = PopupProperties(focusable = true),
+            alignment = Alignment.TopCenter,
+
+        ) {
+
+            // on the below line we are creating a box.
+            Column(
+                // adding modifier to it.
+                Modifier
+                    .padding(top= 100.dp).padding(horizontal = 10.dp)
+                    // on below line we are adding background color
+                    .background(Color(0xFFC4C4C4), RoundedCornerShape(10.dp))
+
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center
+                    // on below line we are adding border.
+
+            ) {
+
+                val dataSource = DependencyProvider.getInstance().getWatchlistSource();
                 OutlinedTextField(
-                    value = watchlistName,
-                    onValueChange = { watchlistName = it },
+                    value = watchlistName.value,
+                    onValueChange = { watchlistName.value = it },
                     label = { Text("Watchlist Name") },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,9 +154,9 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 Button(
                     onClick = {
                         // Call your createWatchlist function here
-                        dataSource.createWatchlist(watchlistName){
-                            watchlistName = it.getStatus();
-                        }
+                        dataSource.createWatchlist(watchlistName.value){}
+                        openDialog.value = false
+                        navController.currentDestination?.let { navController.navigate(it.id) }
                         // You might want to reset the watchlistName after creating a watchlist
                         //watchlistName = ""
                     },
@@ -112,16 +167,12 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                     Text("Create Watchlist")
                 }
 
-                newWatchlist()
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-
-            };
-            BottomBar(navController = navController)
+            }
         }
-
     }
-}
 
+
+}
 
 
 @Composable
@@ -152,10 +203,8 @@ private fun SynHeader() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun newWatchlist(){
+private fun newWatchlist(openDialog : MutableState<Boolean>){
     val dataSource = DependencyProvider.getInstance().getWatchlistSource();
-
-
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -167,7 +216,12 @@ private fun newWatchlist(){
         Box(modifier = Modifier
             .height(100.dp)
             .width(100.dp)
-            .background(Color(0xFFB15FA8)))
+            .background(Color(0xFFB15FA8))
+            .clickable {  openDialog.value = true;
+
+            }
+        )
+
         {
             Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
                 modifier = Modifier
@@ -189,7 +243,8 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp)
+            .padding(horizontal = 34.dp)
+
     ) {
         Text(
             text = header,
@@ -217,52 +272,87 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
-        color = Color(0x00000000) // Set the color to transparent
-    ) {
-        Column(
-            //verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(95.dp)
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp))
-        }
-        /* AsyncImage(
-                model = movie.poster_url,
-                contentDescription = null,
-                modifier = Modifier
-                    .width(95.dp)
-                    .height(135.dp)
-                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
+            Box(
+                modifier = Modifier.size(100.dp, 100.dp).background(color=Color.White)
+                    .clickable (onClick = { navController.popBackStack()})
                 ,
-                contentScale = ContentScale.FillBounds
+
             )
-*/
+            Text(
+                text = watchlist.name,
+                fontSize = 20.sp,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier.size(200.dp, 98.dp)
+                    .padding(10.dp)
+            )
+            Surface(
+                modifier = Modifier.size(30.dp),
+                color = Color(0, 0, 0, 0),
+                onClick = {}) {
+                Image(
+                    painter = painterResource(id = R.drawable.edit_playlist),
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
 
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = watchlist.name,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2,
-            lineHeight = 12.sp,
-            textAlign = TextAlign.Center
-
-        )
+        }
     }
 
+/*
+Surface(
+    modifier = modifier,
+    shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+    color = Color(0x00000000) // Set the color to transparent
+) {
+    Column(
+        //verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(95.dp)
+
+    ) {
+        Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
+            modifier = Modifier
+                .width(100.dp)
+                .height(100.dp))
+    }
+     AsyncImage(
+            model = movie.poster_url,
+            contentDescription = null,
+            modifier = Modifier
+                .width(95.dp)
+                .height(135.dp)
+                .clickable { navController.navigate("mediaDetails/" + movie.id) }
+            ,
+            contentScale = ContentScale.FillBounds
+        )
+
+
+    Spacer(modifier = Modifier.height(5.dp))
+    Text(
+        text = watchlist.name,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.White,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+        lineHeight = 12.sp,
+        textAlign = TextAlign.Center
+
+    )
 }
 
-
-
-
+}
+*/ /* */
