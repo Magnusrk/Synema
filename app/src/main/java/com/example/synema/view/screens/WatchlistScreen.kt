@@ -331,7 +331,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
                 .clickable(onClick = { navController.popBackStack() })
-                .padding(2.dp)
+                .padding(4.dp)
 
         ) {
             ImageCardRow(watchlist.icons)
