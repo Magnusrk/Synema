@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -108,19 +109,50 @@ private fun EditProfileButton(){
     }
 }
 
+
 @Composable
 private fun PersonalDescription() {
+
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(color = Color.Gray)
-    )
-    Text("kjjiewr", modifier = Modifier.padding(2.dp))
+            .fillMaxSize()
 
 
+    ) {
+        Box(
+            modifier = Modifier
+                .width(334.dp)
+                .height(127.dp)
+                .background(Color(0xFF543b5b), shape = RoundedCornerShape(10.dp))
+                .align(Alignment.Center)
+        )
+        Text(
+            "Writer by day, reviewer by night. I live \n" +
+                    "and breathe movies. \n" +
+                    "\n" +
+                    "Especially the weird ones ;P\n" +
+                    "Follo for more! ",
+            color = Color(0xFFC0AEDC),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 50.dp, end=50.dp, top = 50.dp, bottom = 50.dp)
+
+        )
+    }
 
 }
+
+
+/*fun DescriptionSection(desc : String){
+    Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(1.dp)
+        .background(color = Color.Black))
+    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
+
+}
+*/
 
 @Composable
 private fun MovieDisplay(){
