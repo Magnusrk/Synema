@@ -45,26 +45,27 @@ fun MyListScreen(
     profileState: MutableState<ProfileModel>,
     watchlistID: String?
 ) {
-    val i =0;
     val source = DependencyProvider.getInstance().getMovieSource();
-
     val dataSource = DependencyProvider.getInstance().getWatchlistSource();
 
     var watchlistName by remember { mutableStateOf("") }
-    var watchlist : List<WatchlistModel> by remember {
-        mutableStateOf(listOf())
+    var watchlist : WatchlistModel by remember {
+        mutableStateOf(WatchlistModel("",
+            "",
+            "",
+            emptyList()))
     }
-    dataSource.getAllWatchlists {  } (){
+
+    dataSource.getWatchlistById(watchlistID.toString(),) {
         if (it.successful()) {
             it.getResult()?.let {watchlistModel ->
                 watchlist = watchlistModel
             }
+            println(watchlist)
         }
-
     }
     var movie1 : MovieModel by remember {
-        mutableStateOf(
-            MovieModel(
+        mutableStateOf(MovieModel(
             0,
             "",
             "",
@@ -79,16 +80,11 @@ fun MyListScreen(
         Column {
             MainContainer(hasBottomNav = true) {
                 TopBar(title = "My List", alignment = Alignment.Center)
-                print(watchlist.size)
-                println("test")
-
-                watchlist.forEach { movie ->
-                    print(movie.name.toString())
-                    print("test")
-                /*
-                        source.loadMovie(movie.movieIds[0]) {
-                            movie1 = it.getResult()!!
+                watchlist.movieIds.forEach { movie ->
+                        source.loadMovie(movie) {
+                           var movie1 = it.getResult()
                         }
+                    println(movie1.id)
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -134,11 +130,10 @@ fun MyListScreen(
                             }
                         }
                     }
-                    */
+
                 }
 
                 BottomBar(navController = navController)
             }
         }
     }
-}
