@@ -3,6 +3,7 @@ package com.example.synema.view.screens
 import GradientBox
 import MoviePosterFrame
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,12 +12,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -31,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
@@ -49,9 +53,11 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 TopBar(title = "My Profile", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader(name = profileState.value.name)
-                ProfilePicture();
-                FollowersReviewsStatus(76, 88);
-            };
+                ProfilePicture()
+                FollowersReviewsStatus(76, 88)
+                PersonalDescription()
+
+            }
             BottomBar(navController = navController)
         }
 
@@ -70,7 +76,9 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
 @Composable
 private fun ProfilePicture(){
 
-    Row (modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.Center){
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp), horizontalArrangement = Arrangement.Center){
         Image(
             painter = painterResource(R.drawable.profile_picture_placeholder),
             contentDescription = null,
@@ -100,6 +108,19 @@ private fun EditProfileButton(){
     }
 }
 
+@Composable
+private fun PersonalDescription() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(color = Color.Gray)
+    )
+    Text("kjjiewr", modifier = Modifier.padding(2.dp))
+
+
+
+}
 
 @Composable
 private fun MovieDisplay(){
