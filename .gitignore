@@ -13,8 +13,7 @@
 /.idea/kotlinc.xml
 /.idea/migrations.xml
 /.idea/vcs.xml
-/.idea
-.idea
+
 .DS_Store
 /build
 /captures
