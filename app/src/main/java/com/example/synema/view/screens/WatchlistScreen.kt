@@ -41,6 +41,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -114,6 +115,45 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
                 newWatchlist()
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = Color(0, 0, 0, 0)
+                ) {
+                    Box(
+                        modifier = Modifier.clickable {
+                            watchlistName.takeIf { it.isNotEmpty() }?.let { nonEmptyName ->
+                                // Call the showDeleteConfirmationDialog from within a @Composable function
+                                //showDeleteConfirmationDialog(navController, nonEmptyName) { confirmed ->
+                                    //if (confirmed) {
+                                        dataSource.deleteWatchlist(nonEmptyName) { response ->
+                                            if (response.successful()) {
+                                                // Watchlist deleted successfully
+                                                // Fetch the updated watchlist and update the UI
+                                                dataSource.read_db { updatedWatchlistResponse ->
+                                                    if (updatedWatchlistResponse.successful()) {
+                                                        watchlistList = updatedWatchlistResponse.getResult() ?: emptyList()
+                                                    }
+                                                }
+                                                watchlistName = ""
+                                            } else {
+                                                // Failed to delete watchlist, handle accordingly
+                                                // You may want to show an error message to the user
+                                            }
+                                        }
+                                    }
+
+                            }
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.delete),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+
 
             };
             BottomBar(navController = navController)
@@ -122,7 +162,40 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
     }
 }
 
-
+@Composable
+private fun showDeleteConfirmationDialog(
+    navController: NavHostController,
+    watchlistName: String,
+    onConfirmation: (Boolean) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onConfirmation(false) },
+        title = { Text("Delete Watchlist") },
+        text = { Text("Are you sure you want to delete the watchlist '$watchlistName'?") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmation(true)
+                    // Dismiss the dialog
+                    navController.navigateUp()
+                }
+            ) {
+                Text("Delete")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    onConfirmation(false)
+                    // Dismiss the dialog
+                    navController.navigateUp()
+                }
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
+}
 
 @Composable
 private fun MovieDisplay(){

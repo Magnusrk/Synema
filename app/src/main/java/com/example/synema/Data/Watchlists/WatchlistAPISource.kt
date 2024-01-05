@@ -122,6 +122,21 @@ class WatchlistAPISource: WatchlistDataSource {
             override fun onResponse(call: Call<WatchlistModel>, response: Response<WatchlistModel>) {
                 if (response.isSuccessful) {
                     callback(ApiResponse(result = "Watchlist deleted successfully", statusMessage = "success"))
+                    read_db { updatedWatchlistResponse ->
+                        if (updatedWatchlistResponse.successful()) {
+                        // Update the UI or callback with the updated watchlist
+                        callback(ApiResponse(result = null, statusMessage = "success"))
+                        } else {
+                            // Failed to fetch updated watchlist
+                            callback(
+                                ApiResponse(
+                                    result = null,
+                                    statusMessage = "failed to fetch updated watchlist",
+                                    error = true
+                                )
+                            )
+                        }
+                    }
                 } else {
                     // If deletion of watchlist failed
                     callback(ApiResponse(result = null, statusMessage = "failed"))
