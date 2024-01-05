@@ -275,10 +275,8 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
     Text(text = "New Watchlist", fontSize = 16.sp, color =Color.White, modifier = Modifier
         .align(Alignment.CenterVertically)
         .padding(27.dp)
-        )
-        }
-
-        }
+    )}
+}
 
 @Composable
 fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
@@ -363,7 +361,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
 fun ImageCard(imageResId: Int, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
-            .size(48.dp)
+            .size(49.dp)
             .background(Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
     ){
         Image(
@@ -406,11 +404,10 @@ fun ImageCardRow() {
 
         ){
             ImageCard(R.drawable.intersteller, modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
+                .fillMaxSize())
             ImageCard (R.drawable.intersteller, modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
+                .fillMaxSize())
+
         }
     }
 }
