@@ -12,7 +12,7 @@
 /.idea/gradle.xml
 /.idea/kotlinc.xml
 /.idea/migrations.xml
-/.idea/vcs.xml
+
 
 .DS_Store
 /build
