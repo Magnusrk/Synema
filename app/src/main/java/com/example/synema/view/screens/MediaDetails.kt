@@ -83,7 +83,7 @@ fun MediaDetails(
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
             TitleFont(movie.title)
             MovieClip(movie.backdrop_url)
-            InteractionPane(movie)
+            InteractionPane(movie, navController)
             DescriptionSection(movie.description)
             UserReviewSection(source.loadReviews())
         }
@@ -93,18 +93,18 @@ fun MediaDetails(
 
 
 @Composable
-fun InteractionPane(movie : MovieModel){
+fun InteractionPane(movie : MovieModel, navController: NavHostController){
     val size = Size();
     Row(modifier = Modifier
         .fillMaxWidth()
         .height((size.height() / 7).dp)){
-        SaveButton(movie.release_date)
+        SaveButton(movie, navController = navController)
         RatingPanel(movie)
     }
 }
 
 @Composable
-fun SaveButton(releaseDate: String){
+fun SaveButton(movie: MovieModel, navController: NavHostController){
     val size = Size();
     Column(
         modifier = Modifier
@@ -115,11 +115,11 @@ fun SaveButton(releaseDate: String){
         verticalArrangement = Arrangement.Center
 
     ) {
-        Text(text = releaseDate,
+        Text(text = movie.release_date,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(start = 4.dp, top = 10.dp,bottom = 10.dp))
-        Button( onClick = {},
+        Button( onClick = {navController.navigate("mediaDetails/" + movie.id+"/save")},
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)

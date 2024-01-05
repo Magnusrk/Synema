@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,7 +95,9 @@ fun TopBar(
                     color = Color.White,
                     modifier = Modifier
                         .align(alignment)
-                        .padding(20.dp)
+                        .padding(20.dp),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
             }
 

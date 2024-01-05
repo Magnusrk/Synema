@@ -68,6 +68,10 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 
     val dataSource = DependencyProvider.getInstance().getMovieSource();
 
+    var newList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
     var discoverList : List<MovieModel> by remember {
         mutableStateOf(listOf())
     }
@@ -88,8 +92,13 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         it.getResult()?.let {movieModel ->
             discoverList = movieModel
         }
-
     }
+    dataSource.loadNewMovies (){
+        it.getResult()?.let {movieModel ->
+            newList = movieModel
+        }
+    }
+
     dataSource.loadDiscoverMovies(genres = "35") {
         it.getResult()?.let {movieModel ->
             comedyList = movieModel
@@ -118,6 +127,11 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         MainContainer(hasBottomNav = true) {
             TopBar("Synema", Alignment.CenterStart, 30.sp, search = true, navController = navController)
             TrendTopBar(discoverList,search=true, navController)
+            MovieList(
+                movieList = newList,
+                header = "New releases",
+                navController = navController
+            )
             MovieList(
                 movieList = discoverList,
                 header = "For you",
