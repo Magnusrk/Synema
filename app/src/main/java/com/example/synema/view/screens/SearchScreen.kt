@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,12 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.TopBar
 
 @Composable
  fun SearchScreen(navController : NavHostController, profileState : MutableState<ProfileModel>) {
+
+
     SynemaTheme {
         GradientBox() {
             MovieList(navController, profileState)
@@ -43,24 +48,59 @@ import com.example.synema.view.components.TopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieList(navController: NavHostController, profileState: MutableState<ProfileModel>) {
+    val dataSource = DependencyProvider.getInstance().getMovieSource();
+
+
+
+    var movieList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    var readyForSearch : Boolean  by remember {
+        mutableStateOf(true)
+    }
+
+    dataSource.loadDiscoverMovies() {
+        readyForSearch = false;
+        it.getResult()?.let {movieModel ->
+            movieList = movieModel
+            readyForSearch = true;
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+
     ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = navController)
-        /*
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = navController, onChange = {
+            if(readyForSearch){
+                dataSource.searchMovies(it) {
+                    readyForSearch = false;
+                    it.getResult()?.let {movieModel ->
+                        movieList = movieModel
+                        readyForSearch = true;
+                    }
+                }
+            }
+
+        },
+            inputLabel = "Search movie")
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 128.dp)
         ){
-
+            items(movieList.size) { index ->
+                MovieCard(
+                    movie = movieList.get(index),
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )
+            }
         }
 
-         */
     }
 }
 
-fun onChange(text: String) {
 
-}
 
