@@ -73,7 +73,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             val popupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
 
-            dataSource.read_db (){
+            dataSource.read_db (profileState.value.token){
                 if (it.successful()) {
                     it.getResult()?.let {watchlistModel ->
                         watchlistList = watchlistModel
@@ -85,7 +85,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
 
 
-                CreateWatchlistPopup(popupControl, watchlistName, navController);
+                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
 
@@ -99,7 +99,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController){
+private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController, profileState: MutableState<ProfileModel>){
 
 
 
@@ -135,7 +135,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                     Button( onClick = {
                         val dataSource = DependencyProvider.getInstance().getWatchlistSource();
                         // Call your createWatchlist function here
-                        dataSource.createWatchlist(watchlistName.value){}
+                        dataSource.createWatchlist(watchlistName.value, profileState.value.token){}
                         openDialog.value = false
                         navController.currentDestination?.let { navController.navigate(it.id) }
                         // You might want to reset the watchlistName after creating a watchlist

@@ -149,7 +149,10 @@ private fun sendLoginRequest(
         Log.d("Main", it.successful().toString())
         if(it.successful()){
             profileState.value = it.getResult()?.profile!!;
-            Log.d("Main", "navigating!")
+            if(profileState.value.token == null){
+                profileState.value.token = "none"
+            }
+
             navController.navigate("home")
         } else{
             error.value = (it.getStatus())

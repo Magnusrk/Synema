@@ -153,6 +153,10 @@ private fun sendSignUpRequest(
     source.signupUser(username, email, password) {
         if (it.successful()) {
             profileState.value = it.getResult()?.profile!!;
+            if(profileState.value.token == null){
+                profileState.value.token = "none"
+            }
+
             navController.navigate("home")
         } else{
             error.value = (it.getStatus())
