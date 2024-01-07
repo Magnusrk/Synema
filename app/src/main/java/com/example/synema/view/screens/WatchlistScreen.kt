@@ -86,6 +86,11 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
 
                 CreateWatchlistPopup(popupControl, watchlistName, navController);
+                Button(onClick = { navController.navigate("watchlists/53288ff9-b4cc-46ac-af6e-e8e80eb514b0") }, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)) {
+                    Text(text = "NavTest")
+                }
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
 
@@ -145,19 +150,11 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                         shape = RoundedCornerShape(20),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
                         contentPadding = PaddingValues(horizontal = 20.dp)
-                ) {
-                    Text("Create Watchlist")
-                }
-                    {
+                ){
                         Row {
                             Text("Done")
                         }
 
-                    }
-                    Button(onClick = { navController.navigate("watchlists/53288ff9-b4cc-46ac-af6e-e8e80eb514b0") }, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)) {
-                        Text(text = "NavTest")
                     }
                 }
 
@@ -468,7 +465,7 @@ Surface(
 }
 
 }
-
+*/
 
 
 

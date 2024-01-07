@@ -18,6 +18,7 @@ import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.MediaDetails
+import com.example.synema.view.screens.MyListScreen
 import com.example.synema.view.screens.SearchScreen
 import com.example.synema.view.screens.Profile
 import com.example.synema.view.screens.SignupScreen

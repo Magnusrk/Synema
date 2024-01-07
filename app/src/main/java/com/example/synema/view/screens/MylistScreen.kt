@@ -53,7 +53,9 @@ fun MyListScreen(
         mutableStateOf(WatchlistModel("",
             "",
             "",
-            emptyList()))
+            emptyList(),
+            emptyList()
+        ))
     }
 
     dataSource.getWatchlistById(watchlistID.toString(),) {
