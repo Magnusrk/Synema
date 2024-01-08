@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.Data.users.UserAPISource
 import com.example.synema.model.ApiResponse
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
@@ -65,6 +66,18 @@ private fun ContentContainer(navController: NavController, profileState : Mutabl
 
 @Composable
 private fun MovieDisplay(){
+    val dataSource = DependencyProvider.getInstance().getMovieSource();
+
+    var newList : List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    dataSource.loadDiscoverMovies (){
+        it.getResult()?.let {movieModel ->
+            newList = movieModel
+        }
+    }
+
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -72,10 +85,25 @@ private fun MovieDisplay(){
             .height(250.dp)
 
     ){
-        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg", offsetX = 15.dp, zindex = 0f)
-        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg", zindex = 1f)
-        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999", offsetX = (-15).dp,  zindex = 0f)
-
+        if (newList.size >= 3) {
+            MoviePosterFrame(
+                Arrangement.Bottom,
+                newList.get(0).poster_url,
+                offsetX = 15.dp,
+                zindex = 0f
+            )
+            MoviePosterFrame(
+                Arrangement.Center,
+                newList.get(1).poster_url,
+                zindex = 1f
+            )
+            MoviePosterFrame(
+                Arrangement.Top,
+                newList.get(2).poster_url,
+                offsetX = (-15).dp,
+                zindex = 0f
+            )
+        }
 
     }
 }
