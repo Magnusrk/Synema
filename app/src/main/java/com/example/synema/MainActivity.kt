@@ -17,7 +17,6 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
-import com.example.synema.view.screens.MainView
 import com.example.synema.view.screens.MediaDetails
 import com.example.synema.view.screens.MyListScreen
 import com.example.synema.view.screens.SearchScreen
@@ -25,6 +24,7 @@ import com.example.synema.view.screens.Profile
 import com.example.synema.view.screens.SignupScreen
 import com.example.synema.view.screens.WatchList
 import com.example.synema.viewmodel.MainViewModel
+import com.example.synema.view.screens.WriteReviewScreen
 
 
 class MainActivity : ComponentActivity() {

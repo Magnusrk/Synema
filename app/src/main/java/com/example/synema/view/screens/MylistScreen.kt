@@ -56,11 +56,11 @@ fun MyListScreen(
             emptyList()
         ))
     }*/
-    var movielist = remember { mutableStateListOf<MovieModel>()}
+    var movielist = remember { mutableStateListOf<MovieModel>() }
 
     dataSource.getWatchlistById(watchlistID.toString(), token = profileState.value.token) {
         if (it.successful()) {
-            it.getResult()?.let {watchlistModel ->
+            it.getResult()?.let { watchlistModel ->
                 movielist.clear()
                 watchlistModel.movieIds.forEach { movie ->
                     source.loadMovie(movie) {
@@ -77,7 +77,12 @@ fun MyListScreen(
     GradientBox {
         Column {
             MainContainer(hasBottomNav = true) {
-                TopBar(title = "My List", alignment = Alignment.Center, backArrow = true, navController = navController)
+                TopBar(
+                    title = "My List",
+                    alignment = Alignment.Center,
+                    backArrow = true,
+                    navController = navController
+                )
                 movielist.forEach() { movie1 ->
                     Row(
                         modifier = Modifier
@@ -115,18 +120,29 @@ fun MyListScreen(
                         Surface(
                             modifier = Modifier.size(30.dp),
                             color = Color(0, 0, 0, 0),
-                            onClick = { navController?.popBackStack() }) {
+                            onClick = {
+                                dataSource.deleteMovieFromWatchlist(
+                                    watchlistID.toString(),
+                                    movie1.id.toString(),
+                                    profileState.value.token
+                                ) {}
+                            }) {
+
                             Image(
                                 painter = painterResource(id = R.drawable.edit_playlist),
                                 contentDescription = null,
                                 modifier = Modifier.size(30.dp)
                             )
                         }
+
+
                     }
                 }
+                BottomBar(navController = navController)
             }
-            BottomBar(navController = navController)
-                }
-            }
+
+
         }
+    }
+}
 
