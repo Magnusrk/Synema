@@ -18,7 +18,7 @@ interface WatchlistDataSource {
         token : String,
         callback: (ApiResponse<String>) -> Unit
     )
-
-    fun getWatchlistById(watchlistId: String,token: String, callback: (ApiResponse<WatchlistModel>) -> Unit)
+    fun deleteWatchlist(watchlistId: String, token: String, callback: (ApiResponse<String>) -> Unit
+    )    fun getWatchlistById(watchlistId: String,token: String, callback: (ApiResponse<WatchlistModel>) -> Unit)
 }
 
