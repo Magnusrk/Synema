@@ -1,6 +1,7 @@
 package com.example.synema.controller
 
 import WatchlistAPISource
+import android.annotation.SuppressLint
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,24 +24,31 @@ class AppContext private constructor() {
 
         var profileState = mutableStateOf(ProfileModel("","","",""))
 
+        @SuppressLint("StaticFieldLeak")
         lateinit var navHostController :  NavHostController
-        fun setNav(navHostController: NavHostController){
-            this.navHostController = navHostController;
-        }
+
         fun getInstance() =
             instance ?: synchronized(this) {
                 instance ?: AppContext().also { instance = it }
             }
-
-
-        fun getNav(): NavHostController {
-            return this.navHostController;
+        fun setNav(navHostController: NavHostController){
+            this.navHostController = navHostController;
         }
+
+    }
+    fun getNav(): NavHostController {
+        return navHostController;
+    }
+
+    fun setPofileState(newState : ProfileModel){
+        profileState.value = newState
     }
 
     fun getProfileState() : MutableState<ProfileModel> {
         return profileState;
     }
+
+
 
 
 

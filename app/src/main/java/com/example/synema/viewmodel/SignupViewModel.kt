@@ -27,6 +27,8 @@ class SignupViewModel : ViewModel() {
 
     var movieBanners =  mutableStateListOf<MovieModel>()
 
+    val context = AppContext.getInstance();
+
 
 
     fun editUsername(it : String) {username.value = it}
@@ -36,15 +38,15 @@ class SignupViewModel : ViewModel() {
 
 
      fun login() {
-        AppContext.getNav().navigate("login")
+        context.getNav().navigate("login")
     }
 
     fun signup() {
         val source = DependencyProvider.getInstance().getUserSource();
         source.signupUser(username.value, email.value, password.value) {
             if (it.successful()) {
-                AppContext.profileState.value =it.getResult()?.profile!!;
-                AppContext.getNav().navigate("home")
+                context.setPofileState(it.getResult()?.profile!!);
+                context.getNav().navigate("home")
             } else{
                 error.value = (it.getStatus())
             }

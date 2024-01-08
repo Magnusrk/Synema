@@ -132,7 +132,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
             MovieList(
                 movieList = newList,
                 header = "New releases",
-                navController = AppContext.getNav()
+                navController = AppContext.getInstance().getNav()
             )
             MovieList(
                 movieList = discoverList,

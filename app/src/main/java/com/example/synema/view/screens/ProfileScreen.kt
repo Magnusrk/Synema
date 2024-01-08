@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.synema.R
+import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
@@ -43,12 +44,13 @@ import com.example.synema.view.utils.Size
 
 @Composable
 fun Profile(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    val context = AppContext.getInstance();
     GradientBox(){
         Column {
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Profile", Alignment.Center)
                 EditProfileButton()
-                ProfileNameHeader(name = profileState.value.name)
+                ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture();
                 FollowersReviewsStatus(76, 88);
             };
