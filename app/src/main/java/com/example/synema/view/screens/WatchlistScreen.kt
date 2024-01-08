@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -350,7 +351,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
             color = Color(0, 0, 0, 0),
             onClick = {}) {
             Image(
-                painter = painterResource(id = R.drawable.edit_playlist),
+                painter = painterResource(id = R.drawable.delete),
                 contentDescription = null,
                 modifier = Modifier.size(30.dp)
             )
@@ -457,8 +458,35 @@ Surface(
     )
 }
 
-}
-*/
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = Color(0, 0, 0, 0)
+                ) {
+                    Box(
+                        modifier = Modifier.clickable {
+                            watchlistName.takeIf { it.isNotEmpty() }?.let { nonEmptyName ->
+                                // Call the showDeleteConfirmationDialog from within a @Composable function
+                                //showDeleteConfirmationDialog(navController, nonEmptyName) { confirmed ->
+                                    //if (confirmed) {
+                                        dataSource.deleteWatchlist(nonEmptyName) { response ->
+                                            if (response.successful()) {
+                                                // Watchlist deleted successfully
+                                                // Fetch the updated watchlist and update the UI
+                                                dataSource.read_db { updatedWatchlistResponse ->
+                                                    if (updatedWatchlistResponse.successful()) {
+                                                        watchlistList = updatedWatchlistResponse.getResult() ?: emptyList()
+                                                    }
+                                                }
+                                                watchlistName = ""
+                                            } else {
+                                                // Failed to delete watchlist, handle accordingly
+                                            }
+                                        }
+                                    }
 
+                            }
+                    ) {
 
-
+}*/
