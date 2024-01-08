@@ -169,6 +169,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 @Composable
 fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
+    var movList = movieList.shuffled();
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,7 +184,7 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
                 .padding(8.dp)
         )
         LazyRow(modifier = modifier) {
-            items(movieList) { movie ->
+            items(movList) { movie ->
                 MovieCard(
                     movie = movie,
                     modifier = Modifier.padding(8.dp),
