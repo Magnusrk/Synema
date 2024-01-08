@@ -8,6 +8,7 @@ data class ProfileModel(
     val name: String,
     val email: String,
     var bio: String,
+    var token : String = "none"
 )
 
 data class UserModel(

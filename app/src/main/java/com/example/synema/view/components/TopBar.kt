@@ -34,13 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.synema.R
-import com.example.synema.view.screens.onChange
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +53,9 @@ fun TopBar(
     search: Boolean = false,
     transparent : Boolean = false,
     textInput : Boolean = false,
-    navController: NavController? = null
+    navController: NavController? = null,
+    onChange :  (String) -> Unit = { },
+    inputLabel : String = ""
 
 ){
     val syncopateFamily = FontFamily(
@@ -63,9 +66,9 @@ fun TopBar(
     if(transparent) alpha = 0.0f;
     Box(
         modifier = Modifier
-        .fillMaxWidth()
-        .height(103.dp)
-        .background(color = Color(0xFF430B3D).copy(alpha)),
+            .fillMaxWidth()
+            .height(103.dp)
+            .background(color = Color(0xFF430B3D).copy(alpha)),
 
     ){
         if (backArrow) {
@@ -94,7 +97,9 @@ fun TopBar(
                     color = Color.White,
                     modifier = Modifier
                         .align(alignment)
-                        .padding(20.dp)
+                        .padding(20.dp),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
             }
 
@@ -104,8 +109,10 @@ fun TopBar(
             TextField(
                 value = text,
                 onValueChange = { text = it; onChange(text) },
-                modifier = Modifier.padding(start = 60.dp, end = 60.dp),
+                modifier = Modifier.padding(top = 15.dp, start = 60.dp, end = 60.dp),
                 singleLine = true,
+                label = { Text(inputLabel) }
+                ,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color(0, 0, 0, 0),
                     textColor = Color.White,
@@ -118,7 +125,9 @@ fun TopBar(
         }
 
         if (search) {
-            Surface(modifier = Modifier.fillMaxHeight().align(Alignment.CenterEnd),
+            Surface(modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd),
                 color = Color(0,0,0,0),
                 onClick = {navController?.navigate("search")},
             ) {

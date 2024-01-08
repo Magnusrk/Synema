@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MovieApiSource : MovieDataSource {
 
-    //private val BASE_URL = "localhost:8000"
+    //private val BASE_URL = "http://192.168.0.107:8000"
 
     private val BASE_URL = "https://cwjtedqahp.eu10.qoddiapp.com/"
 
@@ -184,4 +184,55 @@ class MovieApiSource : MovieDataSource {
 
     }
 
+    override fun loadNewMovies(callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<MovieModel>> = api.newMovies();
+
+        call.enqueue(object: Callback<List<MovieModel>> {
+            override fun onResponse(
+                call: Call<List<MovieModel>>,
+                response: Response<List<MovieModel>>
+            ) {
+                if(response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                }else{
+                    callback(ApiResponse(null, true, "Couldn't load movies"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<MovieModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+
+    }
+
+    override fun searchMovies(query : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<MovieModel>> = api.searchMovies(query);
+
+        call.enqueue(object: Callback<List<MovieModel>> {
+            override fun onResponse(
+                call: Call<List<MovieModel>>,
+                response: Response<List<MovieModel>>
+            ) {
+                if(response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                }else{
+                    callback(ApiResponse(null, true, "Couldn't load movies"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<MovieModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+
+    }
 }

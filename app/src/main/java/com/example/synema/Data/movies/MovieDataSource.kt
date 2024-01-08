@@ -14,4 +14,7 @@ interface MovieDataSource {
 
     fun loadDiscoverMovies(genres : String = "", callback : (ApiResponse<List<MovieModel>>) -> Unit);
 
+    fun loadNewMovies(callback : (ApiResponse<List<MovieModel>>) -> Unit);
+    fun searchMovies(query : String, callback : (ApiResponse<List<MovieModel>>) -> Unit);
+
 }

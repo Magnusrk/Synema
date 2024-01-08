@@ -132,4 +132,16 @@ class MockMovieDataSource : MovieDataSource {
         ))
     }
 
+    override fun loadNewMovies(callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+        callback(ApiResponse(
+            loadMovies()
+        ))
+    }
+
+    override fun searchMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+        callback(ApiResponse(
+            loadMovies()
+        ))
+    }
+
 }
