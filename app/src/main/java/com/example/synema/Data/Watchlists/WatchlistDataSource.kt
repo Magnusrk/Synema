@@ -12,7 +12,6 @@ interface WatchlistDataSource {
     fun createWatchlist(watchlistName: String, token : String, callback: (ApiResponse<MovieModel>) -> Unit)
     fun read_db(token : String, callback: (ApiResponse<List<WatchlistModel>>) -> Unit)
 
-    fun getAllWatchlists(token: String, callback: (ApiResponse<List<WatchlistModel>>?) -> Unit)
     fun addMovieToWatchlist(
         watchlistId: String,
         movieId: String,

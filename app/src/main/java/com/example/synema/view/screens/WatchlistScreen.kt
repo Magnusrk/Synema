@@ -88,11 +88,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-                Button(onClick = { navController.navigate("watchlists/53288ff9-b4cc-46ac-af6e-e8e80eb514b0") }, modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)) {
-                    Text(text = "NavTest")
-                }
             };
             BottomBar(navController = navController)
         }
@@ -334,7 +329,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { navController.popBackStack() })
+                .clickable(onClick = { navController.navigate("watchlists/"+watchlist.watchlist_id) })
                 .padding(4.dp)
 
         ) {

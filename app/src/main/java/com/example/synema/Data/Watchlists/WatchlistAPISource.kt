@@ -1,3 +1,4 @@
+import android.util.Log
 import com.example.synema.controller.WatchlistAPI
 import com.example.synema.Data.Watchlists.WatchlistDataSource
 import com.example.synema.controller.MovieAPI

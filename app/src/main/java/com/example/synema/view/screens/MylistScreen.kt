@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,95 +48,87 @@ fun MyListScreen(
 ) {
     val source = DependencyProvider.getInstance().getMovieSource();
     val dataSource = DependencyProvider.getInstance().getWatchlistSource();
-
-    var watchlistName by remember { mutableStateOf("") }
-    var watchlist : WatchlistModel by remember {
+    /*var watchlist : WatchlistModel by remember {
         mutableStateOf(WatchlistModel("",
             "",
             "",
             emptyList(),
             emptyList()
         ))
-    }
+    }*/
+    var movielist = remember { mutableStateListOf<MovieModel>()}
 
-    dataSource.getWatchlistById(watchlistID.toString(),) {
+    dataSource.getWatchlistById(watchlistID.toString(), token = profileState.value.token) {
         if (it.successful()) {
             it.getResult()?.let {watchlistModel ->
-                watchlist = watchlistModel
+                movielist.clear()
+                watchlistModel.movieIds.forEach { movie ->
+                    source.loadMovie(movie) {
+                        movielist.add(it.getResult()!!)
+                    }
+                }
             }
-            println(watchlist)
+
+
         }
     }
-    var movie1 : MovieModel by remember {
-        mutableStateOf(MovieModel(
-            0,
-            "",
-            "",
-            "Loading...",
-            "Loading...",
-            0,
-            ""
-        )
-        )
-    }
+
+
     GradientBox {
         Column {
             MainContainer(hasBottomNav = true) {
-                TopBar(title = "My List", alignment = Alignment.Center)
-                watchlist.movieIds.forEach { movie ->
-                        source.loadMovie(movie) {
-                           var movie1 = it.getResult()
-                        }
-                    println(movie1.id)
-                        Row(
+                TopBar(title = "My List", alignment = Alignment.Center, backArrow = true, navController = navController)
+                movielist.forEach() { movie1 ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color(0xFF191825)),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AsyncImage(
+                            model = movie1.poster_url,
+                            contentDescription = null,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color(0xFF191825)),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AsyncImage(
-                                model = movie1.poster_url,
+                                .width(95.dp)
+                                .height(135.dp)
+                                .clickable { navController.navigate("mediaDetails/" + movie1.id) },
+                            contentScale = ContentScale.FillBounds
+                        )
+                        Text(
+                            text = movie1.title,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier.size(200.dp, 98.dp)
+                        )
+                        Surface(
+                            modifier = Modifier.size(30.dp),
+                            color = Color(0, 0, 0, 0),
+                            onClick = { navController?.popBackStack() }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.heart),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .width(95.dp)
-                                    .height(135.dp)
-                                    .clickable { navController.navigate("mediaDetails/" + movie1.id) },
-                                contentScale = ContentScale.FillBounds
+                                modifier = Modifier.size(30.dp)
                             )
-                            Text(
-                                text = movie1.title,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                modifier = Modifier.size(200.dp, 98.dp)
+                        }
+                        Surface(
+                            modifier = Modifier.size(30.dp),
+                            color = Color(0, 0, 0, 0),
+                            onClick = { navController?.popBackStack() }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.edit_playlist),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp)
                             )
-                            Surface(
-                                modifier = Modifier.size(30.dp),
-                                color = Color(0, 0, 0, 0),
-                                onClick = { navController?.popBackStack() }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.heart),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp)
-                                )
-                            }
-                            Surface(
-                                modifier = Modifier.size(30.dp),
-                                color = Color(0, 0, 0, 0),
-                                onClick = { navController?.popBackStack() }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.edit_playlist),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp)
-                                )
-                            }
                         }
                     }
-
+                }
+            }
+            BottomBar(navController = navController)
                 }
 
-                BottomBar(navController = navController)
+
             }
         }
-    }
+
