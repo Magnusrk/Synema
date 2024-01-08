@@ -158,12 +158,12 @@ class WatchlistAPISource: WatchlistDataSource {
     ) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
-        val deleteWatchlistCall: Call<WatchlistModel> = api.delete_watchlist(watchlistId, token)
+        val deleteWatchlistCall: Call<String> = api.delete_watchlist(watchlistId, token)
 
-        deleteWatchlistCall.enqueue(object : Callback<WatchlistModel> {
+        deleteWatchlistCall.enqueue(object : Callback<String> {
             override fun onResponse(
-                call: Call<WatchlistModel>,
-                response: Response<WatchlistModel>
+                call: Call<String>,
+                response: Response<String>
             ) {
                 if (response.isSuccessful) {
                     // Watchlist deleted successfully
@@ -180,7 +180,7 @@ class WatchlistAPISource: WatchlistDataSource {
                 }
             }
 
-            override fun onFailure(call: Call<WatchlistModel>, t: Throwable) {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 callback(ApiResponse(result = null, statusMessage = t.message.toString()))
             }
         })

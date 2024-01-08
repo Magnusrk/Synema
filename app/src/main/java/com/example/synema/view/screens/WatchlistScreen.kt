@@ -88,7 +88,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController, onDeleteWatchlist = onDeleteWatchlist )
+                wathclistList(watchlistList = watchlistList, header ="" , navController = navController)
             };
             BottomBar(navController = navController)
         }
@@ -160,6 +160,70 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 
 }
+@Composable
+private fun CreateDeletePopup(openDialog: MutableState<Boolean>, onDeleteConfirmed: () -> Unit, onDeleteCancelled: () -> Unit, watchlistId: String, navController: NavHostController, profileState: MutableState<ProfileModel>,
+    watchlistList: List<WatchlistModel>,
+) {
+    if (openDialog.value) {
+        Popup(
+            onDismissRequest = { openDialog.value = false },
+            properties = PopupProperties(focusable = true),
+            alignment = Alignment.TopCenter,
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 250.dp)
+            ) {
+                PopUpHeader(openDialog = openDialog, navController = navController)
+                Text("Are you sure you want to delete this watchlist?", color = Color.White)
+                Row(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                        .background(Color(0xFF430B3D)),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = {
+                            onDeleteConfirmed()
+                            val dataSource = DependencyProvider.getInstance().getWatchlistSource()
+                            dataSource.deleteWatchlist(watchlistId, profileState.value.token) { response ->
+                                if (response.successful()) {
+                                    navController.navigate("watchlists")
+                                }
+                                openDialog.value = false
+                            }
+                        },
+                        shape = RoundedCornerShape(20),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
+                    ) {
+                        Row {
+                            Text("Delete")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Button(
+                        onClick = {
+                            onDeleteCancelled()
+                            openDialog.value = false
+                        },
+                        shape = RoundedCornerShape(20),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
+                    ) {
+                        Row {
+                            Text("Cancel")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 @Composable
@@ -184,14 +248,24 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
 
         }
 
-
-
-
-
-
-
     }
 
+}
+
+
+
+@Composable
+private fun DeletePopupButton(text: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(20),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+        contentPadding = PaddingValues(horizontal = 20.dp)
+    ) {
+        Row {
+            Text(text)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -282,7 +356,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 }
 
 @Composable
-fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController, onDeleteWatchlist: (String) -> Unit) {
+fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
     Column(
         modifier = Modifier
@@ -300,7 +374,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
         )
         Column(modifier = modifier) {
             watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController, onDeleteWatchlist = onDeleteWatchlist )
+                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController)
 
                 /*
                             items(watchlistList) { watchlist ->
@@ -318,7 +392,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController, onDeleteWatchlist: (String) -> Unit) {
+fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -350,7 +424,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
         Surface(
             modifier = Modifier.size(30.dp),
             color = Color(0, 0, 0, 0),
-            onClick = {onDeleteWatchlist(watchlist.watchlist_id)
+            onClick = {//onDeleteWatchlist(watchlist.watchlist_id)
             }) {
             Image(
                 painter = painterResource(id = R.drawable.delete),

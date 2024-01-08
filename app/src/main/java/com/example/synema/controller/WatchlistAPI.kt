@@ -22,7 +22,7 @@ public interface WatchlistAPI {
         "Accept: application/json"
     )
     @DELETE("/deletewatchlist/{watchlist_id}")
-    abstract fun delete_watchlist(@Path("watchlist_id") id: String, @Header("authorization") token : String): Call<WatchlistModel>
+    abstract fun delete_watchlist(@Path("watchlist_id") id: String, @Header("authorization") token : String) : Call<String>
 
     @POST("/watchlist")
     fun createWatchlist(@Body watchlist: WatchlistModel, @Header("authorization") token : String): Call<WatchlistModel>
