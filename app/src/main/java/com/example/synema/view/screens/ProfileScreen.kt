@@ -201,6 +201,14 @@ private fun DirectoryCard(text : String) {
                .padding(10.dp)
        )
 
+       Image(
+           painter = painterResource(id = R.drawable.arrow),
+           contentDescription = null,
+           modifier = Modifier
+               .size(25.dp)
+               .padding(16.dp)
+       )
+
    }
 
 }
