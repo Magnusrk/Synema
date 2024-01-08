@@ -73,7 +73,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             val popupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
 
-            dataSource.read_db (){
+            dataSource.read_db (profileState.value.token){
                 if (it.successful()) {
                     it.getResult()?.let {watchlistModel ->
                         watchlistList = watchlistModel
@@ -85,15 +85,14 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
 
 
-                CreateWatchlistPopup(popupControl, watchlistName, navController);
+                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
+                newWatchlist(popupControl)
+                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
                 Button(onClick = { navController.navigate("watchlists/53288ff9-b4cc-46ac-af6e-e8e80eb514b0") }, modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)) {
                     Text(text = "NavTest")
                 }
-                newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-
             };
             BottomBar(navController = navController)
         }
@@ -104,7 +103,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController){
+private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController, profileState: MutableState<ProfileModel>){
 
 
 
@@ -140,7 +139,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                     Button( onClick = {
                         val dataSource = DependencyProvider.getInstance().getWatchlistSource();
                         // Call your createWatchlist function here
-                        dataSource.createWatchlist(watchlistName.value){}
+                        dataSource.createWatchlist(watchlistName.value, profileState.value.token){}
                         openDialog.value = false
                         navController.currentDestination?.let { navController.navigate(it.id) }
                         // You might want to reset the watchlistName after creating a watchlist
@@ -150,7 +149,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                         shape = RoundedCornerShape(20),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
                         contentPadding = PaddingValues(horizontal = 20.dp)
-                ){
+                    ){
                         Row {
                             Text("Done")
                         }

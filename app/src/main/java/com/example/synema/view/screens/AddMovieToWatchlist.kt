@@ -71,7 +71,7 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
                 mutableStateOf(listOf())
             }
 
-            watchlistDataSource.read_db (){
+            watchlistDataSource.read_db (profileState.value.token){
                 if (it.successful()) {
                     it.getResult()?.let {watchlistModel ->
                         watchlistList = watchlistModel
@@ -81,7 +81,7 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
             }
             MainContainer(hasBottomNav = true){
                 TopBar(title = "Add ${movie.title}", alignment = Alignment.BottomCenter, backArrow = true, navController = navController, fontSize = 15.sp)
-                watchlistList(watchlistList = watchlistList, header ="" , navController = navController, movie = movie)
+                watchlistList(watchlistList = watchlistList, header ="" , navController = navController, movie = movie, profileState = profileState)
 
             };
             BottomBar(navController = navController)
@@ -92,7 +92,7 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
 
 
 @Composable
-private fun watchlistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController, movie : MovieModel) {
+private fun watchlistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController, movie : MovieModel, profileState: MutableState<ProfileModel>) {
 
     Column(
         modifier = Modifier
@@ -110,7 +110,7 @@ private fun watchlistList(watchlistList: List<WatchlistModel>, modifier: Modifie
         )
         Column(modifier = modifier) {
             watchlistList.forEach(){
-                watchlist -> watchlistCard(watchlist = watchlist, navController =navController, movie=movie )
+                watchlist -> watchlistCard(watchlist = watchlist, navController =navController, movie=movie, profileState = profileState)
 
 /*
             items(watchlistList) { watchlist ->
@@ -122,13 +122,16 @@ private fun watchlistList(watchlistList: List<WatchlistModel>, modifier: Modifie
 
                 
             }
+            if(watchlistList.isEmpty()){
+                Text(text="You have no watchlist", color = Color.White, fontSize = 15.sp)
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController, movie: MovieModel) {
+private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController, movie: MovieModel, profileState: MutableState<ProfileModel>) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,7 +145,7 @@ private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifi
                     .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
                     .clickable(onClick = {
                         val watchlistDataSource = DependencyProvider.getInstance().getWatchlistSource()
-                        watchlistDataSource.addMovieToWatchlist(watchlist.watchlist_id, movie.id.toString()){
+                        watchlistDataSource.addMovieToWatchlist(watchlist.watchlist_id, movie.id.toString(), profileState.value.token){
                             navController.popBackStack()
                         }
                     })                    .padding(2.dp)

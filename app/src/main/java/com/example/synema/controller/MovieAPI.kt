@@ -29,4 +29,7 @@ public interface MovieAPI {
 
     @GET("/movies/new")
     abstract fun newMovies(): Call<List<MovieModel>>
+
+    @GET("movies/search")
+    abstract fun searchMovies(@Query("query") query: String): Call<List<MovieModel>>
 }
