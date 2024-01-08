@@ -72,6 +72,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             }
             val popupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
+            //val deletePopUp = remember { mutableStateOf(false) }
 
             dataSource.read_db (profileState.value.token){
                 if (it.successful()) {
@@ -87,7 +88,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
+                wathclistList(watchlistList = watchlistList, header ="" , navController = navController, onDeleteWatchlist = onDeleteWatchlist )
             };
             BottomBar(navController = navController)
         }
@@ -281,7 +282,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 }
 
 @Composable
-fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController, onDeleteWatchlist: (String) -> Unit) {
 
     Column(
         modifier = Modifier
@@ -299,7 +300,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
         )
         Column(modifier = modifier) {
             watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController )
+                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController, onDeleteWatchlist = onDeleteWatchlist )
 
                 /*
                             items(watchlistList) { watchlist ->
@@ -317,7 +318,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController) {
+fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navController : NavHostController, onDeleteWatchlist: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -329,7 +330,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { navController.navigate("watchlists/"+watchlist.watchlist_id) })
+                .clickable(onClick = { navController.navigate("watchlists/" + watchlist.watchlist_id) })
                 .padding(4.dp)
 
         ) {
@@ -349,7 +350,8 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
         Surface(
             modifier = Modifier.size(30.dp),
             color = Color(0, 0, 0, 0),
-            onClick = {}) {
+            onClick = {onDeleteWatchlist(watchlist.watchlist_id)
+            }) {
             Image(
                 painter = painterResource(id = R.drawable.delete),
                 contentDescription = null,
@@ -390,10 +392,13 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ImageCard(movieUrls[0], modifier = Modifier.
-            weight(2F))
-            ImageCard(movieUrls[1], modifier = Modifier
-                .weight(2F))
+            ImageCard(
+                movieUrls[0], modifier = Modifier.weight(2F)
+            )
+            ImageCard(
+                movieUrls[1], modifier = Modifier
+                    .weight(2F)
+            )
         }
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -404,16 +409,22 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly,
 
-            ){
-            ImageCard(movieUrls[2], modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
-            ImageCard (movieUrls[3], modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
+            ) {
+            ImageCard(
+                movieUrls[2], modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 2.dp)
+            )
+            ImageCard(
+                movieUrls[3], modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 2.dp)
+            )
         }
     }
 }
+
+
 
 /*
 Surface(
