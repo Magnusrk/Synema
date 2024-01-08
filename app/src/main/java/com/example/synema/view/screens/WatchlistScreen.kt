@@ -283,7 +283,6 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 
 @Composable
 fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

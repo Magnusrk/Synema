@@ -109,7 +109,7 @@ fun TopBar(
             TextField(
                 value = text,
                 onValueChange = { text = it; onChange(text) },
-                modifier = Modifier.padding(start = 60.dp, end = 60.dp),
+                modifier = Modifier.padding(top = 15.dp, start = 60.dp, end = 60.dp),
                 singleLine = true,
                 label = { Text(inputLabel) }
                 ,
