@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,6 +58,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 ProfilePicture()
                 FollowersReviewsStatus(76, 88)
                 PersonalDescription()
+                Directories()
 
             }
             BottomBar(navController = navController)
@@ -135,7 +137,7 @@ private fun PersonalDescription() {
             color = Color(0xFFC0AEDC),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 50.dp, end=50.dp, top = 50.dp, bottom = 50.dp)
+                .padding(start = 50.dp, end = 50.dp, top = 50.dp, bottom = 50.dp)
 
         )
     }
@@ -179,3 +181,44 @@ private fun SynHeader() {
         SynemaLogo()
     }
 }
+
+@Composable
+private fun DirectoryCard(text : String) {
+   Box(
+       modifier = Modifier
+           .fillMaxWidth()
+           .height(50.dp)
+           .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
+           .padding(2.dp)
+   ) {
+       Text(
+           text = text,
+           color = Color(0xFFD9D9D9),
+           fontSize = 17.sp,
+           fontWeight = FontWeight.Bold,
+           modifier = Modifier
+               .fillMaxSize()
+               .padding(10.dp)
+       )
+
+   }
+
+}
+
+@Composable
+private fun Directories() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        DirectoryCard("Friends")
+        Spacer(modifier = Modifier.height(8.dp))
+        DirectoryCard("Watchlist")
+        Spacer(modifier = Modifier.height(8.dp))
+        DirectoryCard("Reviews")
+
+    }
+
+}
+
