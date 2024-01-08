@@ -171,7 +171,7 @@ fun RatingPanel(movie : MovieModel, navController: NavHostController){
 
 
 @Composable
-fun RatingStars(rating : Number){
+private fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
             if(rating.toFloat()/2 >= n.toFloat()){
