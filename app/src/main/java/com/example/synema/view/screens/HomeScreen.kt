@@ -233,9 +233,6 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : 
         }
 
     }
-
-
-
 }
 
 

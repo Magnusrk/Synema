@@ -83,7 +83,6 @@ fun MovieList(navController: NavHostController, profileState: MutableState<Profi
                     }
                 }
             }
-
         },
             inputLabel = "Search movie")
 
