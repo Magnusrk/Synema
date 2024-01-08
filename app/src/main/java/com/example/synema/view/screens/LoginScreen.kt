@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
@@ -45,7 +46,8 @@ import com.example.synema.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel) {
+fun LoginScreen() {
+    val loginViewModel : LoginViewModel = viewModel();
     loginViewModel.getMoviePosters()
     GradientBox(){
         ContentContainer(loginViewModel);

@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.Data.movies.MockMovieDataSource
+import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
@@ -99,6 +100,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         }
     }
 
+
     dataSource.loadDiscoverMovies(genres = "35") {
         it.getResult()?.let {movieModel ->
             comedyList = movieModel
@@ -130,7 +132,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
             MovieList(
                 movieList = newList,
                 header = "New releases",
-                navController = navController
+                navController = AppContext.getNav()
             )
             MovieList(
                 movieList = discoverList,

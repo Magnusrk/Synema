@@ -25,6 +25,7 @@ import com.example.synema.view.screens.SignupScreen
 import com.example.synema.view.screens.WatchList
 import com.example.synema.viewmodel.MainViewModel
 import com.example.synema.view.screens.WriteReviewScreen
+import com.example.synema.view.screens.MainView
 
 
 class MainActivity : ComponentActivity() {

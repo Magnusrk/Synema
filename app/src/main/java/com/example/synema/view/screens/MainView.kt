@@ -8,18 +8,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.synema.Data.DependencyProvider
+import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
 import com.example.synema.viewmodel.LoginViewModel
 import com.example.synema.viewmodel.MainViewModel
+import com.example.synema.viewmodel.SignupViewModel
 
 @Composable
 fun MainView(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
-    val profileState = remember {
-        mutableStateOf(
-            mainViewModel.userContext
-        )
-    }
+
+    val profileState = AppContext.getInstance().getProfileState()
+    AppContext.setNav(navController)
+
 
     if(mainViewModel.appJustLaunched){
         mainViewModel.appJustLaunched = false;
@@ -33,8 +35,8 @@ fun MainView(mainViewModel: MainViewModel) {
 
     // A surface container using the 'background' color from the theme
     NavHost(navController = navController, startDestination = startDestination) {
-        composable("login") { LoginScreen(LoginViewModel(navController, profileState)) }
-        composable("signup") { SignupScreen(navController, profileState) }
+        composable("login") { LoginScreen() }
+        composable("signup") { SignupScreen() }
         composable("home") { HomeScreen(navController, profileState) }
         composable("search") { SearchScreen(navController, profileState) }
         composable("watchlists") { WatchList(navController, profileState) }
@@ -64,6 +66,16 @@ fun MainView(mainViewModel: MainViewModel) {
         )
         { backStackEntry ->
             AddMovieToWatchlist(
+                navController,
+                profileState,
+                backStackEntry.arguments?.getString("movieID")
+            )
+        }
+        composable("mediaDetails/{movieID}/review",
+            arguments = listOf(navArgument("movieID") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            WriteReviewScreen(
                 navController,
                 profileState,
                 backStackEntry.arguments?.getString("movieID")

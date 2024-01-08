@@ -11,5 +11,5 @@ import com.example.synema.model.ProfileModel
 class MainViewModel : ViewModel() {
     var appJustLaunched by mutableStateOf(true)
     var userIsAuthenticated by mutableStateOf(false)
-    var userContext by mutableStateOf(ProfileModel("","","",""))
+
 }

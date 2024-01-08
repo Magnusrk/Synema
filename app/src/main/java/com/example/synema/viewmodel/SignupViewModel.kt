@@ -17,44 +17,38 @@ import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 
-class LoginViewModel : ViewModel() {
+class SignupViewModel : ViewModel() {
 
 
+    private var username  =  mutableStateOf("")
     private var email  =  mutableStateOf("")
     private var password  =  mutableStateOf("")
     var error  =  mutableStateOf("")
 
     var movieBanners =  mutableStateListOf<MovieModel>()
 
+
+
+    fun editUsername(it : String) {username.value = it}
     fun editEmail(it : String) {email.value = it}
     fun editPassword(it : String) {password.value = it}
 
 
 
      fun login() {
+        AppContext.getNav().navigate("login")
+    }
+
+    fun signup() {
         val source = DependencyProvider.getInstance().getUserSource();
-        source.LoginUser(email.value, password.value, callback = {
-            if(it.successful()){
-                AppContext.profileState.value = it.getResult()?.profile!!;
+        source.signupUser(username.value, email.value, password.value) {
+            if (it.successful()) {
+                AppContext.profileState.value =it.getResult()?.profile!!;
                 AppContext.getNav().navigate("home")
             } else{
                 error.value = (it.getStatus())
             }
-        });
-    }
-
-    fun signup() {
-        AppContext.getNav().navigate("signup")
-    }
-
-     fun getMoviePosters(){
-        val dataSource = DependencyProvider.getInstance().getMovieSource();
-        dataSource.loadDiscoverMovies (){
-            it.getResult()?.let {movieModel ->
-                movieBanners.clear()
-                movieBanners.addAll(movieModel)
-            }
-        }
+        };
     }
 
 }
