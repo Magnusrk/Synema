@@ -18,6 +18,7 @@ import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
 import com.example.synema.view.screens.MediaDetails
+import com.example.synema.view.screens.MyListScreen
 import com.example.synema.view.screens.SearchScreen
 import com.example.synema.view.screens.Profile
 import com.example.synema.view.screens.SignupScreen
@@ -57,9 +58,10 @@ class MainActivity : ComponentActivity() {
                     composable("home") { HomeScreen(navController, profileState) }
                     composable("search") {SearchScreen(navController, profileState)}
                     composable("watchlists") { WatchList(navController, profileState) }
-                /*
-                    composable("mylistscreen") { MyListScreen(navController, profileState) }
-                 */
+                    composable("watchlists/{watchlist_id}",
+                        arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType }))
+                        { backStackEntry ->
+                            MyListScreen(navController, profileState, backStackEntry.arguments?.getString("watchlist_id")) }
                     composable("profile") { Profile(navController, profileState) }
                     composable("mediaDetails/{movieID}",
                         arguments = listOf(navArgument("movieID") { type = NavType.StringType }))

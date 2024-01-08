@@ -88,7 +88,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-
             };
             BottomBar(navController = navController)
         }
@@ -283,6 +282,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 
 @Composable
 fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -329,7 +329,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { navController.popBackStack() })
+                .clickable(onClick = { navController.navigate("watchlists/"+watchlist.watchlist_id) })
                 .padding(4.dp)
 
         ) {
@@ -459,4 +459,7 @@ Surface(
 }
 
 }
-*/ /* */
+*/
+
+
+
