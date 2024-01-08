@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -127,19 +130,20 @@ private fun PersonalDescription() {
                 .height(127.dp)
                 .background(Color(0xFF543b5b), shape = RoundedCornerShape(10.dp))
                 .align(Alignment.Center)
-        )
-        Text(
-            "Writer by day, reviewer by night. I live \n" +
-                    "and breathe movies. \n" +
-                    "\n" +
-                    "Especially the weird ones ;P\n" +
-                    "Follo for more! ",
-            color = Color(0xFFC0AEDC),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 50.dp, end = 50.dp, top = 50.dp, bottom = 50.dp)
+        ) {
+            Text(
+                "Writer by day, reviewer by night. I live \n" +
+                        "and breathe movies. \n" +
+                        "\n" +
+                        "Especially the weird ones ;P\n" +
+                        "Follo for more!",
+                color = Color(0xFFC0AEDC),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, top = 2.dp)
 
-        )
+            )
+        }
     }
 
 }
@@ -202,11 +206,13 @@ private fun DirectoryCard(text : String) {
        )
 
        Image(
-           painter = painterResource(id = R.drawable.arrow),
+           painter = painterResource(id = R.drawable.arrow_right),
            contentDescription = null,
            modifier = Modifier
-               .size(25.dp)
-               .padding(16.dp)
+               .size(35.dp)
+               .padding(8.dp)
+               .align(Alignment.CenterEnd)
+
        )
 
    }
