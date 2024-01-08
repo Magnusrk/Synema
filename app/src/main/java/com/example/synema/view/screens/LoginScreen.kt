@@ -41,42 +41,37 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
+import com.example.synema.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun LoginScreen(loginViewModel: LoginViewModel) {
+    loginViewModel.getMoviePosters()
     GradientBox(){
-        ContentContainer(navController, profileState);
+        ContentContainer(loginViewModel);
     }
 }
 
 @Composable
-private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
+private fun ContentContainer(loginViewModel: LoginViewModel){
     Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(14.dp)
     ){
         SynHeader()
-        MovieDisplay();
-        UserLoginArea(navController, profileState);
+        MovieDisplay(loginViewModel);
+        UserLoginArea(loginViewModel);
     }
 }
 
 
 @Composable
-private fun MovieDisplay(){
-    val dataSource = DependencyProvider.getInstance().getMovieSource();
+private fun MovieDisplay(loginViewModel: LoginViewModel){
 
-    var newList : List<MovieModel> by remember {
-        mutableStateOf(listOf())
-    }
 
-    dataSource.loadDiscoverMovies (){
-        it.getResult()?.let {movieModel ->
-            newList = movieModel
-        }
-    }
+
+
 
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -85,26 +80,25 @@ private fun MovieDisplay(){
             .height(250.dp)
 
     ){
-        if (newList.size >= 3) {
+        if (loginViewModel.movieBanners.size >= 3) {
             MoviePosterFrame(
                 Arrangement.Bottom,
-                newList.get(0).poster_url,
+                loginViewModel.movieBanners[0].poster_url,
                 offsetX = 15.dp,
                 zindex = 0f
             )
             MoviePosterFrame(
                 Arrangement.Center,
-                newList.get(1).poster_url,
+                loginViewModel.movieBanners[1].poster_url,
                 zindex = 1f
             )
             MoviePosterFrame(
                 Arrangement.Top,
-                newList.get(2).poster_url,
+                loginViewModel.movieBanners[2].poster_url,
                 offsetX = (-15).dp,
                 zindex = 0f
             )
         }
-
     }
 }
 
@@ -121,16 +115,7 @@ private fun SynHeader() {
 }
 
 @Composable
-private fun UserLoginArea(navController: NavController, profileState : MutableState<ProfileModel>){
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-
-    val error = remember {
-        mutableStateOf(""
-        )
-    }
-
+private fun UserLoginArea(loginViewModel: LoginViewModel){
 
     Column(
         modifier = Modifier
@@ -141,20 +126,20 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
     ) {
         LoginInputField(
             label="Email",
-            onChange = { email = it},
+            onChange = { loginViewModel.editEmail(it)},
         );
         LoginInputField(
             label="Password",
             isHidden=true,
-            onChange = { password = it},
-            onDone = {sendLoginRequest(email, password, navController, profileState, error)}
+            onChange = { loginViewModel.editPassword(it)},
+            onDone = {loginViewModel.login()}
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally
         ){
-            OpaqueButton(label = "Log In", onClick = { sendLoginRequest(email, password, navController, profileState, error)});
-            OpaqueButton(label = "Get started now", onClick = {navController.navigate("signup");});
-            Text(error.value, color=Color.Red)
+            OpaqueButton(label = "Log In", onClick = { loginViewModel.login()});
+            OpaqueButton(label = "Get started now", onClick = {loginViewModel.signup()});
+            Text(loginViewModel.error.value, color=Color.Red)
         }
 
     }
@@ -162,31 +147,7 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
 }
 
-private fun sendLoginRequest(
-    email: String,
-    password: String,
-    navController: NavController,
-    profileState: MutableState<ProfileModel>,
-    error: MutableState<String>
-) {
 
-    val source = DependencyProvider.getInstance().getUserSource();
-    source.LoginUser(email, password, callback = {
-
-        Log.d("Main", it.getStatus())
-        Log.d("Main", it.successful().toString())
-        if(it.successful()){
-            profileState.value = it.getResult()?.profile!!;
-            if(profileState.value.token == null){
-                profileState.value.token = "none"
-            }
-
-            navController.navigate("home")
-        } else{
-            error.value = (it.getStatus())
-        }
-    });
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)

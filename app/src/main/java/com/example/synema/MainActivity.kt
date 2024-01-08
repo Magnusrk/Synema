@@ -17,12 +17,14 @@ import com.example.synema.model.ProfileModel
 import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
 import com.example.synema.view.screens.LoginScreen
+import com.example.synema.view.screens.MainView
 import com.example.synema.view.screens.MediaDetails
 import com.example.synema.view.screens.MyListScreen
 import com.example.synema.view.screens.SearchScreen
 import com.example.synema.view.screens.Profile
 import com.example.synema.view.screens.SignupScreen
 import com.example.synema.view.screens.WatchList
+import com.example.synema.viewmodel.MainViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -40,42 +42,11 @@ class MainActivity : ComponentActivity() {
         val DEBUG = false
         DependencyProvider.getInstance().create(DEBUG);
 
+        val mainViewModel : MainViewModel = MainViewModel();
+
         setContent {
-            val navController = rememberNavController()
-            val profileState = remember {
-                mutableStateOf(ProfileModel(
-                    id = "-1",
-                    name = "",
-                    email = "",
-                    bio = ""
-                ))
-            }
-
-            // A surface container using the 'background' color from the theme
-            NavHost(navController = navController, startDestination = "login") {
-                    composable("login") { LoginScreen(navController, profileState) }
-                    composable("signup") { SignupScreen(navController, profileState) }
-                    composable("home") { HomeScreen(navController, profileState) }
-                    composable("search") {SearchScreen(navController, profileState)}
-                    composable("watchlists") { WatchList(navController, profileState) }
-                    composable("watchlists/{watchlist_id}",
-                        arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType }))
-                        { backStackEntry ->
-                            MyListScreen(navController, profileState, backStackEntry.arguments?.getString("watchlist_id")) }
-                    composable("profile") { Profile(navController, profileState) }
-                    composable("mediaDetails/{movieID}",
-                        arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
-                        { backStackEntry ->
-                            MediaDetails(navController, profileState, backStackEntry.arguments?.getString("movieID")) }
-                    composable("mediaDetails/{movieID}/save",
-                        arguments = listOf(navArgument("movieID") { type = NavType.StringType }))
-                    { backStackEntry ->
-                        AddMovieToWatchlist(navController, profileState, backStackEntry.arguments?.getString("movieID"))
-                    }
-
-
+            MainView(mainViewModel)
             }
         }
     }
 
-}
