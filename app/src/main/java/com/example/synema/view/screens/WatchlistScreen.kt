@@ -72,7 +72,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             }
             val popupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
-            //val deletePopUp = remember { mutableStateOf(false) }
+            val onDeleteCancelled = remember { mutableStateOf(false) }
 
             dataSource.read_db (profileState.value.token){
                 if (it.successful()) {
@@ -89,6 +89,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController)
+                CreateDeletePopup(popupControl, watchlistList = watchlistList, navController = navController, MutableState<ProfileModel> );
             };
             BottomBar(navController = navController)
         }
@@ -161,8 +162,8 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 }
 @Composable
-private fun CreateDeletePopup(openDialog: MutableState<Boolean>, onDeleteConfirmed: () -> Unit, onDeleteCancelled: () -> Unit, watchlistId: String, navController: NavHostController, profileState: MutableState<ProfileModel>,
-    watchlistList: List<WatchlistModel>,
+private fun CreateDeletePopup(openDialog: MutableState<Boolean>, watchlistId: String, navController: NavHostController, profileState: MutableState<ProfileModel>,
+    watchlistList: List<WatchlistModel>
 ) {
     if (openDialog.value) {
         Popup(
