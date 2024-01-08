@@ -2,7 +2,6 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
-import WatchlistAPISource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -22,8 +20,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.synema.model.ProfileModel
@@ -31,37 +27,26 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
-import com.example.synema.controller.WatchlistAPI
-import com.example.synema.model.MovieModel
 import com.example.synema.model.WatchlistModel
 
 
@@ -115,45 +100,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
                 newWatchlist()
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    color = Color(0, 0, 0, 0)
-                ) {
-                    Box(
-                        modifier = Modifier.clickable {
-                            watchlistName.takeIf { it.isNotEmpty() }?.let { nonEmptyName ->
-                                // Call the showDeleteConfirmationDialog from within a @Composable function
-                                //showDeleteConfirmationDialog(navController, nonEmptyName) { confirmed ->
-                                    //if (confirmed) {
-                                        dataSource.deleteWatchlist(nonEmptyName) { response ->
-                                            if (response.successful()) {
-                                                // Watchlist deleted successfully
-                                                // Fetch the updated watchlist and update the UI
-                                                dataSource.read_db { updatedWatchlistResponse ->
-                                                    if (updatedWatchlistResponse.successful()) {
-                                                        watchlistList = updatedWatchlistResponse.getResult() ?: emptyList()
-                                                    }
-                                                }
-                                                watchlistName = ""
-                                            } else {
-                                                // Failed to delete watchlist, handle accordingly
-                                                // You may want to show an error message to the user
-                                            }
-                                        }
-                                    }
-
-                            }
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.delete),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                }
-
 
             };
             BottomBar(navController = navController)
@@ -162,40 +108,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
     }
 }
 
-@Composable
-private fun showDeleteConfirmationDialog(
-    navController: NavHostController,
-    watchlistName: String,
-    onConfirmation: (Boolean) -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = { onConfirmation(false) },
-        title = { Text("Delete Watchlist") },
-        text = { Text("Are you sure you want to delete the watchlist '$watchlistName'?") },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onConfirmation(true)
-                    // Dismiss the dialog
-                    navController.navigateUp()
-                }
-            ) {
-                Text("Delete")
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = {
-                    onConfirmation(false)
-                    // Dismiss the dialog
-                    navController.navigateUp()
-                }
-            ) {
-                Text("Cancel")
-            }
-        }
-    )
-}
 
 @Composable
 private fun MovieDisplay(){
