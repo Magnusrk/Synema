@@ -41,6 +41,7 @@ import com.example.synema.Data.movies.MockMovieDataSource
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.model.WatchlistModel
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
@@ -56,8 +57,20 @@ fun MediaDetails(
     movieID: String?
 ) {
 
-    val source = DependencyProvider.getInstance().getMovieSource();
 
+
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getReviewsForMovie(movieID.toString(),profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+               reviewList = reviewModel
+            }
+        }
+    }
     var movie : MovieModel by remember {
         mutableStateOf(MovieModel(
             0,
@@ -85,11 +98,13 @@ fun MediaDetails(
             MovieClip(movie.backdrop_url)
             InteractionPane(movie, navController)
             DescriptionSection(movie.description)
-            UserReviewSection(source.loadReviews())
+            UserReviewSection(reviewList)
+        println(reviewList)
+            }
         }
 
 
-}
+
 
 
 @Composable
@@ -239,8 +254,8 @@ fun InnerReviewContainer(review : ReviewModel){
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text= review.owner.name, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
-            RatingStars(review.rating.toFloat())
+            Text(modifier = Modifier.height(30.dp), text= review.username, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            RatingStars(review.rating*2)
         }
 
         Text(review.reviewText,  color = Color.White, overflow = TextOverflow.Ellipsis, maxLines = 3)
