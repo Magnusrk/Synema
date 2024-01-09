@@ -99,7 +99,7 @@ fun InteractionPane(movie : MovieModel, navController: NavHostController){
         .fillMaxWidth()
         .height((size.height() / 7).dp)){
         SaveButton(movie, navController = navController)
-        RatingPanel(movie)
+        RatingPanel(movie, navController = navController)
     }
 }
 
@@ -136,7 +136,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController){
 
 
 @Composable
-fun RatingPanel(movie : MovieModel){
+fun RatingPanel(movie : MovieModel, navController: NavHostController){
     val size = Size();
     Column(
         modifier = Modifier
@@ -154,7 +154,7 @@ fun RatingPanel(movie : MovieModel){
             ){
             RatingStars(movie.rating)
         }
-        Button( onClick = {},
+        Button( onClick = {navController.navigate("mediaDetails/" + movie.id+"/review")},
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
@@ -171,7 +171,7 @@ fun RatingPanel(movie : MovieModel){
 
 
 @Composable
-fun RatingStars(rating : Number){
+private fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
             if(rating.toFloat()/2 >= n.toFloat()){
