@@ -138,8 +138,9 @@ fun MyListScreen(
 
                     }
                 }
-                BottomBar(navController = navController)
+
             }
+            BottomBar(navController = navController)
 
 
         }

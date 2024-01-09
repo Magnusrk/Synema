@@ -84,8 +84,6 @@ fun WatchList(navController : NavHostController) {
             }
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
-
-
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )

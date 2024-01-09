@@ -41,9 +41,10 @@ class SignupViewModel : ViewModel() {
             if (it.successful()) {
                 context.setProfileState(it.getResult()?.profile!!);
                 viewModelScope.launch {
-                    DataStoreManager(c).saveToDataStore(context.getProfileState().value);
+                    DataStoreManager(c).saveToDataStore(context.getProfileState().value)
                 }.let {
-                    context.getNav().navigate("home")
+                    error.value = context.getProfileState().value.token
+                    //context.getNav().navigate("home")
                 }
 
             } else{
