@@ -254,7 +254,7 @@ fun InnerReviewContainer(review : ReviewModel){
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text= review.owner.name, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            Text(modifier = Modifier.height(30.dp), text= review.username, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
             RatingStars(review.rating.toFloat())
         }
 

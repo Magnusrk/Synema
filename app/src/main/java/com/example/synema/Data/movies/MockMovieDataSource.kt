@@ -151,7 +151,9 @@ class MockMovieDataSource : MovieDataSource {
     override fun createReviewForMovie(
         movieId: String,
         review: String,
+        rating: Int,
         token: String,
+        profileModel: ProfileModel,
         callback: (ApiResponse<String>) -> Unit
     ) {
         TODO("Not yet implemented")

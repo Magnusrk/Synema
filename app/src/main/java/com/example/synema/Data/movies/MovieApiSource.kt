@@ -89,7 +89,8 @@ class MovieApiSource : MovieDataSource {
             )
         )
     }
-/*
+    /*
+
     override fun loadReviews(): List<ReviewModel> {
         return listOf(
             ReviewModel(
@@ -156,7 +157,9 @@ class MovieApiSource : MovieDataSource {
 
     }
 
- */
+     */
+
+
 
     override fun loadDiscoverMovies(
         genres: String,
@@ -242,12 +245,14 @@ class MovieApiSource : MovieDataSource {
     override fun createReviewForMovie(
         movieId: String,
         review: String,
+        rating: Int,
         token: String,
+        profileModel: ProfileModel,
         callback: (ApiResponse<String>) -> Unit
     ) {
         val api = retrofit.create(MovieAPI::class.java)
 
-        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, review)
+        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, ReviewModel(review,rating,movieId,profileModel.name, profileModel.id), token)
 
         createReviewCall.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
