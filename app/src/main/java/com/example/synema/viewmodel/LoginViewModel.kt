@@ -61,10 +61,23 @@ class LoginViewModel : ViewModel() {
     fun checkUserLoggedIn(c : Context){
         viewModelScope.launch {
             DataStoreManager(c).getFromDataStore().collect{
-                profile -> if(profile.token != ""){
+                profile -> if(profile.token == ""){
+                    return@collect
+                }
+
+                val dataSource = DependencyProvider.getInstance().getUserSource()
+
+                dataSource.verifyToken(profile.token){
+                    if(!it.successful()){
+                        return@verifyToken
+                    }
+                    if(it.getResult() == false){
+                        return@verifyToken
+                    }
                     context.setProfileState(profile)
                     context.getNav().navigate("home")
-            }
+                }
+
             }
         }
     }
