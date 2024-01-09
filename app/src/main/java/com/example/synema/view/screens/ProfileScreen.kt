@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,9 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,6 +61,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 ProfilePicture()
                 FollowersReviewsStatus(76, 88)
                 PersonalDescription()
+                Directories(context.getNav())
 
             }
             BottomBar(navController = navController)
@@ -136,19 +135,20 @@ private fun PersonalDescription() {
                 .height(127.dp)
                 .background(Color(0xFF543b5b), shape = RoundedCornerShape(10.dp))
                 .align(Alignment.Center)
-        )
-        Text(
-            "Writer by day, reviewer by night. I live \n" +
-                    "and breathe movies. \n" +
-                    "\n" +
-                    "Especially the weird ones ;P\n" +
-                    "Follo for more! ",
-            color = Color(0xFFC0AEDC),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 50.dp, end=50.dp, top = 50.dp, bottom = 50.dp)
+        ) {
+            Text(
+                "Writer by day, reviewer by night. I live \n" +
+                        "and breathe movies. \n" +
+                        "\n" +
+                        "Especially the weird ones ;P\n" +
+                        "Follo for more!",
+                color = Color(0xFFC0AEDC),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, top = 2.dp)
 
-        )
+            )
+        }
     }
 
 }
@@ -190,3 +190,63 @@ private fun SynHeader() {
         SynemaLogo()
     }
 }
+
+@Composable
+private fun DirectoryCard(text : String, navController: NavHostController,route: String = "") {
+
+    Box(
+       modifier = Modifier
+           .fillMaxWidth()
+           .height(50.dp)
+           .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
+           .padding(2.dp)
+           .clickable { navController.navigate(route) }
+
+
+
+   ) {
+       Text(
+           text = text,
+           color = Color(0xFFD9D9D9),
+           fontSize = 17.sp,
+           fontWeight = FontWeight.Bold,
+           modifier = Modifier
+               .fillMaxSize()
+               .padding(10.dp)
+
+       )
+
+       Image(
+           painter = painterResource(id = R.drawable.arrow_right),
+           contentDescription = null,
+           modifier = Modifier
+               .size(35.dp)
+               .padding(8.dp)
+               .align(Alignment.CenterEnd)
+
+       )
+   }
+}
+
+@Composable
+private fun Directories(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+
+       // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
+
+        DirectoryCard("Watchlist", navController = navController, route = "watchlists")
+        Spacer(modifier = Modifier.height(8.dp))
+        //}
+        DirectoryCard("Friends", navController = navController )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DirectoryCard("Reviews", navController = navController )
+
+    }
+
+}
+
