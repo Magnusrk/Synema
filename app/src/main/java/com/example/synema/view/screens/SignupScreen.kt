@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -80,7 +81,7 @@ private fun SynHeader() {
 
 @Composable
 private fun UserSignUpArea(signupViewModel: SignupViewModel){
-
+    val c  = LocalContext.current;
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,12 +105,12 @@ private fun UserSignUpArea(signupViewModel: SignupViewModel){
             label="Password",
             isHidden=true,
             onChange = { signupViewModel.editPassword(it)},
-            onDone = {signupViewModel.signup() }
+            onDone = {signupViewModel.signup(c) }
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
         ){
-            OpaqueButton(label = "Sign up", onClick = {signupViewModel.signup()});
+            OpaqueButton(label = "Sign up", onClick = {signupViewModel.signup(c)});
             Box(modifier= Modifier.height(50.dp))
             Text("By signing up you agree on our", color=Color.White, fontSize = 10.sp)
             OpaqueButton(label = "Terms of Service", onClick = {});

@@ -130,6 +130,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.3.3")
     testImplementation("androidx.test.ext:junit-ktx:1.1.2")
     testImplementation("org.robolectric:robolectric:4.")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 
 
 

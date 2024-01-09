@@ -25,12 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.synema.Data.DataStore.DataStoreManager
 import com.example.synema.R
 import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
@@ -40,6 +43,7 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
+import com.example.synema.viewmodel.ProfileViewModel
 
 
 @Composable
@@ -72,7 +76,9 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
 @Composable
 private fun ProfilePicture(){
 
-    Row (modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.Center){
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp), horizontalArrangement = Arrangement.Center){
         Image(
             painter = painterResource(R.drawable.profile_picture_placeholder),
             contentDescription = null,
@@ -95,10 +101,15 @@ private fun ProfileNameHeader(name : String){
 }
 @Composable
 private fun EditProfileButton(){
+    var c = LocalContext.current;
+    var profileViewModel : ProfileViewModel = viewModel()
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()){
-        OpaqueButton("Edit profile", onClick = {}, modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+        OpaqueButton("Edit profile", onClick = {
+            profileViewModel.logout(c);
+            },
+         modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
     }
 }
 
