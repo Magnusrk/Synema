@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,10 +18,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -30,16 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
@@ -47,7 +40,7 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
+
 
 
 @Composable
@@ -61,7 +54,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 ProfilePicture()
                 FollowersReviewsStatus(76, 88)
                 PersonalDescription()
-                Directories()
+                Directories(navController)
 
             }
             BottomBar(navController = navController)
@@ -187,13 +180,18 @@ private fun SynHeader() {
 }
 
 @Composable
-private fun DirectoryCard(text : String) {
-   Box(
+private fun DirectoryCard(text : String, navController: NavHostController,route: String = "") {
+
+    Box(
        modifier = Modifier
            .fillMaxWidth()
            .height(50.dp)
            .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
            .padding(2.dp)
+           .clickable { navController.navigate(route) }
+
+
+
    ) {
        Text(
            text = text,
@@ -203,6 +201,7 @@ private fun DirectoryCard(text : String) {
            modifier = Modifier
                .fillMaxSize()
                .padding(10.dp)
+
        )
 
        Image(
@@ -214,23 +213,26 @@ private fun DirectoryCard(text : String) {
                .align(Alignment.CenterEnd)
 
        )
-
    }
-
 }
 
 @Composable
-private fun Directories() {
+private fun Directories(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        DirectoryCard("Friends")
+
+       // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
+
+        DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))
-        DirectoryCard("Watchlist")
+        //}
+        DirectoryCard("Friends", navController = navController )
         Spacer(modifier = Modifier.height(8.dp))
-        DirectoryCard("Reviews")
+
+        DirectoryCard("Reviews", navController = navController )
 
     }
 
