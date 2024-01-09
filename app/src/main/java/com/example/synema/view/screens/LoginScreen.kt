@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -49,6 +50,7 @@ import com.example.synema.viewmodel.LoginViewModel
 fun LoginScreen() {
     val loginViewModel : LoginViewModel = viewModel();
     loginViewModel.getMoviePosters()
+    loginViewModel.checkUserLoggedIn(LocalContext.current)
     GradientBox(){
         ContentContainer(loginViewModel);
     }
@@ -118,7 +120,7 @@ private fun SynHeader() {
 
 @Composable
 private fun UserLoginArea(loginViewModel: LoginViewModel){
-
+    val c  =LocalContext.current;
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,12 +136,13 @@ private fun UserLoginArea(loginViewModel: LoginViewModel){
             label="Password",
             isHidden=true,
             onChange = { loginViewModel.editPassword(it)},
-            onDone = {loginViewModel.login()}
+            onDone = {loginViewModel.login(c)}
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally
         ){
-            OpaqueButton(label = "Log In", onClick = { loginViewModel.login()});
+
+            OpaqueButton(label = "Log In", onClick = { loginViewModel.login(c)});
             OpaqueButton(label = "Get started now", onClick = {loginViewModel.signup()});
             Text(loginViewModel.error.value, color=Color.Red)
         }

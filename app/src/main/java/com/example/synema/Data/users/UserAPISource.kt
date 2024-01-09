@@ -76,4 +76,27 @@ class UserAPISource() : UserDataSource {
         }
         )
     }
+
+    override fun verifyToken(token: String, callback: (ApiResponse<Boolean>) -> Unit) {
+        val api = retrofit.create(UserAPI::class.java)
+        val call: Call<Boolean> = api.verifyToken(token)
+
+
+        call.enqueue(object : Callback<Boolean> {
+            override fun onResponse(call: Call<Boolean?>, response: Response<Boolean>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(response.body()!!))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't check token"))
+                }
+            }
+
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                //Failure
+                callback(ApiResponse(null, true, "Couldn't check token"))
+
+            }
+        }
+        )
+    }
 }

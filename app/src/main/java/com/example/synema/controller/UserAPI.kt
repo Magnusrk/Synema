@@ -35,4 +35,11 @@ public interface UserAPI {
         @Field("email") email: String,
         @Field("password") password: String,
     ) : Call<UserModel?>?
+
+    @POST("token/verify")
+    @FormUrlEncoded
+    fun verifyToken(
+        @Field("token") token: String,
+    ) : Call<Boolean>
+
 }

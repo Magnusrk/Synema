@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.synema.Data.DependencyProvider
+import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.screens.AddMovieToWatchlist
 import com.example.synema.view.screens.HomeScreen
@@ -31,6 +32,7 @@ import com.example.synema.view.screens.MainView
 class MainActivity : ComponentActivity() {
     companion object {
         private val key = "text"
+
         fun create(context: Context, text: String? = null): Intent =
             Intent(context, MainActivity::class.java).putExtra(
                 key, text
@@ -43,10 +45,11 @@ class MainActivity : ComponentActivity() {
         val DEBUG = false
         DependencyProvider.getInstance().create(DEBUG);
 
-        val mainViewModel : MainViewModel = MainViewModel();
+
+
 
         setContent {
-            MainView(mainViewModel)
+            MainView()
             }
         }
     }

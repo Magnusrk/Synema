@@ -56,14 +56,15 @@ import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import coil.compose.AsyncImage
+import com.example.synema.controller.AppContext
 import com.example.synema.view.components.OpaqueButton
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchList(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun WatchList(navController : NavHostController) {
     val dataSource = DependencyProvider.getInstance().getWatchlistSource();
-
+    val profileState = AppContext.getInstance().getProfileState();
     GradientBox(){
         Column {
 
@@ -83,8 +84,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             }
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
-
-
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
