@@ -163,7 +163,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateDeletePopup(
+private fun CreateDeleteWatchlist(
     openDialog: MutableState<Boolean>,
     watchlistId: String,
     navController: NavHostController,
@@ -176,7 +176,56 @@ private fun CreateDeletePopup(
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
         ) {
-            DeletePopupContent(openDialog, watchlistId, navController, profileState, watchlistList)
+            DeletePopup(openDialog, watchlistId, navController, profileState, watchlistList)
+        }
+    }
+}
+
+@Composable
+private fun DeletePopup(
+    openDialog: MutableState<Boolean>,
+    watchlistId: String,
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>,
+    watchlistList: List<WatchlistModel>,
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = 250.dp)
+    ) {
+        PopUpHeader(openDialog = openDialog, navController = navController)
+        Text("Are you sure you want to delete this watchlist?", color = Color.White)
+        Row(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+                .background(Color(0xFF430B3D)),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            DeletePopupButton("Delete") {
+                //onDeleteConfirmed(watchlistId, navController, profileState, watchlistList)
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            DeletePopupButton("Cancel") {
+                //onDeleteCancelled(openDialog)
+            }
+        }
+    }
+}
+
+@Composable
+private fun DeletePopupButton(text: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(20),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+        contentPadding = PaddingValues(horizontal = 20.dp)
+    ) {
+        Row {
+            Text(text)
         }
     }
 }
