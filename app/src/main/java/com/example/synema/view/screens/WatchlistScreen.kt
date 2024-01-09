@@ -180,15 +180,7 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
                 .fillMaxWidth()) {
                 Text("Create watchlist", color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally), fontSize = 20.sp)
             }
-
-
         }
-
-
-
-
-
-
 
     }
 
