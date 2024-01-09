@@ -1,13 +1,10 @@
 package com.example.synema.Data.movies
 import android.util.Log
-import com.example.synema.R
 import com.example.synema.controller.MovieAPI
-import com.example.synema.controller.UserAPI
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
-import com.example.synema.model.UserModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,19 +22,20 @@ class MovieApiSource : MovieDataSource {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    override fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit){
+
+    override fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit) {
 
         val api = retrofit.create(MovieAPI::class.java)
         val call: Call<MovieModel> = api.getMovieById(id);
 
-        call.enqueue(object: Callback<MovieModel> {
+        call.enqueue(object : Callback<MovieModel> {
             override fun onResponse(
                 call: Call<MovieModel>,
                 response: Response<MovieModel>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     callback(ApiResponse(response.body()!!))
-                }else{
+                } else {
                     callback(ApiResponse(null, true, "Couldn't find movie"))
                 }
             }
@@ -49,7 +47,7 @@ class MovieApiSource : MovieDataSource {
         })
     }
 
-    override fun loadMovies(): List<MovieModel>{
+    override fun loadMovies(): List<MovieModel> {
         return listOf<MovieModel>(
             MovieModel(
                 507089,
@@ -57,7 +55,7 @@ class MovieApiSource : MovieDataSource {
                 "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
                 "Five Nights at Freddy's",
                 "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                8.4/2,
+                8.4 / 2,
                 "2023-10-25"
             ),
             MovieModel(
@@ -66,7 +64,7 @@ class MovieApiSource : MovieDataSource {
                 "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/aQPeznSu7XDTrrdCtT5eLiu52Yu.jpg",
                 "Saw X",
                 "Between the events of 'Saw' and 'Saw II', a sick and desperate John Kramer travels to Mexico for a risky and experimental medical procedure in hopes of a miracle cure for his cancer, only to discover the entire operation is a scam to defraud the most vulnerable. Armed with a newfound purpose, the infamous serial killer returns to his work, turning the tables on the con artists in his signature visceral way through devious, deranged, and ingenious traps.",
-                7.4/2,
+                7.4 / 2,
                 "2023-09-26"
             ),
             MovieModel(
@@ -76,7 +74,7 @@ class MovieApiSource : MovieDataSource {
 
                 "Muzzle",
                 "LAPD K-9 officer Jake Rosser has just witnessed the shocking murder of his dedicated partner by a mysterious assailant. As he investigates the shooter’s identity, he uncovers a vast conspiracy that has a chokehold on the city in this thrilling journey through the tangled streets of Los Angeles and the corrupt bureaucracy of the LAPD.",
-                6.3/2,
+                6.3 / 2,
                 "2023-09-29"
             ),
             MovieModel(
@@ -86,13 +84,13 @@ class MovieApiSource : MovieDataSource {
 
                 "The Exorcist: Believer",
                 "When his daughter and her friend show signs of demonic possession, it unleashes a chain of events that forces single father, Victor Fielding, to confront the nadir of evil. Terrified and desperate, he seeks out the only person alive who's witnessed anything like it before.",
-                6.1/2,
+                6.1 / 2,
                 "2023-10-04"
             )
         )
     }
 
-    override fun loadReviews() : List <ReviewModel>{
+    override fun loadReviews(): List<ReviewModel> {
         return listOf(
             ReviewModel(
                 ProfileModel(
@@ -111,7 +109,7 @@ class MovieApiSource : MovieDataSource {
                     "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
                     "Five Nights at Freddy's",
                     "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
+                    8.4 / 2,
                     "2023-10-25"
                 )
             ),
@@ -130,7 +128,7 @@ class MovieApiSource : MovieDataSource {
                     "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
                     "Five Nights at Freddy's",
                     "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
+                    8.4 / 2,
                     "2023-10-25"
                 )
 
@@ -150,7 +148,7 @@ class MovieApiSource : MovieDataSource {
                     "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
                     "Five Nights at Freddy's",
                     "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
+                    8.4 / 2,
                     "2023-10-25"
                 )
             )
@@ -158,20 +156,23 @@ class MovieApiSource : MovieDataSource {
 
     }
 
-    override fun loadDiscoverMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+    override fun loadDiscoverMovies(
+        genres: String,
+        callback: (ApiResponse<List<MovieModel>>) -> Unit
+    ) {
 
         val api = retrofit.create(MovieAPI::class.java)
         val call: Call<List<MovieModel>> = api.discoverMovies(genres);
 
-        call.enqueue(object: Callback<List<MovieModel>> {
+        call.enqueue(object : Callback<List<MovieModel>> {
             override fun onResponse(
                 call: Call<List<MovieModel>>,
                 response: Response<List<MovieModel>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     Log.d("Main", "success!" + response.body().toString())
                     callback(ApiResponse(response.body()!!))
-                }else{
+                } else {
                     callback(ApiResponse(null, true, "Couldn't load movies"))
                 }
             }
@@ -189,15 +190,15 @@ class MovieApiSource : MovieDataSource {
         val api = retrofit.create(MovieAPI::class.java)
         val call: Call<List<MovieModel>> = api.newMovies();
 
-        call.enqueue(object: Callback<List<MovieModel>> {
+        call.enqueue(object : Callback<List<MovieModel>> {
             override fun onResponse(
                 call: Call<List<MovieModel>>,
                 response: Response<List<MovieModel>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     Log.d("Main", "success!" + response.body().toString())
                     callback(ApiResponse(response.body()!!))
-                }else{
+                } else {
                     callback(ApiResponse(null, true, "Couldn't load movies"))
                 }
             }
@@ -210,20 +211,20 @@ class MovieApiSource : MovieDataSource {
 
     }
 
-    override fun searchMovies(query : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+    override fun searchMovies(query: String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
 
         val api = retrofit.create(MovieAPI::class.java)
         val call: Call<List<MovieModel>> = api.searchMovies(query);
 
-        call.enqueue(object: Callback<List<MovieModel>> {
+        call.enqueue(object : Callback<List<MovieModel>> {
             override fun onResponse(
                 call: Call<List<MovieModel>>,
                 response: Response<List<MovieModel>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     Log.d("Main", "success!" + response.body().toString())
                     callback(ApiResponse(response.body()!!))
-                }else{
+                } else {
                     callback(ApiResponse(null, true, "Couldn't load movies"))
                 }
             }
@@ -234,5 +235,35 @@ class MovieApiSource : MovieDataSource {
 
         })
 
+    }
+
+    override fun createReviewForMovie(
+        movieId: String,
+        review: String,
+        callback: (ApiResponse<String>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, review)
+
+        createReviewCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(
+                        ApiResponse(
+                            result = "Review created successfully",
+                            statusMessage = "success"
+                        )
+                    )
+                } else {
+                    // Failed to create review or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
     }
 }
