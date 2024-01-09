@@ -22,7 +22,7 @@ fun MainView() {
         composable("signup") { SignupScreen() }
         composable("home") { HomeScreen() }
         composable("search") { SearchScreen(navController, profileState) }
-        composable("watchlists") { WatchList(navController) }
+        composable("watchlists") { WatchList() }
         composable("watchlists/{watchlist_id}",
             arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType })
         )
