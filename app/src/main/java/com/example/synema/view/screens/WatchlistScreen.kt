@@ -48,7 +48,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
@@ -62,7 +61,7 @@ import com.example.synema.view.components.OpaqueButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WatchList(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+    val dataSource = DependencyProvider.getInstance().getWatchlistSource()
 
     GradientBox(){
         Column {
@@ -72,7 +71,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             }
             val popupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
-            val onDeleteCancelled = remember { mutableStateOf(false) }
+
 
             dataSource.read_db (profileState.value.token){
                 if (it.successful()) {
@@ -85,11 +84,11 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
 
-
-                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
+                CreateDeletePopup(popupControl, watchlistName = watchlistName, navController, profileState, watchlistList)
+                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState)
                 newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController)
-            };
+                wathclistList(watchlistList = watchlistList, header = "", navController = navController)
+            }
             BottomBar(navController = navController)
         }
 
@@ -133,7 +132,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                 ){
                     // Button to create watchlist
                     Button( onClick = {
-                        val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+                        val dataSource = DependencyProvider.getInstance().getWatchlistSource()
                         // Call your createWatchlist function here
                         dataSource.createWatchlist(watchlistName.value, profileState.value.token){}
                         openDialog.value = false
@@ -163,9 +162,9 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateDeleteWatchlist(
+private fun CreateDeletePopup(
     openDialog: MutableState<Boolean>,
-    watchlistId: String,
+    watchlistName : MutableState<String>,
     navController: NavHostController,
     profileState: MutableState<ProfileModel>,
     watchlistList: List<WatchlistModel>,
@@ -176,15 +175,15 @@ private fun CreateDeleteWatchlist(
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
         ) {
-            DeletePopup(openDialog, watchlistId, navController, profileState, watchlistList)
+            DeletePopupContent(openDialog, watchlistName, navController, profileState, watchlistList)
         }
     }
 }
 
 @Composable
-private fun DeletePopup(
+private fun DeletePopupContent(
     openDialog: MutableState<Boolean>,
-    watchlistId: String,
+    watchlistName: MutableState<String>,
     navController: NavHostController,
     profileState: MutableState<ProfileModel>,
     watchlistList: List<WatchlistModel>,
@@ -204,16 +203,39 @@ private fun DeletePopup(
             horizontalArrangement = Arrangement.Center
         ) {
             DeletePopupButton("Delete") {
-                //onDeleteConfirmed(watchlistId, navController, profileState, watchlistList)
+                onDeleteConfirmed(navController, profileState, watchlistList, watchlistName)
             }
-
             Spacer(modifier = Modifier.width(8.dp))
-
             DeletePopupButton("Cancel") {
-                //onDeleteCancelled(openDialog)
+                onDeleteCancelled(openDialog)
             }
         }
     }
+}
+
+private fun onDeleteConfirmed(
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>,
+    watchlistList: List<WatchlistModel>,
+    watchlistName: MutableState<String>
+) {
+    val dataSource = DependencyProvider.getInstance().getWatchlistSource()
+    dataSource.deleteWatchlist(watchlistName.value, profileState.value.token) { response ->
+        if (response.successful()) {
+            dataSource.read_db(profileState.value.token) { updatedWatchlistResponse ->
+                if (updatedWatchlistResponse.successful()) {
+                    // Update watchlistListState with the new data
+                    updatedWatchlistResponse.getResult() ?: emptyList()
+                    navController.navigate("watchlists")
+                }
+            }
+        }
+    }
+}
+
+
+private fun onDeleteCancelled(openDialog: MutableState<Boolean>) {
+    openDialog.value = false
 }
 
 @Composable
@@ -256,10 +278,6 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
     }
 
 }
-
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
