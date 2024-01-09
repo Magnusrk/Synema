@@ -89,7 +89,6 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
                 newWatchlist(popupControl)
                 wathclistList(watchlistList = watchlistList, header ="" , navController = navController)
-                CreateDeletePopup(popupControl, watchlistList = watchlistList, navController = navController, MutableState<ProfileModel> );
             };
             BottomBar(navController = navController)
         }
@@ -161,9 +160,15 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
 
 
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateDeletePopup(openDialog: MutableState<Boolean>, watchlistId: String, navController: NavHostController, profileState: MutableState<ProfileModel>,
-    watchlistList: List<WatchlistModel>
+private fun CreateDeletePopup(
+    openDialog: MutableState<Boolean>,
+    watchlistId: String,
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>,
+    watchlistList: List<WatchlistModel>,
 ) {
     if (openDialog.value) {
         Popup(
@@ -171,57 +176,7 @@ private fun CreateDeletePopup(openDialog: MutableState<Boolean>, watchlistId: St
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
         ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 250.dp)
-            ) {
-                PopUpHeader(openDialog = openDialog, navController = navController)
-                Text("Are you sure you want to delete this watchlist?", color = Color.White)
-                Row(
-                    modifier = Modifier
-                        .height(50.dp)
-                        .fillMaxWidth()
-                        .background(Color(0xFF430B3D)),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        onClick = {
-                            onDeleteConfirmed()
-                            val dataSource = DependencyProvider.getInstance().getWatchlistSource()
-                            dataSource.deleteWatchlist(watchlistId, profileState.value.token) { response ->
-                                if (response.successful()) {
-                                    navController.navigate("watchlists")
-                                }
-                                openDialog.value = false
-                            }
-                        },
-                        shape = RoundedCornerShape(20),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
-                        contentPadding = PaddingValues(horizontal = 20.dp)
-                    ) {
-                        Row {
-                            Text("Delete")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Button(
-                        onClick = {
-                            onDeleteCancelled()
-                            openDialog.value = false
-                        },
-                        shape = RoundedCornerShape(20),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
-                        contentPadding = PaddingValues(horizontal = 20.dp)
-                    ) {
-                        Row {
-                            Text("Cancel")
-                        }
-                    }
-                }
-            }
+            DeletePopupContent(openDialog, watchlistId, navController, profileState, watchlistList)
         }
     }
 }
@@ -255,19 +210,7 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
 
 
 
-@Composable
-private fun DeletePopupButton(text: String, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        shape = RoundedCornerShape(20),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
-        contentPadding = PaddingValues(horizontal = 20.dp)
-    ) {
-        Row {
-            Text(text)
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
