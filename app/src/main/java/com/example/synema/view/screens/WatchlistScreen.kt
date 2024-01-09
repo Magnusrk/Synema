@@ -224,7 +224,7 @@ private fun onDeleteConfirmed(
         if (response.successful()) {
             dataSource.read_db(profileState.value.token) { updatedWatchlistResponse ->
                 if (updatedWatchlistResponse.successful()) {
-                    // Update watchlistListState with the new data
+                    // Update watchlist after deletion
                     updatedWatchlistResponse.getResult() ?: emptyList()
                     navController.navigate("watchlists")
                 }
