@@ -5,27 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.synema.Data.DependencyProvider
-import com.example.synema.controller.AppContext
-import com.example.synema.model.ProfileModel
-import com.example.synema.view.screens.AddMovieToWatchlist
-import com.example.synema.view.screens.HomeScreen
-import com.example.synema.view.screens.LoginScreen
-import com.example.synema.view.screens.MediaDetails
-import com.example.synema.view.screens.MyListScreen
-import com.example.synema.view.screens.SearchScreen
-import com.example.synema.view.screens.Profile
-import com.example.synema.view.screens.SignupScreen
-import com.example.synema.view.screens.WatchList
-import com.example.synema.viewmodel.MainViewModel
-import com.example.synema.view.screens.WriteReviewScreen
 import com.example.synema.view.screens.MainView
 
 
