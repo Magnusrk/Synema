@@ -2,48 +2,88 @@ package com.example.synema.view.screens
 import GradientBox
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.WatchlistModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 
-/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyListScreen(navController: NavHostController, profileState: MutableState<ProfileModel>) {
-    val movieList = Datasource().loadMovies()
+fun MyListScreen(
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>,
+    watchlistID: String?
+) {
+    val source = DependencyProvider.getInstance().getMovieSource();
+    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+    /*var watchlist : WatchlistModel by remember {
+        mutableStateOf(WatchlistModel("",
+            "",
+            "",
+            emptyList(),
+            emptyList()
+        ))
+    }*/
+    var movielist = remember { mutableStateListOf<MovieModel>() }
+
+    dataSource.getWatchlistById(watchlistID.toString(), token = profileState.value.token) {
+        if (it.successful()) {
+            it.getResult()?.let { watchlistModel ->
+                movielist.clear()
+                watchlistModel.movieIds.forEach { movie ->
+                    source.loadMovie(movie) {
+                        movielist.add(it.getResult()!!)
+                    }
+                }
+            }
+
+
+        }
+    }
+
 
     GradientBox {
         Column {
             MainContainer(hasBottomNav = true) {
-                TopBar(title = "My List", alignment = Alignment.Center)
-
-                movieList.forEach { movie ->
+                TopBar(
+                    title = "My List",
+                    alignment = Alignment.Center,
+                    backArrow = true,
+                    navController = navController
+                )
+                movielist.forEach() { movie1 ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -51,14 +91,17 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(movie.imageResourceId),
-                            contentDescription = stringResource(movie.stringResourceId),
-                            modifier = Modifier.size(95.dp, 98.dp),
-                            contentScale = ContentScale.Crop
+                        AsyncImage(
+                            model = movie1.poster_url,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(95.dp)
+                                .height(135.dp)
+                                .clickable { navController.navigate("mediaDetails/" + movie1.id) },
+                            contentScale = ContentScale.FillBounds
                         )
                         Text(
-                            text = LocalContext.current.getString(movie.stringResourceId),
+                            text = movie1.title,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -77,19 +120,30 @@ fun MyListScreen(navController: NavHostController, profileState: MutableState<Pr
                         Surface(
                             modifier = Modifier.size(30.dp),
                             color = Color(0, 0, 0, 0),
-                            onClick = { navController?.popBackStack() }) {
+                            onClick = {
+                                dataSource.deleteMovieFromWatchlist(
+                                    watchlistID.toString(),
+                                    movie1.id.toString(),
+                                    profileState.value.token
+                                ) {}
+                            }) {
+
                             Image(
                                 painter = painterResource(id = R.drawable.edit_playlist),
                                 contentDescription = null,
                                 modifier = Modifier.size(30.dp)
                             )
                         }
+
+
                     }
                 }
-                BottomBar(navController = navController)
+
             }
+            BottomBar(navController = navController)
+
+
         }
     }
 }
 
-*/

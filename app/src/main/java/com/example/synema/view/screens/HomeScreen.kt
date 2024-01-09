@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.Data.movies.MockMovieDataSource
+import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
@@ -99,6 +100,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
         }
     }
 
+
     dataSource.loadDiscoverMovies(genres = "35") {
         it.getResult()?.let {movieModel ->
             comedyList = movieModel
@@ -130,7 +132,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
             MovieList(
                 movieList = newList,
                 header = "New releases",
-                navController = navController
+                navController = AppContext.getInstance().getNav()
             )
             MovieList(
                 movieList = discoverList,
@@ -169,6 +171,7 @@ fun MoviesApp(navController : NavHostController, profileState: MutableState<Prof
 @Composable
 fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
+    var movList = movieList.shuffled();
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,7 +186,7 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
                 .padding(8.dp)
         )
         LazyRow(modifier = modifier) {
-            items(movieList) { movie ->
+            items(movList) { movie ->
                 MovieCard(
                     movie = movie,
                     modifier = Modifier.padding(8.dp),
@@ -233,9 +236,6 @@ fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : 
         }
 
     }
-
-
-
 }
 
 

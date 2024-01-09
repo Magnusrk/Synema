@@ -1,3 +1,4 @@
+import android.util.Log
 import com.example.synema.controller.WatchlistAPI
 import com.example.synema.Data.Watchlists.WatchlistDataSource
 import com.example.synema.controller.MovieAPI
@@ -11,24 +12,25 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class WatchlistAPISource: WatchlistDataSource {
+    //private val BASE_URL = "http://192.168.0.107:8000"
     val BASE_URL = "https://cwjtedqahp.eu10.qoddiapp.com/"
 
     val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    override fun createWatchlist(watchlistName: String , callback: (ApiResponse<MovieModel>) -> Unit) {
+    override fun createWatchlist(watchlistName: String, token : String, callback: (ApiResponse<MovieModel>) -> Unit) {
         if (watchlistName.isEmpty()) {
             // Handle the case where the watchlist name is empty
             // You can throw an exception or handle it as needed
-            createWatchlist("Hardcodedname", callback)
+            createWatchlist("Hardcodedname", token,  callback)
             return
         }
         val api = retrofit.create(WatchlistAPI::class.java)
 
         val createWatchlistCall: Call<WatchlistModel> = api.createWatchlist(WatchlistModel(watchlistName,"","",
             listOf(), listOf()
-        ))
+        ), token)
 
         createWatchlistCall.enqueue(object : Callback<WatchlistModel> {
             override fun onResponse(call: Call<WatchlistModel>, response: Response<WatchlistModel>) {
@@ -48,10 +50,11 @@ class WatchlistAPISource: WatchlistDataSource {
         })
     }
 
-    override fun read_db(callback: (ApiResponse<List<WatchlistModel>>) -> Unit) {
+    override fun read_db(token : String, callback: (ApiResponse<List<WatchlistModel>>) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
+        Log.d("Main", token);
 
-        val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db()
+        val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db(token)
 
         getAllWatchlistsCall.enqueue(object : Callback<List<WatchlistModel>> {
             override fun onResponse(call: Call<List<WatchlistModel>>, response: Response<List<WatchlistModel>>) {
@@ -71,31 +74,55 @@ class WatchlistAPISource: WatchlistDataSource {
 
 
 
-     override fun getAllWatchlists(callback: (ApiResponse<List<WatchlistModel>>?) -> Unit) {
+     override fun getWatchlistById(watchlistId: String,token: String, callback: (ApiResponse<WatchlistModel>) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
-        val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_db()
+        val getWatchlistByIdCall: Call<WatchlistModel> = api.getWatchlistById(watchlistId,token
+        )
 
-        getAllWatchlistsCall.enqueue(object : Callback<List<WatchlistModel>> {
-            override fun onResponse(call: Call<List<WatchlistModel>>, response: Response<List<WatchlistModel>>) {
+        getWatchlistByIdCall.enqueue(object : Callback<WatchlistModel> {
+            override fun onResponse(call: Call<WatchlistModel>, response: Response<WatchlistModel>) {
                 if (response.isSuccessful) {
                     callback(ApiResponse(result = response.body(), statusMessage = "success"))
                 } else {
-                    // Failed to fetch watchlists
+                    // Watchlist not found or other error
                     callback(ApiResponse(result = null, statusMessage = "failed"))
                 }
             }
 
-            override fun onFailure(call: Call<List<WatchlistModel>>, t: Throwable) {
+            override fun onFailure(call: Call<WatchlistModel>, t: Throwable) {
                 callback(ApiResponse(result = null, statusMessage = t.message.toString()))
             }
         })
     }
 
-     override fun addMovieToWatchlist(watchlistId: String, movieId: String, callback: (ApiResponse<String>) -> Unit) {
+
+
+    override fun deleteMovieFromWatchlist(watchlistId: String, movieId: String,token: String, callback: (ApiResponse<String>) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
-        val addMovieCall: Call<String> = api.addMovieToWatchlist(watchlistId, movieId)
+        val deleteMovieCall: Call<String> = api.deleteMovieFromWatchlist(watchlistId, movieId,token)
+
+        deleteMovieCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = "Movie deleted successfully", statusMessage = "success"))
+                } else {
+                    // Failed to delete movie or watchlist not found
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
+    override fun addMovieToWatchlist(watchlistId: String, movieId: String, token : String,  callback: (ApiResponse<String>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
+
+        val addMovieCall: Call<String> = api.addMovieToWatchlist(watchlistId, movieId, token)
 
         addMovieCall.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

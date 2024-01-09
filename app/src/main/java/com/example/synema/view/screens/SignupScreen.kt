@@ -24,10 +24,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
@@ -36,6 +38,7 @@ import com.example.synema.controller.UserAPI
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.view.components.SynemaLogo
+import com.example.synema.viewmodel.SignupViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,21 +47,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Composable
-fun SignupScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun SignupScreen() {
+    val signupViewModel : SignupViewModel = viewModel();
     GradientBox(){
-        ContentContainer(navController, profileState);
+        ContentContainer(signupViewModel);
     }
 }
 
 @Composable
-private fun ContentContainer(navController: NavController, profileState: MutableState<ProfileModel>){
+private fun ContentContainer(signupViewModel: SignupViewModel){
     Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(14.dp)
     ){
         SynHeader()
-        UserSignUpArea(navController, profileState);
+        UserSignUpArea(signupViewModel);
     }
 }
 
@@ -76,16 +80,8 @@ private fun SynHeader() {
 }
 
 @Composable
-private fun UserSignUpArea(navController: NavController, profileState: MutableState<ProfileModel>){
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val error = remember {
-        mutableStateOf(""
-        )
-    }
-
-
+private fun UserSignUpArea(signupViewModel: SignupViewModel){
+    val c  = LocalContext.current;
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,44 +92,30 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
         LoginInputField(
             label="Username",
             isHidden= false,
-            onChange = { username = it},
+            onChange = { signupViewModel.editUsername(it)},
             onDone = {}
         );
         LoginInputField(
             label="Email",
             isHidden= false,
-            onChange = { email = it},
+            onChange = { signupViewModel.editEmail(it)},
             onDone = {}
         );
         LoginInputField(
             label="Password",
             isHidden=true,
-            onChange = { password = it},
-            onDone = {sendSignUpRequest(
-                username,
-                email,
-                password,
-                navController,
-                profileState,
-                error
-            ); }
+            onChange = { signupViewModel.editPassword(it)},
+            onDone = {signupViewModel.signup(c) }
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top=50.dp)
         ){
-            OpaqueButton(label = "Sign up", onClick = {sendSignUpRequest(
-                username,
-                email,
-                password,
-                navController,
-                profileState,
-                error
-            );});
+            OpaqueButton(label = "Sign up", onClick = {signupViewModel.signup(c)});
             Box(modifier= Modifier.height(50.dp))
             Text("By signing up you agree on our", color=Color.White, fontSize = 10.sp)
-            OpaqueButton(label = "Terms of Service", onClick = {navController.navigate("home");});
-            OpaqueButton(label = "Login instead", onClick = {navController.navigate("login");});
-            Text(error.value, color=Color.Red)
+            OpaqueButton(label = "Terms of Service", onClick = {});
+            OpaqueButton(label = "Login instead", onClick = {signupViewModel.login()});
+            Text(signupViewModel.error.value, color=Color.Red)
         }
 
     }
@@ -141,24 +123,6 @@ private fun UserSignUpArea(navController: NavController, profileState: MutableSt
 
 }
 
-private fun sendSignUpRequest(
-    username: String,
-    email: String,
-    password: String,
-    navController: NavController,
-    profileState: MutableState<ProfileModel>,
-    error: MutableState<String>
-) {
-    val source = DependencyProvider.getInstance().getUserSource();
-    source.signupUser(username, email, password) {
-        if (it.successful()) {
-            profileState.value = it.getResult()?.profile!!;
-            navController.navigate("home")
-        } else{
-            error.value = (it.getStatus())
-        }
-    };
-}
 
 
 
