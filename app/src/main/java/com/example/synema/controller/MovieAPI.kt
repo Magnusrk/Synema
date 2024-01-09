@@ -1,6 +1,7 @@
 package com.example.synema.controller
 
 import com.example.synema.model.MovieModel
+import com.example.synema.model.ReviewModel
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -36,4 +37,9 @@ public interface MovieAPI {
         @Path("movieId") movieId: String,
         @Body reviewModel: String
     ): Call<String>
+
+    @GET("/movie/{movieId}/reviews")
+    fun getReviewsForMovie(
+        @Path("movieId") movieId: String
+    ): Call<List<ReviewModel>>
 }

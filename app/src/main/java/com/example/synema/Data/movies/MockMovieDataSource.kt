@@ -63,7 +63,7 @@ class MockMovieDataSource : MovieDataSource {
         )
     }
 
-    override fun loadReviews() : List <ReviewModel>{
+ /* override fun loadReviews() : List <ReviewModel>{
         return listOf(
             ReviewModel(
                 ProfileModel(
@@ -126,6 +126,10 @@ class MockMovieDataSource : MovieDataSource {
 
     }
 
+
+  */
+
+
     override fun loadDiscoverMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
         callback(ApiResponse(
             loadMovies()
@@ -142,6 +146,23 @@ class MockMovieDataSource : MovieDataSource {
         callback(ApiResponse(
             loadMovies()
         ))
+    }
+
+    override fun createReviewForMovie(
+        movieId: String,
+        review: String,
+        token: String,
+        callback: (ApiResponse<String>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getReviewsForMovie(
+        movieId: String,
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
+        TODO("Not yet implemented")
     }
 
 }
