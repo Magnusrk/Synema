@@ -135,7 +135,15 @@ fun WriteReviewScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(
-                            onClick = { navController.navigate("mediaDetails/" + movie.id + "/review") },
+                            onClick = {
+                                movieDataSource.delete_review(
+                                    movieID.toString(),
+                                    profileState.value.token,
+                                    profileState.value
+                                ) {
+                                    navController.popBackStack()
+                                }
+                            },
                             shape = RoundedCornerShape(20),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFd60202)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
