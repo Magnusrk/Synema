@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -56,42 +57,46 @@ import com.example.synema.view.components.TopBar
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun WriteReviewScreen(navController : NavHostController, profileState: MutableState<ProfileModel>, movieID: String?) {
+fun WriteReviewScreen(
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>,
+    movieID: String?
+) {
     val reviewText = mutableStateOf("")
     val rating = mutableStateOf(0)
 
 
-    var movie : MovieModel by remember {
+    var movie: MovieModel by remember {
         mutableStateOf(
             MovieModel(
-            0,
-            "",
-            "",
-            "Loading...",
-            "Loading...",
-            0,
-            ""
-        )
+                0,
+                "",
+                "",
+                "Loading...",
+                "Loading...",
+                0,
+                ""
+            )
         )
     }
     val movieDataSource = DependencyProvider.getInstance().getMovieSource();
 
     if (movieID != null) {
-        movieDataSource.loadMovie(movieID){
+        movieDataSource.loadMovie(movieID) {
             movie = it.getResult()!!
         }
     }
 
-    var reviewList : List<ReviewModel> by remember {
+    var reviewList: List<ReviewModel> by remember {
         mutableStateOf(listOf())
     }
 
-    movieDataSource.getReviewsForMovie(movieID.toString(),profileState.value.token){
+    movieDataSource.getReviewsForMovie(movieID.toString(), profileState.value.token) {
         if (it.successful()) {
-            it.getResult()?.let {reviewModel ->
+            it.getResult()?.let { reviewModel ->
                 reviewList = reviewModel
-                reviewList.forEach{review ->
-                    if(review.userid == profileState.value.id){
+                reviewList.forEach { review ->
+                    if (review.userid == profileState.value.id) {
                         reviewText.value = review.reviewText
                         rating.value = review.rating
                     }
@@ -110,11 +115,13 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                     navController = navController,
                     fontSize = 15.sp
                 )
-                Box(modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth()
-                    .height(75.dp)
-                    .background(color = Color(0xFF75146B), shape = RoundedCornerShape(4.dp))){
+                Box(
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .fillMaxWidth()
+                        .height(75.dp)
+                        .background(color = Color(0xFF75146B), shape = RoundedCornerShape(4.dp))
+                ) {
                     RatingStars(rating)
                 }
 
@@ -123,9 +130,20 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Box(modifier = Modifier.fillMaxSize()) {
-                    Row (horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()){
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Button(
-                            onClick = { navController.navigate("mediaDetails/" + movie.id + "/review") },
+                            onClick = {
+                                movieDataSource.delete_review(
+                                    movieID.toString(),
+                                    profileState.value.token,
+                                    profileState.value
+                                ) {
+                                    navController.popBackStack()
+                                }
+                            },
                             shape = RoundedCornerShape(20),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFd60202)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
@@ -134,9 +152,17 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                             Text(text = "Delete", fontSize = 20.sp)
                         }
                         Button(
-                            onClick = { movieDataSource.createReviewForMovie(movieID.toString(), reviewText.value, rating.value, profileState.value.token, profileState.value){
-                                navController.popBackStack()
-                            } },
+                            onClick = {
+                                movieDataSource.createReviewForMovie(
+                                    movieID.toString(),
+                                    reviewText.value,
+                                    rating.value,
+                                    profileState.value.token,
+                                    profileState.value
+                                ) {
+                                    navController.popBackStack()
+                                }
+                            },
                             shape = RoundedCornerShape(20),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
@@ -146,7 +172,7 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                         }
                     }
 
-            }
+                }
             }
             BottomBar(navController = navController)
 
@@ -156,79 +182,126 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReviewBox(reviewText : MutableState<String>){
-    Box(modifier= Modifier
-        .fillMaxWidth()
-        .height(400.dp)
-        .padding(horizontal = 15.dp, vertical = 10.dp)
-        .background(Color.White, shape = RoundedCornerShape(4.dp)),
+fun ReviewBox(reviewText: MutableState<String>) {
+    val maxChar = 1000
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
+            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .background(Color.White, shape = RoundedCornerShape(4.dp)),
     )
     {
         OutlinedTextField(
             value = reviewText.value,
-            onValueChange = { reviewText.value = it },
+            onValueChange = { if (it.length <= maxChar) reviewText.value = it.take(maxChar) },
             label = { Text("Review") },
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 10.dp)
-                .fillMaxSize()
+                .fillMaxSize(),
+            supportingText = {
+                Text(
+                    text = "${reviewText.value.length} / $maxChar",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                )
+            }
         )
     }
 }
 
 @Composable
-private fun RatingStars(rating : MutableState<Int>){
+private fun RatingStars(rating: MutableState<Int>) {
     val size = 63.dp
     val spacing = 0.dp
 
-    Row ( horizontalArrangement = Arrangement.SpaceEvenly){
-        Button(onClick = { rating.value = 1 }, shape = RectangleShape,
+    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        Button(
+            onClick = { rating.value = 1 }, shape = RectangleShape,
             contentPadding = PaddingValues(horizontal = 5.dp),
             border = BorderStroke(0.dp, Color.Transparent),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()) {
+            modifier = Modifier.fillMaxHeight()
+        ) {
             if (rating.value > 0) {
-                InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = size,
+                    spacing = spacing,
+                    tint = Color(0xFF4399FF)
+                )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
             }
         }
-        Button(onClick = { rating.value = 2 }, shape = RectangleShape,
+        Button(
+            onClick = { rating.value = 2 }, shape = RectangleShape,
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()) {
+            modifier = Modifier.fillMaxHeight()
+        ) {
             if (rating.value > 1) {
-                InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = size,
+                    spacing = spacing,
+                    tint = Color(0xFF4399FF)
+                )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
-            }        }
-        Button(onClick = { rating.value= 3 }, shape = RectangleShape,
+            }
+        }
+        Button(
+            onClick = { rating.value = 3 }, shape = RectangleShape,
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()) {
+            modifier = Modifier.fillMaxHeight()
+        ) {
             if (rating.value > 2) {
-                InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = size,
+                    spacing = spacing,
+                    tint = Color(0xFF4399FF)
+                )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
-            }        }
-        Button(onClick = { rating.value = 4 }, shape = RectangleShape,
+            }
+        }
+        Button(
+            onClick = { rating.value = 4 }, shape = RectangleShape,
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()) {
+            modifier = Modifier.fillMaxHeight()
+        ) {
             if (rating.value > 3) {
-                InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = size,
+                    spacing = spacing,
+                    tint = Color(0xFF4399FF)
+                )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
-            }        }
-        Button(onClick = {rating.value = 5 }, shape = RectangleShape,
+            }
+        }
+        Button(
+            onClick = { rating.value = 5 }, shape = RectangleShape,
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()) {
+            modifier = Modifier.fillMaxHeight()
+        ) {
             if (rating.value > 4) {
-                InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = size,
+                    spacing = spacing,
+                    tint = Color(0xFF4399FF)
+                )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
             }

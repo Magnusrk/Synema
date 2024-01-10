@@ -159,6 +159,15 @@ class MockMovieDataSource : MovieDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun delete_review(
+        movieId: String,
+        token: String,
+        profileModel: ProfileModel,
+        callback: (ApiResponse<String>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun getReviewsForMovie(
         movieId: String,
         token: String,

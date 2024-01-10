@@ -1,4 +1,5 @@
 package com.example.synema.Data.movies
+import android.annotation.SuppressLint
 import android.util.Log
 import com.example.synema.controller.MovieAPI
 import com.example.synema.model.ApiResponse
@@ -275,6 +276,37 @@ class MovieApiSource : MovieDataSource {
         })
     }
 
+    override fun delete_review(
+        movieId: String,
+        token: String,
+        profileModel: ProfileModel,
+        callback: (ApiResponse<String>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val deleteReviewCall: Call<String> = api.delete_Review(movieId, token)
+
+        deleteReviewCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(
+                        ApiResponse(
+                            result = "Review deleted successfully",
+                            statusMessage = "success"
+                        )
+                    )
+                } else {
+                    // Failed to create review or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
     override fun getReviewsForMovie(
         movieId: String,
         token: String,
@@ -282,17 +314,42 @@ class MovieApiSource : MovieDataSource {
     ) {
         val api = retrofit.create(MovieAPI::class.java)
 
-        val getReviewsCall: Call<List<ReviewModel>> = api.getReviewsForMovie(movieId)
+        val getReviewsCall: Call<List<ReviewModel>> = api.getReviewsForMovie(movieId,token)
 
         getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
+            @SuppressLint("SuspiciousIndentation")
             override fun onResponse(call: Call<List<ReviewModel>>, response: Response<List<ReviewModel>>) {
                 if (response.isSuccessful) {
                     val reviews = response.body()
-                    if (reviews != null && reviews.isNotEmpty()) {
                         callback(ApiResponse(result = reviews, statusMessage = "success"))
-                    } else {
-                        callback(ApiResponse(result = null, statusMessage = "No reviews found for the given movie ID"))
-                    }
+
+                } else {
+                    // Failed to fetch reviews or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<ReviewModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
+    override fun getOwnReviews(
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val getReviewsCall: Call<List<ReviewModel>> = api.getOwnReviews(token)
+
+        getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onResponse(call: Call<List<ReviewModel>>, response: Response<List<ReviewModel>>) {
+                if (response.isSuccessful) {
+                    val reviews = response.body()
+                    callback(ApiResponse(result = reviews, statusMessage = "success"))
+
                 } else {
                     // Failed to fetch reviews or other error occurred
                     callback(ApiResponse(result = null, statusMessage = "failed"))
