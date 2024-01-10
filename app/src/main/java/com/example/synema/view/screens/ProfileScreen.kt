@@ -135,6 +135,7 @@ private fun PersonalDescription() {
                 .height(127.dp)
                 .background(Color(0xFF543b5b), shape = RoundedCornerShape(10.dp))
                 .align(Alignment.Center)
+
         ) {
             Text(
                 "Writer by day, reviewer by night. I live \n" +
@@ -145,7 +146,7 @@ private fun PersonalDescription() {
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, top = 2.dp)
+                    .padding(start = 16.dp, top = 16.dp)
 
             )
         }
