@@ -29,8 +29,6 @@ fun MainView() {
         )
         { backStackEntry ->
             MyListScreen(
-                navController,
-                profileState,
                 backStackEntry.arguments?.getString("watchlist_id")
             )
         }
