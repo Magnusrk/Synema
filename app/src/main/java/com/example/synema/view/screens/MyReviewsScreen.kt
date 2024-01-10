@@ -147,6 +147,9 @@ private fun InnerReviewContainer(review : ReviewModel){
         }
     }
     var expanded by remember { mutableStateOf (false) }
+    var moreText by remember {
+        mutableStateOf("More")
+    }
 
     Column(
         modifier = Modifier.padding(10.dp)
@@ -173,8 +176,13 @@ private fun InnerReviewContainer(review : ReviewModel){
         Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
             if (review.reviewText.length > 30) {
                 OpaqueButton(
-                    label = "More",
-                    onClick = { expanded = !expanded },
+                    label = moreText,
+                    onClick = { expanded = !expanded;
+                        if (expanded){
+                            moreText = "Less"
+                        } else {
+                            moreText = "More"
+                        }},
                     Modifier.defaultMinSize(minHeight = 5.dp)
                 )
             }
