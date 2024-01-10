@@ -55,8 +55,12 @@ import com.example.synema.R
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.OpaqueButton
+import com.example.synema.viewmodel.Watchlists.WatchlistViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,9 +76,9 @@ fun WatchList() {
                 MainContainer(hasBottomNav = true){
                     TopBar(title = "My Watchlists", alignment = Alignment.Center)
                     CreateWatchlistPopup(vm);
-                    newWatchlist(vm.popupControl)
-                    CreateDeletePopup(deletePopupControl, watchlistName = watchlistName, navController,profileState)
-                    wathclistList(watchlistList = vm.watchlistList, header ="", navController = vm.getNav())
+                    newWatchlist(vm)
+                    CreateDeletePopup(vm)
+                    wathclistList(vm)
                 };
                 BottomBar(navController = vm.getNav())
             }
@@ -141,16 +145,11 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
 }
 @Composable
-private fun CreateDeletePopup(
-    openDialog: MutableState<Boolean>,
-    watchlistName: MutableState<String>,
-    navController: NavHostController,
-    profileState: MutableState<ProfileModel>
-) {
+private fun CreateDeletePopup( vm : WatchlistViewModel) {
 
-    if (openDialog.value) {
+    if (vm.deleteConfirmationPopupControl.value) {
         Popup(
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = { vm.deleteConfirmationPopupControl.value = false },
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
         ) {
@@ -160,7 +159,7 @@ private fun CreateDeletePopup(
                 modifier = Modifier.padding(top = 250.dp)
             ) {
                 // Row with buttons
-                DeletePopupButton(openDialog = openDialog, navController = navController, watchlistId = watchlistName.value, token = profileState.value.token)
+                DeletePopupButton(vm)
 
                 // Text for the delete confirmation
                 Text(
@@ -175,12 +174,7 @@ private fun CreateDeletePopup(
 }
 
 @Composable
-private fun DeletePopupButton(
-    openDialog: MutableState<Boolean>,
-    navController: NavHostController,
-    watchlistId: String,
-    token: String
-) {
+private fun DeletePopupButton(vm : WatchlistViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -189,19 +183,12 @@ private fun DeletePopupButton(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // Cancel Button
-        OpaqueButton(label = "Cancel", onClick = { openDialog.value = false })
+        OpaqueButton(label = "Cancel", onClick = { vm.deleteConfirmationPopupControl.value = false })
 
         // Delete Button
         OpaqueButton(
             label = "Delete watchlist",
-            onClick = {
-                val dataSource = DependencyProvider.getInstance().getWatchlistSource()
-                dataSource.deleteWatchlist(watchlistId, token) { response ->
-                    // Close the dialog and navigate to watchlist
-                    openDialog.value = false
-                    navController.navigate("watchlists")
-                }
-            }
+            onClick = { vm.DeleteWatchlist()}
         )
     }
 }
@@ -288,8 +275,7 @@ private fun SynHeader() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun newWatchlist(openDialog : MutableState<Boolean>){
-    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+private fun newWatchlist(vm: WatchlistViewModel){
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -303,7 +289,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
             .width(100.dp)
             .background(Color(0xFFB15FA8))
             .clickable {
-                openDialog.value = true;
+                vm.popupControl.value = true;
 
             }
         )
@@ -324,7 +310,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 }
 
 @Composable
-fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController, openDialog: MutableState<Boolean>) {
+fun wathclistList(vm : WatchlistViewModel) {
 
     Column(
         modifier = Modifier
@@ -333,16 +319,16 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 
     ) {
         Text(
-            text = header,
+            text = "",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
-        Column(modifier = modifier) {
-            watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, navController = navController )
+        Column {
+            vm.watchlistList.forEach(){
+                    watchlist -> watchlistCard(watchlist = watchlist, vm=vm)
 
                 /*
                             items(watchlistList) { watchlist ->
@@ -360,7 +346,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController, openDialog: MutableState<Boolean>) {
+fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -373,7 +359,7 @@ fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController, 
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { navController.navigate("watchlists/" + watchlist.watchlist_id) })
+                .clickable(onClick = { vm.getNav().navigate("watchlists/" + watchlist.watchlist_id) })
                 .padding(4.dp)
 
         ) {
@@ -396,7 +382,10 @@ fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController, 
             contentDescription = null,
             modifier = Modifier
                 .size(30.dp)
-                .clickable(onClick={openDialog.value=true}
+                .clickable(onClick={
+                    vm.promptDeletion(watchlist.watchlist_id)
+
+                }
         ))
 
         }

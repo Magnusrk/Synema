@@ -18,7 +18,9 @@ class WatchlistViewModel : ViewModel() {
     var watchlistList = mutableStateListOf<WatchlistModel>()
 
     val popupControl = mutableStateOf(false)
+    val deleteConfirmationPopupControl = mutableStateOf(false)
     val newWatchlistName =  mutableStateOf("")
+    val watchlistToDelete =  mutableStateOf("")
 
     private val profileState = context.getProfileState()
 
@@ -48,6 +50,20 @@ class WatchlistViewModel : ViewModel() {
 
     fun getNav() : NavHostController{
         return context.getNav()
+    }
+
+    fun DeleteWatchlist(){
+        val dataSource = DependencyProvider.getInstance().getWatchlistSource()
+        dataSource.deleteWatchlist(watchlistToDelete.value, context.getProfileState().value.token) { response ->
+            // Close the dialog and navigate to watchlist
+            deleteConfirmationPopupControl.value = false
+            context.getNav().navigate("watchlists")
+        }
+    }
+
+    fun promptDeletion(id : String){
+        watchlistToDelete.value = id
+        deleteConfirmationPopupControl.value=true
     }
 
 
