@@ -115,7 +115,6 @@ fun TopBar(
                 ,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color(0, 0, 0, 0),
-                    //textColor = Color.White,
                     unfocusedLabelColor = Color.White,
                     focusedLabelColor = Color.White,
                     unfocusedIndicatorColor = Color(0xFFC5AC29),
