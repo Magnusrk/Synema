@@ -69,7 +69,8 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             var watchlistList : List<WatchlistModel> by remember {
                 mutableStateOf(listOf())
             }
-            val popupControl = remember { mutableStateOf(false) }
+            val createPopupControl = remember { mutableStateOf(false) }
+            val deletePopupControl = remember { mutableStateOf(false) }
             val watchlistName = remember { mutableStateOf("")}
 
 
@@ -84,10 +85,10 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
             MainContainer(hasBottomNav = true){
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
 
-                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState)
-                newWatchlist(popupControl)
-                CreateDeletePopup(popupControl, watchlistName = watchlistName, navController,profileState)
-                wathclistList(watchlistList = watchlistList, header = "", navController = navController, openDialog = popupControl)
+                CreateWatchlistPopup(createPopupControl, watchlistName, navController, profileState)
+                newWatchlist(createPopupControl)
+                CreateDeletePopup(deletePopupControl, watchlistName = watchlistName, navController,profileState)
+                wathclistList(watchlistList = watchlistList, header = "", navController = navController, openDialog = createPopupControl)
             }
             BottomBar(navController = navController)
         }
