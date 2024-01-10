@@ -1,19 +1,12 @@
-package com.example.synema.viewmodel
+package com.example.synema.viewmodel.Watchlists
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.synema.Data.DataStore.DataStoreManager
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.controller.AppContext
-import com.example.synema.model.MovieModel
-import com.example.synema.model.ProfileModel
 import com.example.synema.model.WatchlistModel
-import kotlinx.coroutines.launch
 
 class WatchlistViewModel : ViewModel() {
     var context = AppContext.getInstance();
