@@ -1,4 +1,4 @@
-package com.example.synema.viewmodel
+package com.example.synema.viewmodel.Landing
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
