@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -208,7 +209,7 @@ fun DescriptionSection(desc : String){
         .fillMaxWidth()
         .height(1.dp)
         .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
+    Text(desc, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp, end = 20.dp))
 
 }
 
