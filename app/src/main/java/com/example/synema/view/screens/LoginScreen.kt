@@ -151,23 +151,27 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
 
     if(!isHidden){
 
+        val containerColor = Color(0,0,0,0)
+        //textColor = Color.White,
         TextField(
             value = text,
             onValueChange = { text = it ; onChange(text)},
             label = { Text(label) },
             modifier = Modifier.padding(7.dp),
             singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0,0,0,0),
-                textColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFC5AC29),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
                 focusedIndicatorColor = Color(0xFF811C77),
-
-                )
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+            )
         )
     } else{
+        val containerColor = Color(0,0,0,0)
+        //textColor = Color.White,
         TextField(
             value = text,
             onValueChange = { text = it ; onChange(text)},
@@ -179,13 +183,14 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             keyboardActions = KeyboardActions(
                 onDone = { onDone()}),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0,0,0,0),
-                textColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFC5AC29),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
                 focusedIndicatorColor = Color(0xFF811C77),
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
             )
         )
     }

@@ -276,6 +276,37 @@ class MovieApiSource : MovieDataSource {
         })
     }
 
+    override fun delete_review(
+        movieId: String,
+        token: String,
+        profileModel: ProfileModel,
+        callback: (ApiResponse<String>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val deleteReviewCall: Call<String> = api.delete_Review(movieId, token)
+
+        deleteReviewCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(
+                        ApiResponse(
+                            result = "Review deleted successfully",
+                            statusMessage = "success"
+                        )
+                    )
+                } else {
+                    // Failed to create review or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
     override fun getReviewsForMovie(
         movieId: String,
         token: String,
