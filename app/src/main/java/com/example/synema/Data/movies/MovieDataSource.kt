@@ -21,4 +21,6 @@ interface MovieDataSource {
 
     fun getReviewsForMovie(movieId: String,token: String, callback: (ApiResponse<List<ReviewModel>>) -> Unit)
     fun createReviewForMovie(movieId: String, review: String,rating: Int, token: String, profileModel: ProfileModel, callback: (ApiResponse<String>) -> Unit)
+    fun getOwnReviews(token: String, callback: (ApiResponse<List<ReviewModel>>) -> Unit)
+
 }

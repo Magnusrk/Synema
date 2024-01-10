@@ -42,6 +42,12 @@ public interface MovieAPI {
 
     @GET("/movie/{movieId}/reviews")
     fun getReviewsForMovie(
-        @Path("movieId") movieId: String
+        @Path("movieId") movieId: String,
+        @Header("authorization") token : String
+    ): Call<List<ReviewModel>>
+
+    @GET("/movie/reviews")
+    fun getOwnReviews(
+        @Header("authorization") token : String
     ): Call<List<ReviewModel>>
 }
