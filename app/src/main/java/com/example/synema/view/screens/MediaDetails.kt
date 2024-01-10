@@ -251,17 +251,31 @@ fun UserReviewCard(review : ReviewModel){
 
 @Composable
 fun InnerReviewContainer(review : ReviewModel){
+    var expanded by remember { mutableStateOf (false) }
     Column(
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text= review.username, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            Text(modifier = Modifier.height(30.dp), text= "@" + review.username, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
             RatingStars(review.rating*2)
         }
 
-        Text(review.reviewText,  color = Color.White, overflow = TextOverflow.Ellipsis, maxLines = 3)
+        if (expanded) {
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+            )
+        } else{
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 3
+            )
+        }
         Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
-            OpaqueButton(label = "More", onClick = { }, Modifier.defaultMinSize(minHeight = 5.dp))
+            OpaqueButton(label = "More", onClick = {  expanded = !expanded }, Modifier.defaultMinSize(minHeight = 5.dp))
         }
 
     }

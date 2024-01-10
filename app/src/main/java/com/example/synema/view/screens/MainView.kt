@@ -21,7 +21,7 @@ fun MainView() {
         composable("login") { LoginScreen() }
         composable("signup") { SignupScreen() }
         composable("home") { HomeScreen() }
-        composable("search") { SearchScreen(navController, profileState) }
+        composable("search") { SearchScreen() }
         composable("watchlists") { WatchList() }
         composable("watchlists/{watchlist_id}",
             arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType })
