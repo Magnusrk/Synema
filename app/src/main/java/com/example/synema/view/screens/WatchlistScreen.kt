@@ -2,7 +2,6 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
-import android.service.autofill.OnClickAction
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -88,7 +87,7 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
                 CreateWatchlistPopup(createPopupControl, watchlistName, navController, profileState)
                 newWatchlist(createPopupControl)
                 CreateDeletePopup(deletePopupControl, watchlistName = watchlistName, navController,profileState)
-                wathclistList(watchlistList = watchlistList, header = "", navController = navController, openDialog = createPopupControl)
+                wathclistList(watchlistList = watchlistList, header = "", navController = navController, openDialog = deletePopupControl)
             }
             BottomBar(navController = navController)
         }
