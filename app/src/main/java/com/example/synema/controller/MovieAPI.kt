@@ -1,9 +1,11 @@
 package com.example.synema.controller
 
 import com.example.synema.model.MovieModel
+import com.example.synema.model.ReviewModel
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -34,6 +36,12 @@ public interface MovieAPI {
     @POST("/movie/{movieId}/reviews")
     fun createReviewForMovie(
         @Path("movieId") movieId: String,
-        @Body reviewModel: String
+        @Body reviewModel: ReviewModel,
+        @Header("authorization") token : String
     ): Call<String>
+
+    @GET("/movie/{movieId}/reviews")
+    fun getReviewsForMovie(
+        @Path("movieId") movieId: String
+    ): Call<List<ReviewModel>>
 }

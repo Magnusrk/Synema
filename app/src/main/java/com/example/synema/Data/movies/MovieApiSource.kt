@@ -89,6 +89,7 @@ class MovieApiSource : MovieDataSource {
             )
         )
     }
+    /*
 
     override fun loadReviews(): List<ReviewModel> {
         return listOf(
@@ -155,6 +156,10 @@ class MovieApiSource : MovieDataSource {
         )
 
     }
+
+     */
+
+
 
     override fun loadDiscoverMovies(
         genres: String,
@@ -240,11 +245,14 @@ class MovieApiSource : MovieDataSource {
     override fun createReviewForMovie(
         movieId: String,
         review: String,
+        rating: Int,
+        token: String,
+        profileModel: ProfileModel,
         callback: (ApiResponse<String>) -> Unit
     ) {
         val api = retrofit.create(MovieAPI::class.java)
 
-        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, review)
+        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, ReviewModel(review,rating,movieId,profileModel.name, profileModel.id), token)
 
         createReviewCall.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -266,4 +274,35 @@ class MovieApiSource : MovieDataSource {
             }
         })
     }
+
+    override fun getReviewsForMovie(
+        movieId: String,
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val getReviewsCall: Call<List<ReviewModel>> = api.getReviewsForMovie(movieId)
+
+        getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
+            override fun onResponse(call: Call<List<ReviewModel>>, response: Response<List<ReviewModel>>) {
+                if (response.isSuccessful) {
+                    val reviews = response.body()
+                    if (reviews != null && reviews.isNotEmpty()) {
+                        callback(ApiResponse(result = reviews, statusMessage = "success"))
+                    } else {
+                        callback(ApiResponse(result = null, statusMessage = "No reviews found for the given movie ID"))
+                    }
+                } else {
+                    // Failed to fetch reviews or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<ReviewModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
 }

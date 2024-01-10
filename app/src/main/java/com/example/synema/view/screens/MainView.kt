@@ -1,28 +1,12 @@
 package com.example.synema.view.screens
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.datastore.dataStore
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.test.core.app.ApplicationProvider
-import com.example.synema.Data.DataStore.DataStoreManager
-import com.example.synema.Data.DependencyProvider
 import com.example.synema.controller.AppContext
-import com.example.synema.model.ProfileModel
-import com.example.synema.viewmodel.LoginViewModel
-import com.example.synema.viewmodel.MainViewModel
-import com.example.synema.viewmodel.SignupViewModel
-
-
-
 
 
 @Composable
@@ -36,9 +20,9 @@ fun MainView() {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") { LoginScreen() }
         composable("signup") { SignupScreen() }
-        composable("home") { HomeScreen(navController, profileState) }
+        composable("home") { HomeScreen() }
         composable("search") { SearchScreen(navController, profileState) }
-        composable("watchlists") { WatchList(navController) }
+        composable("watchlists") { WatchList() }
         composable("watchlists/{watchlist_id}",
             arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType })
         )
