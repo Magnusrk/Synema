@@ -23,6 +23,7 @@ fun MainView() {
         composable("home") { HomeScreen() }
         composable("search") { SearchScreen(navController, profileState) }
         composable("watchlists") { WatchList() }
+        composable("myreviews") {MyReviews(navController, profileState)}
         composable("watchlists/{watchlist_id}",
             arguments = listOf(navArgument("watchlist_id") { type = NavType.StringType })
         )
