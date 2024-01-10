@@ -53,7 +53,7 @@ public interface MovieAPI {
         @Header("authorization") token : String
     ): Call<List<ReviewModel>>
 
-    @GET("/user/reviews")
+    @GET("/user/reviews/")
     fun getOwnReviews(
         @Header("authorization") token : String
     ): Call<List<ReviewModel>>
