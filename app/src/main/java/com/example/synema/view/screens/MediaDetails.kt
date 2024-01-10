@@ -229,7 +229,7 @@ fun UserReviewSection(reviewList: List<ReviewModel>){
 }
 
 @Composable
-fun UserReviewCard(review : ReviewModel){
+private fun UserReviewCard(review : ReviewModel){
     Box(modifier= Modifier
         .fillMaxWidth()
         .defaultMinSize(70.dp)
@@ -246,11 +246,10 @@ fun UserReviewCard(review : ReviewModel){
 
     }
 
-
 }
 
 @Composable
-fun InnerReviewContainer(review : ReviewModel){
+private fun InnerReviewContainer(review : ReviewModel){
     Column(
         modifier = Modifier.padding(10.dp)
     ) {

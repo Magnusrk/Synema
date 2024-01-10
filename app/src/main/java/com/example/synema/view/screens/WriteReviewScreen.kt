@@ -127,7 +127,7 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                         Button(
                             onClick = { navController.navigate("mediaDetails/" + movie.id + "/review") },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFd60202)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB13563)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -138,7 +138,7 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
                                 navController.popBackStack()
                             } },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF912BB1)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
