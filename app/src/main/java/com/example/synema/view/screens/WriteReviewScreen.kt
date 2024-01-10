@@ -48,6 +48,7 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
@@ -78,6 +79,24 @@ fun WriteReviewScreen(navController : NavHostController, profileState: MutableSt
     if (movieID != null) {
         movieDataSource.loadMovie(movieID){
             movie = it.getResult()!!
+        }
+    }
+
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    movieDataSource.getReviewsForMovie(movieID.toString(),profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+                reviewList = reviewModel
+                reviewList.forEach{review ->
+                    if(review.userid == profileState.value.id){
+                        reviewText.value = review.reviewText
+                        rating.value = review.rating
+                    }
+                }
+            }
         }
     }
 
@@ -148,7 +167,7 @@ fun ReviewBox(reviewText : MutableState<String>){
         OutlinedTextField(
             value = reviewText.value,
             onValueChange = { reviewText.value = it },
-            label = { Text("Label") },
+            label = { Text("Review") },
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 10.dp)
                 .fillMaxSize()
@@ -212,7 +231,8 @@ private fun RatingStars(rating : MutableState<Int>){
                 InlineIcon(resourceID = R.drawable.icon_star, size = size, spacing = spacing, tint= Color(0xFF4399FF))
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
-            }        }
+            }
+        }
     }
 }
 
