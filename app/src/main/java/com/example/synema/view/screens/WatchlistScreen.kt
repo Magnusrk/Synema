@@ -435,8 +435,10 @@ fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController) 
         Surface(
             modifier = Modifier.size(30.dp),
             color = Color(0, 0, 0, 0),
-            onClick = {//onDeleteWatchlist(watchlist.watchlist_id)
-            }) {
+            onClick = {
+                onDeleteConfirmed
+            }
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.delete),
                 contentDescription = null,
@@ -445,7 +447,6 @@ fun watchlistCard(watchlist: WatchlistModel, navController : NavHostController) 
         }
     }
 }
-
 @Composable
 fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
     Box(
