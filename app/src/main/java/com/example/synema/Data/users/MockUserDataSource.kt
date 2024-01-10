@@ -42,4 +42,8 @@ class MockUserDataSource() : UserDataSource {
             )
         ))
     }
+
+    override fun verifyToken(token: String, callback: (ApiResponse<Boolean>) -> Unit) {
+        callback(ApiResponse(true))
+    }
 }

@@ -37,6 +37,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
@@ -59,38 +61,25 @@ import com.example.synema.view.components.OpaqueButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchList(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-    val dataSource = DependencyProvider.getInstance().getWatchlistSource()
+fun WatchList() {
+
+    val vm : WatchlistViewModel = viewModel()
+    vm.loadWatchlists()
 
     GradientBox(){
-        Column {
-
-            var watchlistList : List<WatchlistModel> by remember {
-                mutableStateOf(listOf())
+        LoadingWrapper(vm.isLoading) {
+            Column {
+                MainContainer(hasBottomNav = true){
+                    TopBar(title = "My Watchlists", alignment = Alignment.Center)
+                    CreateWatchlistPopup(vm);
+                    newWatchlist(vm.popupControl)
+                    CreateDeletePopup(deletePopupControl, watchlistName = watchlistName, navController,profileState)
+                    wathclistList(watchlistList = vm.watchlistList, header ="", navController = vm.getNav())
+                };
+                BottomBar(navController = vm.getNav())
             }
-            val createPopupControl = remember { mutableStateOf(false) }
-            val deletePopupControl = remember { mutableStateOf(false) }
-            val watchlistName = remember { mutableStateOf("")}
-
-
-            dataSource.read_db (profileState.value.token){
-                if (it.successful()) {
-                    it.getResult()?.let {watchlistModel ->
-                        watchlistList = watchlistModel
-                    }
-                }
-
-            }
-            MainContainer(hasBottomNav = true){
-                TopBar(title = "My Watchlists", alignment = Alignment.Center)
-
-                CreateWatchlistPopup(createPopupControl, watchlistName, navController, profileState)
-                newWatchlist(createPopupControl)
-                CreateDeletePopup(deletePopupControl, watchlistName = watchlistName, navController,profileState)
-                wathclistList(watchlistList = watchlistList, header = "", navController = navController, openDialog = deletePopupControl)
-            }
-            BottomBar(navController = navController)
         }
+
 
     }
 }
@@ -98,15 +87,13 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController, profileState: MutableState<ProfileModel>){
+private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
-
-
-    if (openDialog.value) {
+    if (vm.popupControl.value) {
         Popup(
             // on below line we are adding
             // alignment and properties.
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = { vm.popupControl.value = false },
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
 
@@ -121,8 +108,8 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                 // on below line we are adding border.
 
             ) {
-                PopUpHeader(openDialog = openDialog, navController = navController)
-                WatchlistCreationPane(openDialog = openDialog, watchlistName = watchlistName, navController = navController)
+                PopUpHeader(openDialog = vm.popupControl, navController = vm.getNav())
+                WatchlistCreationPane(openDialog = vm.popupControl, watchlistName = vm.newWatchlistName, navController = vm.getNav())
                 Row(modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
@@ -132,13 +119,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                 ){
                     // Button to create watchlist
                     Button( onClick = {
-                        val dataSource = DependencyProvider.getInstance().getWatchlistSource()
-                        // Call your createWatchlist function here
-                        dataSource.createWatchlist(watchlistName.value, profileState.value.token){}
-                        openDialog.value = false
-                        navController.currentDestination?.let { navController.navigate(it.id) }
-                        // You might want to reset the watchlistName after creating a watchlist
-                        //watchlistName = ""
+                            vm.createWatchlist()
 
                     },
                         shape = RoundedCornerShape(20),
@@ -361,7 +342,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
         )
         Column(modifier = modifier) {
             watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController, openDialog = openDialog)
+                    watchlist -> watchlistCard(watchlist = watchlist, navController = navController )
 
                 /*
                             items(watchlistList) { watchlist ->
@@ -456,13 +437,10 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ImageCard(
-                movieUrls[0], modifier = Modifier.weight(2F)
-            )
-            ImageCard(
-                movieUrls[1], modifier = Modifier
-                    .weight(2F)
-            )
+            ImageCard(movieUrls[0], modifier = Modifier.
+            weight(2F))
+            ImageCard(movieUrls[1], modifier = Modifier
+                .weight(2F))
         }
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -473,22 +451,16 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly,
 
-            ) {
-            ImageCard(
-                movieUrls[2], modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 2.dp)
-            )
-            ImageCard(
-                movieUrls[3], modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 2.dp)
-            )
+            ){
+            ImageCard(movieUrls[2], modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 2.dp))
+            ImageCard (movieUrls[3], modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 2.dp))
         }
     }
 }
-
-
 
 /*
 Surface(
@@ -533,35 +505,8 @@ Surface(
     )
 }
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    color = Color(0, 0, 0, 0)
-                ) {
-                    Box(
-                        modifier = Modifier.clickable {
-                            watchlistName.takeIf { it.isNotEmpty() }?.let { nonEmptyName ->
-                                // Call the showDeleteConfirmationDialog from within a @Composable function
-                                //showDeleteConfirmationDialog(navController, nonEmptyName) { confirmed ->
-                                    //if (confirmed) {
-                                        dataSource.deleteWatchlist(nonEmptyName) { response ->
-                                            if (response.successful()) {
-                                                // Watchlist deleted successfully
-                                                // Fetch the updated watchlist and update the UI
-                                                dataSource.read_db { updatedWatchlistResponse ->
-                                                    if (updatedWatchlistResponse.successful()) {
-                                                        watchlistList = updatedWatchlistResponse.getResult() ?: emptyList()
-                                                    }
-                                                }
-                                                watchlistName = ""
-                                            } else {
-                                                // Failed to delete watchlist, handle accordingly
-                                            }
-                                        }
-                                    }
+}
+*/
 
-                            }
-                    ) {
 
-}*/
+

@@ -52,4 +52,11 @@ public interface WatchlistAPI {
     @GET("/movies/new")
     abstract fun newMovies(): Call<List<MovieModel>>
 
+    @DELETE("/watchlist/{watchlistId}/movies/{movieId}")
+    fun deleteMovieFromWatchlist(
+        @Path("watchlistId") watchlistId: String,
+        @Path("movieId") movieId: String,
+        @Header("authorization") token : String
+    ): Call<String>
+
 }

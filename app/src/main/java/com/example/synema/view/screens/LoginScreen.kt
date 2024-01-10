@@ -2,7 +2,6 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
-import android.util.Log
 import com.example.synema.view.components.OpaqueButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,51 +19,53 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.synema.Data.DependencyProvider
-import com.example.synema.Data.users.UserAPISource
-import com.example.synema.model.ApiResponse
-import com.example.synema.model.ProfileModel
-import com.example.synema.model.UserModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.synema.view.components.SynemaLogo
+import com.example.synema.viewmodel.Landing.LoginViewModel
 
 
 @Composable
-fun LoginScreen(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun LoginScreen() {
+    val loginViewModel : LoginViewModel = viewModel();
+    loginViewModel.getMoviePosters()
+    loginViewModel.checkUserLoggedIn(LocalContext.current)
     GradientBox(){
-        ContentContainer(navController, profileState);
+        ContentContainer(loginViewModel);
     }
 }
 
 @Composable
-private fun ContentContainer(navController: NavController, profileState : MutableState<ProfileModel>){
+private fun ContentContainer(loginViewModel: LoginViewModel){
     Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(14.dp)
     ){
         SynHeader()
-        MovieDisplay();
-        UserLoginArea(navController, profileState);
+        MovieDisplay(loginViewModel);
+        UserLoginArea(loginViewModel);
     }
 }
 
 
 @Composable
-private fun MovieDisplay(){
+private fun MovieDisplay(loginViewModel: LoginViewModel){
+
+
+
+
+
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -72,11 +73,25 @@ private fun MovieDisplay(){
             .height(250.dp)
 
     ){
-        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg", offsetX = 15.dp, zindex = 0f)
-        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg", zindex = 1f)
-        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999", offsetX = (-15).dp,  zindex = 0f)
-
-
+        if (loginViewModel.movieBanners.size >= 3) {
+            MoviePosterFrame(
+                Arrangement.Bottom,
+                loginViewModel.movieBanners[0].poster_url,
+                offsetX = 15.dp,
+                zindex = 0f
+            )
+            MoviePosterFrame(
+                Arrangement.Center,
+                loginViewModel.movieBanners[1].poster_url,
+                zindex = 1f
+            )
+            MoviePosterFrame(
+                Arrangement.Top,
+                loginViewModel.movieBanners[2].poster_url,
+                offsetX = (-15).dp,
+                zindex = 0f
+            )
+        }
     }
 }
 
@@ -93,17 +108,8 @@ private fun SynHeader() {
 }
 
 @Composable
-private fun UserLoginArea(navController: NavController, profileState : MutableState<ProfileModel>){
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-
-    val error = remember {
-        mutableStateOf(""
-        )
-    }
-
-
+private fun UserLoginArea(loginViewModel: LoginViewModel){
+    val c  =LocalContext.current;
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,20 +119,21 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
     ) {
         LoginInputField(
             label="Email",
-            onChange = { email = it},
+            onChange = { loginViewModel.editEmail(it)},
         );
         LoginInputField(
             label="Password",
             isHidden=true,
-            onChange = { password = it},
-            onDone = {sendLoginRequest(email, password, navController, profileState, error)}
+            onChange = { loginViewModel.editPassword(it)},
+            onDone = {loginViewModel.login(c)}
 
         );
         Column (horizontalAlignment = Alignment.CenterHorizontally
         ){
-            OpaqueButton(label = "Log In", onClick = { sendLoginRequest(email, password, navController, profileState, error)});
-            OpaqueButton(label = "Get started now", onClick = {navController.navigate("signup");});
-            Text(error.value, color=Color.Red)
+
+            OpaqueButton(label = "Log In", onClick = { loginViewModel.login(c)});
+            OpaqueButton(label = "Get started now", onClick = {loginViewModel.signup()});
+            Text(loginViewModel.error.value, color=Color.Red)
         }
 
     }
@@ -134,31 +141,7 @@ private fun UserLoginArea(navController: NavController, profileState : MutableSt
 
 }
 
-private fun sendLoginRequest(
-    email: String,
-    password: String,
-    navController: NavController,
-    profileState: MutableState<ProfileModel>,
-    error: MutableState<String>
-) {
 
-    val source = DependencyProvider.getInstance().getUserSource();
-    source.LoginUser(email, password, callback = {
-
-        Log.d("Main", it.getStatus())
-        Log.d("Main", it.successful().toString())
-        if(it.successful()){
-            profileState.value = it.getResult()?.profile!!;
-            if(profileState.value.token == null){
-                profileState.value.token = "none"
-            }
-
-            navController.navigate("home")
-        } else{
-            error.value = (it.getStatus())
-        }
-    });
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -168,23 +151,29 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
 
     if(!isHidden){
 
+        val containerColor = Color(0,0,0,0)
+        //textColor = Color.White,
         TextField(
             value = text,
             onValueChange = { text = it ; onChange(text)},
             label = { Text(label) },
             modifier = Modifier.padding(7.dp),
             singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0,0,0,0),
-                textColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFC5AC29),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
                 focusedIndicatorColor = Color(0xFF811C77),
-
-                )
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                unfocusedTextColor = Color(0xFFBF76FF),
+                focusedTextColor = Color.White
+            )
         )
     } else{
+        val containerColor = Color(0,0,0,0)
+        //textColor = Color.White,
         TextField(
             value = text,
             onValueChange = { text = it ; onChange(text)},
@@ -196,13 +185,16 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             keyboardActions = KeyboardActions(
                 onDone = { onDone()}),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0,0,0,0),
-                textColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFC5AC29),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
                 focusedIndicatorColor = Color(0xFF811C77),
+                unfocusedIndicatorColor = Color(0xFFC5AC29),
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                unfocusedTextColor = Color(0xFFBF76FF),
+                focusedTextColor = Color.White
             )
         )
     }

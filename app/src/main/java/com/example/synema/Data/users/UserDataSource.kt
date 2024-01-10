@@ -12,4 +12,6 @@ interface UserDataSource {
     fun LoginUser(email : String, password : String, callback : (ApiResponse<UserModel>) -> Unit);
 
     fun signupUser(username : String, email: String,password: String, callback : (ApiResponse<UserModel>) -> Unit);
+
+    fun verifyToken(token: String, callback : (ApiResponse<Boolean>) -> Unit);
 }
