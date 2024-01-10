@@ -4,6 +4,7 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ReviewModel
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -37,6 +38,12 @@ public interface MovieAPI {
     fun createReviewForMovie(
         @Path("movieId") movieId: String,
         @Body reviewModel: ReviewModel,
+        @Header("authorization") token : String
+    ): Call<String>
+
+    @DELETE("/movie/{movieId}/reviews")
+    fun delete_Review(
+        @Path("movieId") movieId: String,
         @Header("authorization") token : String
     ): Call<String>
 
