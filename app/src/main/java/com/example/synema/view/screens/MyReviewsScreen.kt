@@ -60,7 +60,7 @@ fun MyReviews(navController: NavHostController, profileState: MutableState<Profi
         mutableStateOf(listOf())
     }
 
-    source.getReviewsForMovie("891699",profileState.value.token){
+    source.getOwnReviews(profileState.value.token){
         if (it.successful()) {
             it.getResult()?.let {reviewModel ->
                 reviewList = reviewModel
