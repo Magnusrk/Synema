@@ -275,7 +275,13 @@ fun InnerReviewContainer(review : ReviewModel){
             )
         }
         Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
-            OpaqueButton(label = "More", onClick = {  expanded = !expanded }, Modifier.defaultMinSize(minHeight = 5.dp))
+            if (review.reviewText.length > 30) {
+                OpaqueButton(
+                    label = "More",
+                    onClick = { expanded = !expanded },
+                    Modifier.defaultMinSize(minHeight = 5.dp)
+                )
+            }
         }
 
     }
