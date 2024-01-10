@@ -79,25 +79,6 @@ fun MyReviews(navController: NavHostController, profileState: MutableState<Profi
 
                 )
                 myReviewSection(reviewList)
-                /*
-                Box(
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(color = Color(0xFF430B3D).copy(alpha = 0.9F), shape = RoundedCornerShape(10.dp), )
-                ) {
-
-                    Text(
-                        "i looooove this movie \n",
-                        color = Color(0xFFC0AEDC),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, top = 2.dp))
-
-                }
-*/
-
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -138,32 +119,26 @@ private fun UserReviewCard(review : ReviewModel){
 }
 @Composable
 fun myReviewSection(reviewList: List<ReviewModel>){
-
-    Text("My reviews", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(color = Color.Black))
-
     Column(){
         reviewList.forEach(){review -> UserReviewCard(review)}
     }
 
 }
+
 @Composable
 private fun InnerReviewContainer(review : ReviewModel){
     val source = DependencyProvider.getInstance().getMovieSource();
     var movie : MovieModel by remember {
         mutableStateOf(
             MovieModel(
-            0,
-            "",
-            "",
-            "Loading...",
-            "Loading...",
-            0,
-            ""
-        )
+                0,
+                "",
+                "",
+                "Loading...",
+                "Loading...",
+                0,
+                ""
+            )
         )
     }
     if (review.movieid != null) {
@@ -171,17 +146,38 @@ private fun InnerReviewContainer(review : ReviewModel){
             movie = it.getResult()!!
         }
     }
+    var expanded by remember { mutableStateOf (false) }
+
     Column(
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text= movie.title, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            Text(modifier = Modifier.height(30.dp), text=movie.title, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
             myRatingStars(review.rating*2)
         }
 
-        Text(review.reviewText,  color = Color.White, overflow = TextOverflow.Ellipsis, maxLines = 3)
+        if (expanded) {
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+            )
+        } else{
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 3
+            )
+        }
         Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
-            OpaqueButton(label = "More", onClick = { }, Modifier.defaultMinSize(minHeight = 5.dp))
+            if (review.reviewText.length > 30) {
+                OpaqueButton(
+                    label = "More",
+                    onClick = { expanded = !expanded },
+                    Modifier.defaultMinSize(minHeight = 5.dp)
+                )
+            }
         }
 
     }
