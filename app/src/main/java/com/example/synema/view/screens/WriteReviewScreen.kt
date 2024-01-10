@@ -186,7 +186,7 @@ fun ReviewBox(reviewText: MutableState<String>) {
     {
         OutlinedTextField(
             value = reviewText.value,
-            onValueChange = { reviewText.value = it.take(maxChar) },
+            onValueChange = { if (it.length <= maxChar) reviewText.value = it.take(maxChar) },
             label = { Text("Review") },
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 10.dp)
