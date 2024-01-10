@@ -167,6 +167,8 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
                 unfocusedIndicatorColor = Color(0xFFC5AC29),
                 focusedLabelColor = Color.White,
                 unfocusedLabelColor = Color.White,
+                unfocusedTextColor = Color(0xFFBF76FF),
+                focusedTextColor = Color.White
             )
         )
     } else{
@@ -191,6 +193,8 @@ private fun LoginInputField(label : String, isHidden : Boolean = false, onChange
                 unfocusedIndicatorColor = Color(0xFFC5AC29),
                 focusedLabelColor = Color.White,
                 unfocusedLabelColor = Color.White,
+                unfocusedTextColor = Color(0xFFBF76FF),
+                focusedTextColor = Color.White
             )
         )
     }
