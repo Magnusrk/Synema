@@ -22,6 +22,7 @@ class DataStoreManager (val context: Context) {
         val EMAIL = stringPreferencesKey("email")
         val BIO = stringPreferencesKey("bio")
         val TOKEN = stringPreferencesKey("token")
+        val PROFILEPICTURE = stringPreferencesKey("profilePicture")
     }
 
     suspend fun saveToDataStore(profileState : ProfileModel) {
@@ -31,6 +32,7 @@ class DataStoreManager (val context: Context) {
             it[EMAIL] = profileState.email
             it[BIO] = profileState.bio
             it[TOKEN] = profileState.token
+            it[PROFILEPICTURE]=profileState.profilePicture
         }
     }
 
@@ -40,7 +42,8 @@ class DataStoreManager (val context: Context) {
             it[NAME]?:"",
             it[EMAIL]?:"",
             it[BIO]?:"",
-            it[TOKEN]?:"")
+            it[TOKEN]?:"",
+            it[PROFILEPICTURE]?:"")
     }
 
     suspend fun clearDataStore() = context.dataStore.edit {

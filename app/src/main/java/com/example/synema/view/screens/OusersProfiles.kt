@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.example.synema.R
 import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
@@ -48,16 +47,16 @@ import com.example.synema.viewmodel.ProfileViewModel
 
 
 @Composable
-fun Profile(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun OUprofiles(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     val context = AppContext.getInstance();
     GradientBox(){
         Column {
-            TopBar(title = "My Profile", Alignment.Center)
             MainContainer(hasBottomNav = true){
+                TopBar(title = "Other User", Alignment.Center)
                 EditProfileButton()
-                ProfileNameHeader(name = context.getProfileState().value.name)
-                ProfilePicture(profileState.value)
-                FollowersReviewsStatus(76, 88)
+                ProfileNameHeader("Devon Jeffery")
+                ProfilePicture()
+                FollowersReviewsStatus(7522, 955)
                 PersonalDescription()
                 Directories(context.getNav())
 
@@ -78,36 +77,23 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
     }
 }
 @Composable
-private fun ProfilePicture(currentUser: ProfileModel) {
+private fun ProfilePicture(){
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp), horizontalArrangement = Arrangement.Center
-    ) {
-        println(currentUser.name)
-        println(currentUser.profilePicture)
-        if (false) {
-            Image(
-                painter = painterResource(R.drawable.profile_picture_placeholder),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            println(currentUser.bio)
-            AsyncImage(
-                model = currentUser.profilePicture, contentDescription = null, modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
+    Row (modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp), horizontalArrangement = Arrangement.Center){
+        Image(
+            painter = painterResource(R.drawable.devon),
+            contentDescription = null,
+            modifier = Modifier
+                .size(145.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Black, CircleShape)
+            ,
+            contentScale = ContentScale.Crop
+        )
     }
+
 }
 
 @Composable
@@ -125,8 +111,8 @@ private fun EditProfileButton(){
         .fillMaxWidth()){
         OpaqueButton("Edit profile", onClick = {
             profileViewModel.logout(c);
-            },
-         modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+        },
+            modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
     }
 }
 
@@ -149,11 +135,7 @@ private fun PersonalDescription() {
 
         ) {
             Text(
-                "Writer by day, reviewer by night. I live \n" +
-                        "and breathe movies. \n" +
-                        "\n" +
-                        "Especially the weird ones ;P\n" +
-                        "Follo for more!",
+                "subscribe for a full scale analysis of your favorite movies and the best ratings from me innit, gang gang!",
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -166,78 +148,41 @@ private fun PersonalDescription() {
 }
 
 
-/*fun DescriptionSection(desc : String){
-    Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
-
-}
-*/
-
 @Composable
-private fun MovieDisplay(){
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-    ){
-        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
-        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
-        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
-    }
-}
-
-@Composable
-private fun SynHeader() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 77.dp)
-
-    ) {
-        SynemaLogo()
-    }
-}
-
-@Composable
-private fun DirectoryCard(text : String, navController: NavHostController,route: String = "") {
+private fun DirectoryCard(text : String, navController: NavHostController, route: String = "") {
 
     Box(
-       modifier = Modifier
-           .fillMaxWidth()
-           .height(50.dp)
-           .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
-           .padding(2.dp)
-           .clickable { navController.navigate(route) }
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
+            .padding(2.dp)
+            .clickable { navController.navigate(route) }
 
 
 
-   ) {
-       Text(
-           text = text,
-           color = Color(0xFFD9D9D9),
-           fontSize = 17.sp,
-           fontWeight = FontWeight.Bold,
-           modifier = Modifier
-               .fillMaxSize()
-               .padding(10.dp)
+    ) {
+        Text(
+            text = text,
+            color = Color(0xFFD9D9D9),
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
 
-       )
+        )
 
-       Image(
-           painter = painterResource(id = R.drawable.arrow_right),
-           contentDescription = null,
-           modifier = Modifier
-               .size(35.dp)
-               .padding(8.dp)
-               .align(Alignment.CenterEnd)
+        Image(
+            painter = painterResource(id = R.drawable.arrow_right),
+            contentDescription = null,
+            modifier = Modifier
+                .size(35.dp)
+                .padding(8.dp)
+                .align(Alignment.CenterEnd)
 
-       )
-   }
+        )
+    }
 }
 
 @Composable
@@ -248,7 +193,7 @@ private fun Directories(navController: NavHostController) {
             .padding(16.dp)
     ) {
 
-       // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
+        // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
 
         DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))

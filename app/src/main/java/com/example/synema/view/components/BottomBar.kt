@@ -22,9 +22,10 @@ import com.example.synema.R
 
 @Composable
 fun BottomBar(navController: NavHostController){
-    val tabs = listOf("home", "watchlists", "profile")
-    val icons = listOf(R.drawable.theater_icon,R.drawable.eye_icon, R.drawable.profile_icon )
-    val current = navController.currentBackStackEntry?.destination?.route;
+    val tabs = listOf("home", "watchlists", "profile", "socials")
+    val icons = listOf(R.drawable.theater_icon,R.drawable.eye_icon, R.drawable.profile_icon, R.drawable.social_icon)
+    val current = navController.currentBackStackEntry?.destination?.route
+
 
     NavigationBar (containerColor = Color(0xFF430B3D), modifier = Modifier.height(55.dp)
 
