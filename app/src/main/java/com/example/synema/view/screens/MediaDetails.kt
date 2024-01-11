@@ -1,5 +1,6 @@
 package com.example.synema.view.screens
 
+import GradientBox
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.Canvas
@@ -102,13 +103,15 @@ fun MediaDetails(
     //val movie : MovieModel = source.loadMovie(movieID.toString())
     Column {
         TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
-        MainContainer(hasBottomNav = false) {
-            TitleFont(movie.title)
-            MovieClip(movie.backdrop_url)
-            InteractionPane(movie, navController, reviewList)
-            DescriptionSection(movie.description)
-            UserReviewSection(reviewList)
-        }
+
+            MainContainer(hasBottomNav = false) {
+                TitleFont(movie.title)
+                MovieClip(movie.backdrop_url)
+                InteractionPane(movie, navController, reviewList)
+                DescriptionSection(movie.description)
+                UserReviewSection(reviewList)
+            }
+
     }
 }
 
@@ -148,7 +151,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
         )
         Button(
             onClick = { navController.navigate("mediaDetails/" + movie.id + "/save") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
@@ -166,7 +169,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 @Composable
 fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList: List<ReviewModel>){
     val size = Size();
-    var avg = 0.0f
+    var avg = 0f
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
@@ -207,9 +210,13 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
         ){
             if (!reviewList.isEmpty()) {
                 reviewList.forEach() { review -> avg += review.rating }
-                avg /= reviewList.size;
+
+
+                    avg /= reviewList.size;
+
+
             }
-            val solution:Double = String.format("%.1f", avg).toDouble()
+            val solution:Double = avg.toDouble()
             Text("User ratings: "+ solution.toString()+ "/5")
         }
 
@@ -252,7 +259,10 @@ private fun ReviewStars(rating: Number) {
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
             if(rating.toFloat()/2 >= n.toFloat()){
-                InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(0xFF4399FF))
+                InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(
+                    0xFFC96E0E
+                )
+                )
             } else{
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
             }
