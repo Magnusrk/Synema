@@ -144,7 +144,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
             text = movie.release_date,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(start = 4.dp, top = 10.dp, bottom = 10.dp)
+                .padding(start = 4.dp, top = 20.dp, bottom = 10.dp)
         )
         Button(
             onClick = { navController.navigate("mediaDetails/" + movie.id + "/save") },
@@ -156,8 +156,8 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
                 Text("Save")
                 InlineIcon(resourceID = R.drawable.playlist_add)
             }
-
         }
+        Box(modifier = Modifier.fillMaxSize())
     }
 
 }
