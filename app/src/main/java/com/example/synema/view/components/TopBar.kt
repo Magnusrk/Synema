@@ -70,7 +70,7 @@ fun TopBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(103.dp)
+            .height(100.dp)
             .background(color = Color(0xFF430B3D).copy(alpha)),
 
     ){

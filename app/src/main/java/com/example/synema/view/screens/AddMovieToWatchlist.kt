@@ -79,8 +79,9 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
                 }
 
             }
+            TopBar(title = "Add ${movie.title}", alignment = Alignment.Center, backArrow = true, navController = navController, fontSize = 15.sp)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "Add ${movie.title}", alignment = Alignment.Center, backArrow = true, navController = navController, fontSize = 15.sp)
+
                 watchlistList(watchlistList = watchlistList, header ="" , navController = navController, movie = movie, profileState = profileState)
 
             }

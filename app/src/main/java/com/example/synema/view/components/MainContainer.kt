@@ -11,10 +11,11 @@ import androidx.compose.ui.unit.dp
 import com.example.synema.view.utils.Size
 
 @Composable
-fun MainContainer(hasBottomNav : Boolean = false, content : @Composable () -> Unit = {} ){
+fun MainContainer(hasBottomNav : Boolean = false, hasTopNav : Boolean = true, content : @Composable () -> Unit = {} ){
     val size = Size();
     var containerHeight =size.height();
-    if (hasBottomNav) containerHeight -= 80;
+    if (hasBottomNav) containerHeight -= (55);
+    if(hasTopNav) containerHeight -= 100;
     Column(
         modifier = Modifier
             .height(containerHeight.dp)
