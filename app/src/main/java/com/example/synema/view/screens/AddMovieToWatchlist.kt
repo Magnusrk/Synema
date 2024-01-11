@@ -80,10 +80,10 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
 
             }
             MainContainer(hasBottomNav = true){
-                TopBar(title = "Add ${movie.title}", alignment = Alignment.BottomCenter, backArrow = true, navController = navController, fontSize = 15.sp)
+                TopBar(title = "Add ${movie.title}", alignment = Alignment.Center, backArrow = true, navController = navController, fontSize = 15.sp)
                 watchlistList(watchlistList = watchlistList, header ="" , navController = navController, movie = movie, profileState = profileState)
 
-            };
+            }
             BottomBar(navController = navController)
         }
 
@@ -148,7 +148,7 @@ private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifi
                         watchlistDataSource.addMovieToWatchlist(watchlist.watchlist_id, movie.id.toString(), profileState.value.token){
                             navController.popBackStack()
                         }
-                    })                    .padding(2.dp)
+                    }).padding(2.dp)
 
             ) {
                 ImageCardRow(watchlist.icons)
@@ -166,49 +166,3 @@ private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifi
 
         }
     }
-
-/*
-Surface(
-    modifier = modifier,
-    shape = RoundedCornerShape(10.dp), // Customize the shape if needed
-    color = Color(0x00000000) // Set the color to transparent
-) {
-    Column(
-        //verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(95.dp)
-
-    ) {
-        Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
-            modifier = Modifier
-                .width(100.dp)
-                .height(100.dp))
-    }
-     AsyncImage(
-            model = movie.poster_url,
-            contentDescription = null,
-            modifier = Modifier
-                .width(95.dp)
-                .height(135.dp)
-                .clickable { navController.navigate("mediaDetails/" + movie.id) }
-            ,
-            contentScale = ContentScale.FillBounds
-        )
-
-
-    Spacer(modifier = Modifier.height(5.dp))
-    Text(
-        text = watchlist.name,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color.White,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 2,
-        lineHeight = 12.sp,
-        textAlign = TextAlign.Center
-
-    )
-}
-
-}
-*/ /* */

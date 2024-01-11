@@ -96,7 +96,30 @@ class WatchlistAPISource: WatchlistDataSource {
         })
     }
 
-     override fun addMovieToWatchlist(watchlistId: String, movieId: String, token : String,  callback: (ApiResponse<String>) -> Unit) {
+
+
+    override fun deleteMovieFromWatchlist(watchlistId: String, movieId: String,token: String, callback: (ApiResponse<String>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
+
+        val deleteMovieCall: Call<String> = api.deleteMovieFromWatchlist(watchlistId, movieId,token)
+
+        deleteMovieCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = "Movie deleted successfully", statusMessage = "success"))
+                } else {
+                    // Failed to delete movie or watchlist not found
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
+    override fun addMovieToWatchlist(watchlistId: String, movieId: String, token : String,  callback: (ApiResponse<String>) -> Unit) {
         val api = retrofit.create(WatchlistAPI::class.java)
 
         val addMovieCall: Call<String> = api.addMovieToWatchlist(watchlistId, movieId, token)

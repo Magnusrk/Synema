@@ -30,7 +30,7 @@ fun MoviePosterFrame(arrangement : Arrangement.Vertical, img : String, offsetX :
         Card(
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier
-                .size(width = 106.dp, height = 161.dp)
+                .size(width = 105.dp, height = 158.dp)
 
         ){
             AsyncImage(

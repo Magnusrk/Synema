@@ -1,13 +1,14 @@
 package com.example.synema.controller
 
 import com.example.synema.model.MovieModel
-import okhttp3.ResponseBody
+import com.example.synema.model.ReviewModel
 import retrofit2.Call
-import retrofit2.Response
-import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -32,4 +33,28 @@ public interface MovieAPI {
 
     @GET("movies/search")
     abstract fun searchMovies(@Query("query") query: String): Call<List<MovieModel>>
+
+    @POST("/movie/{movieId}/reviews")
+    fun createReviewForMovie(
+        @Path("movieId") movieId: String,
+        @Body reviewModel: ReviewModel,
+        @Header("authorization") token : String
+    ): Call<String>
+
+    @DELETE("/movie/{movieId}/reviews")
+    fun delete_Review(
+        @Path("movieId") movieId: String,
+        @Header("authorization") token : String
+    ): Call<String>
+
+    @GET("/movie/{movieId}/reviews")
+    fun getReviewsForMovie(
+        @Path("movieId") movieId: String,
+        @Header("authorization") token : String
+    ): Call<List<ReviewModel>>
+
+    @GET("/user/reviews/")
+    fun getOwnReviews(
+        @Header("authorization") token : String
+    ): Call<List<ReviewModel>>
 }

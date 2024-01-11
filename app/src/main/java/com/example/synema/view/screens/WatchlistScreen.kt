@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.SynemaLogo
@@ -39,58 +38,44 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.OpaqueButton
+import com.example.synema.viewmodel.Watchlists.WatchlistViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchList(navController : NavHostController, profileState: MutableState<ProfileModel>) {
-    val dataSource = DependencyProvider.getInstance().getWatchlistSource();
+fun WatchList() {
+
+    val vm : WatchlistViewModel = viewModel()
+    vm.loadWatchlists()
 
     GradientBox(){
-        Column {
-
-            var watchlistList : List<WatchlistModel> by remember {
-                mutableStateOf(listOf())
+        LoadingWrapper(vm.isLoading) {
+            Column {
+                MainContainer(hasBottomNav = true){
+                    TopBar(title = "My Watchlists", alignment = Alignment.Center)
+                    CreateWatchlistPopup(vm);
+                    newWatchlist(vm.popupControl)
+                    wathclistList(watchlistList = vm.watchlistList, header ="", navController = vm.getNav())
+                };
+                BottomBar(navController = vm.getNav())
             }
-            val popupControl = remember { mutableStateOf(false) }
-            val watchlistName = remember { mutableStateOf("")}
-
-            dataSource.read_db (profileState.value.token){
-                if (it.successful()) {
-                    it.getResult()?.let {watchlistModel ->
-                        watchlistList = watchlistModel
-                    }
-                }
-
-            }
-            MainContainer(hasBottomNav = true){
-                TopBar(title = "My Watchlists", alignment = Alignment.Center)
-
-
-                CreateWatchlistPopup(popupControl, watchlistName, navController, profileState);
-                newWatchlist(popupControl)
-                wathclistList(watchlistList = watchlistList, header ="" , navController = navController )
-            };
-            BottomBar(navController = navController)
         }
+
 
     }
 }
@@ -98,15 +83,13 @@ fun WatchList(navController : NavHostController, profileState: MutableState<Prof
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistName : MutableState<String>, navController: NavHostController, profileState: MutableState<ProfileModel>){
+private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
-
-
-    if (openDialog.value) {
+    if (vm.popupControl.value) {
         Popup(
             // on below line we are adding
             // alignment and properties.
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = { vm.popupControl.value = false },
             properties = PopupProperties(focusable = true),
             alignment = Alignment.TopCenter,
 
@@ -121,8 +104,8 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                 // on below line we are adding border.
 
             ) {
-                PopUpHeader(openDialog = openDialog, navController = navController)
-                WatchlistCreationPane(openDialog = openDialog, watchlistName = watchlistName, navController = navController)
+                PopUpHeader(openDialog = vm.popupControl, navController = vm.getNav())
+                WatchlistCreationPane(openDialog = vm.popupControl, watchlistName = vm.newWatchlistName, navController = vm.getNav())
                 Row(modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
@@ -132,13 +115,7 @@ private fun CreateWatchlistPopup(openDialog : MutableState<Boolean>, watchlistNa
                 ){
                     // Button to create watchlist
                     Button( onClick = {
-                        val dataSource = DependencyProvider.getInstance().getWatchlistSource();
-                        // Call your createWatchlist function here
-                        dataSource.createWatchlist(watchlistName.value, profileState.value.token){}
-                        openDialog.value = false
-                        navController.currentDestination?.let { navController.navigate(it.id) }
-                        // You might want to reset the watchlistName after creating a watchlist
-                        //watchlistName = ""
+                            vm.createWatchlist()
 
                     },
                         shape = RoundedCornerShape(20),
@@ -281,7 +258,7 @@ private fun newWatchlist(openDialog : MutableState<Boolean>){
 }
 
 @Composable
-fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modifier, header: String, navController: NavHostController) {
 
     Column(
         modifier = Modifier
@@ -299,7 +276,7 @@ fun wathclistList(watchlistList: List<WatchlistModel>, modifier: Modifier = Modi
         )
         Column(modifier = modifier) {
             watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, navController =navController )
+                    watchlist -> watchlistCard(watchlist = watchlist, navController = navController )
 
                 /*
                             items(watchlistList) { watchlist ->
@@ -329,7 +306,7 @@ fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifier, navC
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { navController.navigate("watchlists/"+watchlist.watchlist_id) })
+                .clickable(onClick = { navController.navigate("watchlists/" + watchlist.watchlist_id) })
                 .padding(4.dp)
 
         ) {

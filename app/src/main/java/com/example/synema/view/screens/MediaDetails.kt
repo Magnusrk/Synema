@@ -29,15 +29,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
-import com.example.synema.Data.movies.MockMovieDataSource
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -56,8 +54,20 @@ fun MediaDetails(
     movieID: String?
 ) {
 
-    val source = DependencyProvider.getInstance().getMovieSource();
 
+
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getReviewsForMovie(movieID.toString(),profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+               reviewList = reviewModel
+            }
+        }
+    }
     var movie : MovieModel by remember {
         mutableStateOf(MovieModel(
             0,
@@ -83,23 +93,29 @@ fun MediaDetails(
             TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
             TitleFont(movie.title)
             MovieClip(movie.backdrop_url)
-            InteractionPane(movie, navController)
+            InteractionPane(movie, navController,reviewList)
             DescriptionSection(movie.description)
-            UserReviewSection(source.loadReviews())
+            UserReviewSection(reviewList)
+        println(reviewList)
+            }
         }
 
 
-}
+
 
 
 @Composable
-fun InteractionPane(movie : MovieModel, navController: NavHostController){
+fun InteractionPane(
+    movie: MovieModel,
+    navController: NavHostController,
+    reviewList: List<ReviewModel>
+){
     val size = Size();
     Row(modifier = Modifier
         .fillMaxWidth()
         .height((size.height() / 7).dp)){
         SaveButton(movie, navController = navController)
-        RatingPanel(movie)
+        RatingPanel(movie, navController = navController, reviewList)
     }
 }
 
@@ -136,8 +152,9 @@ fun SaveButton(movie: MovieModel, navController: NavHostController){
 
 
 @Composable
-fun RatingPanel(movie : MovieModel){
+fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList: List<ReviewModel>){
     val size = Size();
+    var avg =0;
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
@@ -154,7 +171,7 @@ fun RatingPanel(movie : MovieModel){
             ){
             RatingStars(movie.rating)
         }
-        Button( onClick = {},
+        Button( onClick = {navController.navigate("mediaDetails/" + movie.id+"/review")},
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
@@ -165,13 +182,25 @@ fun RatingPanel(movie : MovieModel){
             }
 
         }
+        Button( onClick = {},
+            shape = RoundedCornerShape(20),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
+            contentPadding = PaddingValues(horizontal = 15.dp)
+        ){
+            if (!reviewList.isEmpty()) {
+                reviewList.forEach() { review -> avg += review.rating }
+                avg /= reviewList.size;
+            }
+            Text(avg.toFloat().toString()+ "/5")
+        }
+
     }
 
 }
 
 
 @Composable
-fun RatingStars(rating : Number){
+private fun RatingStars(rating : Number){
     Row ( horizontalArrangement = Arrangement.SpaceEvenly){
         for( n  in 1..5){
             if(rating.toFloat()/2 >= n.toFloat()){
@@ -193,7 +222,7 @@ fun DescriptionSection(desc : String){
         .fillMaxWidth()
         .height(1.dp)
         .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
+    Text(desc, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp, end = 20.dp))
 
 }
 
@@ -213,7 +242,7 @@ fun UserReviewSection(reviewList: List<ReviewModel>){
 }
 
 @Composable
-fun UserReviewCard(review : ReviewModel){
+private fun UserReviewCard(review : ReviewModel){
     Box(modifier= Modifier
         .fillMaxWidth()
         .defaultMinSize(70.dp)
@@ -234,18 +263,47 @@ fun UserReviewCard(review : ReviewModel){
 }
 
 @Composable
-fun InnerReviewContainer(review : ReviewModel){
+private fun InnerReviewContainer(review : ReviewModel){
+    var expanded by remember { mutableStateOf (false) }
+    var moreText by remember {
+        mutableStateOf("More")
+    }
+
     Column(
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text= review.owner.name, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
-            RatingStars(review.rating.toFloat())
+            Text(modifier = Modifier.height(30.dp), text= "@" + review.username, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            RatingStars(review.rating*2)
         }
 
-        Text(review.reviewText,  color = Color.White, overflow = TextOverflow.Ellipsis, maxLines = 3)
+        if (expanded) {
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+            )
+        } else{
+            Text(
+                review.reviewText,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 3
+            )
+        }
         Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
-            OpaqueButton(label = "More", onClick = { }, Modifier.defaultMinSize(minHeight = 5.dp))
+            if (review.reviewText.length > 30) {
+                OpaqueButton(
+                    label = moreText,
+                    onClick = { expanded = !expanded;
+                              if (expanded){
+                                  moreText = "Less"
+                              } else {
+                                  moreText = "More"
+                              }},
+                    Modifier.defaultMinSize(minHeight = 5.dp)
+                )
+            }
         }
 
     }
