@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -55,7 +56,9 @@ fun TopBar(
     textInput : Boolean = false,
     navController: NavController? = null,
     onChange :  (String) -> Unit = { },
-    inputLabel : String = ""
+    inputLabel : String = "",
+    filter  : Boolean = false,
+    filterPopUp :  () -> Unit = {}
 
 ){
     val syncopateFamily = FontFamily(
@@ -121,6 +124,10 @@ fun TopBar(
                     focusedIndicatorColor = Color(0xFF811C77),
                 )
             )
+            if(filter){
+                OpaqueButton(label = "filter", onClick = { filterPopUp.invoke() }, modifier= Modifier.align(
+                    Alignment.CenterEnd))
+            }
         }
 
         if (search) {
