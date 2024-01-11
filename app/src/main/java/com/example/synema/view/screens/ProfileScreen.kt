@@ -242,7 +242,7 @@ private fun Directories(navController: NavHostController) {
         DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))
         //}
-        DirectoryCard("Friends", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
         DirectoryCard("Reviews", navController = navController, route = "myreviews")
