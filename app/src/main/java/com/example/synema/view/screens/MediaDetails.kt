@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -107,7 +108,6 @@ fun MediaDetails(
             InteractionPane(movie, navController, reviewList)
             DescriptionSection(movie.description)
             UserReviewSection(reviewList)
-            println(reviewList)
         }
     }
 }
@@ -122,7 +122,7 @@ fun InteractionPane(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height((size.height() / 7).dp)
+            .height((size.height() / 5).dp)
     ) {
         SaveButton(movie, navController = navController)
         RatingPanel(movie, navController = navController, reviewList)
@@ -166,7 +166,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 @Composable
 fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList: List<ReviewModel>){
     val size = Size();
-    var avg =0;
+    var avg = 0.0f
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
@@ -184,6 +184,7 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
         ) {
             RatingStars(movie.rating)
         }
+
         Button(
             onClick = { navController.navigate("mediaDetails/" + movie.id + "/review") },
             shape = RoundedCornerShape(20),
@@ -196,7 +197,10 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
             }
 
         }
+
+
         Button( onClick = {},
+            modifier = Modifier.fillMaxWidth(0.75f),
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
@@ -205,7 +209,8 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
                 reviewList.forEach() { review -> avg += review.rating }
                 avg /= reviewList.size;
             }
-            Text(avg.toFloat().toString()+ "/5")
+            val solution:Double = String.format("%.1f", avg).toDouble()
+            Text("User ratings: "+ solution.toString()+ "/5")
         }
 
     }
@@ -217,7 +222,6 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
 private fun RatingStars(rating: Number) {
 
     val starImage = ImageBitmap.imageResource(id = R.drawable.stars6)
-
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
 
