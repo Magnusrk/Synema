@@ -54,8 +54,8 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     val context = AppContext.getInstance();
     GradientBox(){
         Column {
+            TopBar(title = "My Profile", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "My Profile", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture()
@@ -135,6 +135,7 @@ private fun PersonalDescription() {
                 .height(127.dp)
                 .background(Color(0xFF543b5b), shape = RoundedCornerShape(10.dp))
                 .align(Alignment.Center)
+
         ) {
             Text(
                 "Writer by day, reviewer by night. I live \n" +
@@ -145,7 +146,7 @@ private fun PersonalDescription() {
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, top = 2.dp)
+                    .padding(start = 16.dp, top = 16.dp)
 
             )
         }
@@ -241,10 +242,10 @@ private fun Directories(navController: NavHostController) {
         DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))
         //}
-        DirectoryCard("Friends", navController = navController )
+        DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Reviews", navController = navController )
+        DirectoryCard("Reviews", navController = navController, route = "myreviews")
 
     }
 

@@ -107,14 +107,15 @@ fun WriteReviewScreen(
 
     GradientBox {
         Column {
+            TopBar(
+                title = "Review ${movie.title}",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
+                fontSize = 15.sp
+            )
             MainContainer(hasBottomNav = true) {
-                TopBar(
-                    title = "Review ${movie.title}",
-                    alignment = Alignment.Center,
-                    backArrow = true,
-                    navController = navController,
-                    fontSize = 15.sp
-                )
+
                 Box(
                     modifier = Modifier
                         .padding(15.dp)
@@ -145,7 +146,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFd60202)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB13563)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -164,7 +165,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4399FF)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF912BB1)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {

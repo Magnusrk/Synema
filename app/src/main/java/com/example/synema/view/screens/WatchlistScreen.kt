@@ -73,8 +73,9 @@ fun WatchList() {
     GradientBox(){
         LoadingWrapper(vm.isLoading) {
             Column {
+                TopBar(title = "My Watchlists", alignment = Alignment.Center)
                 MainContainer(hasBottomNav = true){
-                    TopBar(title = "My Watchlists", alignment = Alignment.Center)
+
                     CreateWatchlistPopup(vm);
                     newWatchlist(vm)
                     CreateDeletePopup(vm)
