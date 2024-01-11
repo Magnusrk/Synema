@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.SynemaLogo
@@ -39,23 +38,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.synema.view.components.LoadingWrapper
@@ -75,10 +70,9 @@ fun WatchList() {
             Column {
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
                 MainContainer(hasBottomNav = true){
-
                     CreateWatchlistPopup(vm);
-                    newWatchlist(vm)
                     CreateDeletePopup(vm)
+                    newWatchlist(vm)
                     wathclistList(vm)
                 };
                 BottomBar(navController = vm.getNav())
@@ -100,7 +94,7 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
             // alignment and properties.
             onDismissRequest = { vm.popupControl.value = false },
             properties = PopupProperties(focusable = true),
-            alignment = Alignment.TopCenter,
+            alignment = Alignment.Center,
 
             ) {
 
@@ -109,7 +103,7 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top=250.dp)
+                modifier = Modifier.padding(horizontal = 15.dp)
                 // on below line we are adding border.
 
             ) {
@@ -118,8 +112,10 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
                 Row(modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
-                    .background(Color(0xFF430B3D)),
-                    horizontalArrangement = Arrangement.Center
+                    .background(Color(0xFF430B3D), shape= RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
+                    .padding(bottom=10.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
 
                 ){
                     // Button to create watchlist
@@ -157,18 +153,14 @@ private fun CreateDeletePopup( vm : WatchlistViewModel) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 250.dp)
+                modifier = Modifier.padding(10.dp)
+
             ) {
                 // Row with buttons
                 DeletePopupButton(vm)
 
                 // Text for the delete confirmation
-                Text(
-                    text = "Are you sure you want to delete this watchlist?",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
+
             }
         }
     }
@@ -176,21 +168,43 @@ private fun CreateDeletePopup( vm : WatchlistViewModel) {
 
 @Composable
 private fun DeletePopupButton(vm : WatchlistViewModel) {
-    Row(
+
+
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .background(color = Color(0xFF63105B)),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        // Cancel Button
-        OpaqueButton(label = "Cancel", onClick = { vm.deleteConfirmationPopupControl.value = false })
+            .height(175.dp)
+            .background(color = Color(0xFF63105B), shape = RoundedCornerShape(5.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
 
-        // Delete Button
-        OpaqueButton(
-            label = "Delete watchlist",
-            onClick = { vm.DeleteWatchlist()}
+    ) {
+        Text(
+            text = "Are you sure you want to delete this watchlist?",
+            color = Color.White,
+            fontSize = 16.sp,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()){
+            // Cancel Button
+            Button(onClick = { vm.deleteConfirmationPopupControl.value = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+            ){
+                Text(text = "Cancel")
+            }
+            // Delete Button
+            Button(
+                onClick = { vm.DeleteWatchlist()},
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAD2F2F)),
+            ){
+                Text(text="Delete")
+            }
+        }
+
     }
 }
 
@@ -203,7 +217,8 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
     Row (modifier = Modifier
         .fillMaxWidth()
         .height(56.dp)
-        .background(color = Color(0xFF63105B))
+        .background(color = Color(0xFF63105B), shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+        .padding(5.dp)
         ,
         horizontalArrangement = Arrangement.SpaceBetween
     ){
@@ -219,6 +234,12 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
 
 
         }
+
+
+
+
+
+
 
     }
 
@@ -238,7 +259,7 @@ private fun WatchlistCreationPane(openDialog : MutableState<Boolean>, watchlistN
                 label = { Text("Watchlist Name") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(top=16.dp).padding(horizontal = 20.dp)
             )
         }
 
@@ -352,7 +373,7 @@ fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
 
     ) {
@@ -360,7 +381,11 @@ fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-                .clickable(onClick = { vm.getNav().navigate("watchlists/" + watchlist.watchlist_id) })
+                .clickable(onClick = {
+                    vm
+                        .getNav()
+                        .navigate("watchlists/" + watchlist.watchlist_id)
+                })
                 .padding(4.dp)
 
         ) {
@@ -383,11 +408,13 @@ fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
             contentDescription = null,
             modifier = Modifier
                 .size(30.dp)
-                .clickable(onClick={
+                .clickable(onClick = {
                     vm.promptDeletion(watchlist.watchlist_id)
+                }),
+            colorFilter = ColorFilter.tint(Color.White),
 
-                }
-        ))
+
+            )
 
         }
     }
