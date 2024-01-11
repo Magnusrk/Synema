@@ -13,7 +13,7 @@ class ProfileViewModel : ViewModel() {
     var context = AppContext.getInstance();
 
      fun logout(c: Context) {
-         context.setProfileState(ProfileModel("","","",""));
+         context.setProfileState(ProfileModel("","","","","",""));
          viewModelScope.launch {
              DataStoreManager(c).clearDataStore().let {
                  context.getNav().navigate("login")

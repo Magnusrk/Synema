@@ -15,7 +15,7 @@ class AppContext private constructor() {
         private var instance: AppContext? = null
 
 
-        var profileState = mutableStateOf(ProfileModel("","","",""))
+        var profileState = mutableStateOf(ProfileModel("","","","","",""))
 
         @SuppressLint("StaticFieldLeak")
         lateinit var navHostController :  NavHostController
