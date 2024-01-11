@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.synema.Data.DataStore.DataStoreManager
 import coil.compose.AsyncImage
 import com.example.synema.R
 import com.example.synema.controller.AppContext
@@ -45,7 +44,6 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
-import com.example.synema.view.utils.Size
 import com.example.synema.viewmodel.ProfileViewModel
 
 
@@ -54,11 +52,11 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     val context = AppContext.getInstance();
     GradientBox(){
         Column {
+            TopBar(title = "My Profile", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "My Profile", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
-                ProfilePicture()
+                ProfilePicture(profileState.value)
                 FollowersReviewsStatus(76, 88)
                 PersonalDescription()
                 Directories(context.getNav())
@@ -80,23 +78,36 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
     }
 }
 @Composable
-private fun ProfilePicture(){
+private fun ProfilePicture(currentUser: ProfileModel) {
 
-    Row (modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp), horizontalArrangement = Arrangement.Center){
-        Image(
-            painter = painterResource(R.drawable.profile_picture_placeholder),
-            contentDescription = null,
-            modifier = Modifier
-                .size(145.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Black, CircleShape)
-            ,
-            contentScale = ContentScale.Crop
-        )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp), horizontalArrangement = Arrangement.Center
+    ) {
+        println(currentUser.name)
+        println(currentUser.profilePicture)
+        if (false) {
+            Image(
+                painter = painterResource(R.drawable.profile_picture_placeholder),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(145.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.Black, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            println(currentUser.bio)
+            AsyncImage(
+                model = currentUser.profilePicture, contentDescription = null, modifier = Modifier
+                    .size(145.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.Black, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
-
 }
 
 @Composable

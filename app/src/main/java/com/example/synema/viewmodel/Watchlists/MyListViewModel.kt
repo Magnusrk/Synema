@@ -35,6 +35,10 @@ class MyListViewModel : ViewModel() {
                 it.getResult()?.let { watchlistModel ->
                     movielist.clear()
                     moviesToLoad.value = watchlistModel.movieIds.size
+                    if(moviesToLoad.value == 0){
+                        isLoading.value = false;
+                        return@getWatchlistById
+                    }
                     watchlistModel.movieIds.forEach { movie : String ->
                         movieSource.loadMovie(movie) {
                             movielist.add(it.getResult()!!)

@@ -23,11 +23,13 @@ class SearchViewModel : ViewModel() {
     val dataSource = DependencyProvider.getInstance().getMovieSource();
 
 
-
     var movieList = mutableStateListOf<MovieModel>()
     var readyForSearch = mutableStateOf(true)
 
     var isLoading = mutableStateOf(true)
+
+    var filterPopUp = mutableStateOf(false)
+
 
     fun initSearch(){
         readyForSearch.value = false;
