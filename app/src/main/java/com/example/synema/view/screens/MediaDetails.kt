@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -222,6 +223,7 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
 private fun RatingStars(rating: Number) {
 
     val starImage = ImageBitmap.imageResource(id = R.drawable.stars6)
+    val bigStarImage = ImageBitmap.imageResource(id = R.drawable.stars_big)
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
 
@@ -229,19 +231,21 @@ private fun RatingStars(rating: Number) {
             modifier = Modifier
                 .height(30.dp)
                 .fillMaxWidth(rating.toFloat() / 10)
-              //  .background(color = Color.Transparent)
+
         ) {
             Canvas(modifier = Modifier.fillMaxSize()
             ) {
+
                 drawImage(image = starImage)
+            }
+            Canvas(modifier = Modifier.fillMaxSize().graphicsLayer (alpha = 0.99f)
+            ) {
+
                 drawRect(
-                    color = Color.Blue,
+                    color = Color(0xFF4180FF),
                     size = size,
-                   // blendMode = BlendMode.Xor
                 )
-                drawImage(image = starImage, blendMode = BlendMode.DstIn )
-
-
+                drawImage(image = starImage, blendMode = BlendMode.DstAtop)
             }
         }
     }
