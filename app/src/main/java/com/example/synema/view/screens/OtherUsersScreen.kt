@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -103,18 +103,17 @@ fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController : N
         ){
             Row (
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ){
                 AsyncImage(
                     model = R.drawable.devon,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(45.dp)
                         .clip(CircleShape)
                         .border(2.dp, Color(0x00000000), CircleShape)
-
                     ,
-
+                    contentScale = ContentScale.Crop
                 )
 
                 Text(
