@@ -26,7 +26,10 @@ class MockUserDataSource() : UserDataSource {
                     "test",
                     "Chuck Norris",
                     "chuck@norris.com",
-                    "bio")
+                    "bio",
+                    "",
+                    "ds")
+
             )
         ))
     }
@@ -38,7 +41,9 @@ class MockUserDataSource() : UserDataSource {
                     "test",
                     "Chuck Norris",
                     "chuck@norris.com",
-                    "bio")
+                    "bio",
+                    "2",
+                    "2")
             )
         ))
     }
