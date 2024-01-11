@@ -50,13 +50,14 @@ fun MyListScreen(
     GradientBox {
         LoadingWrapper (vm.isLoading){
         Column {
+            TopBar(
+                title = "My List",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = vm.getNav()
+            )
             MainContainer(hasBottomNav = true) {
-                TopBar(
-                    title = "My List",
-                    alignment = Alignment.Center,
-                    backArrow = true,
-                    navController = vm.getNav()
-                )
+
                     ListDetails(vm = vm, watchlistID = watchlistID)
 
             }

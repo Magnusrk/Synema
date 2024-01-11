@@ -29,8 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
@@ -46,6 +45,7 @@ import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.model.WatchlistModel
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.MovieClip
@@ -62,6 +62,7 @@ fun MediaDetails(
     profileState: MutableState<ProfileModel>,
     movieID: String?
 ) {
+
 
 
     val source = DependencyProvider.getInstance().getMovieSource();
@@ -97,21 +98,25 @@ fun MediaDetails(
 
 
     //val movie : MovieModel = source.loadMovie(movieID.toString())
-
-    MainContainer {
+    Column {
         TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
-        TitleFont(movie.title)
-        MovieClip(movie.backdrop_url)
-        InteractionPane(movie, navController)
-        DescriptionSection(movie.description)
-        UserReviewSection(reviewList)
-        println(reviewList)
+        MainContainer (hasBottomNav = false){
+            TitleFont(movie.title)
+            MovieClip(movie.backdrop_url)
+            InteractionPane(movie, navController,reviewList)
+            DescriptionSection(movie.description)
+            UserReviewSection(reviewList)
+            println(reviewList)
+        }
     }
-}
 
 
 @Composable
-fun InteractionPane(movie: MovieModel, navController: NavHostController) {
+fun InteractionPane(
+    movie: MovieModel,
+    navController: NavHostController,
+    reviewList: List<ReviewModel>
+){
     val size = Size();
     Row(
         modifier = Modifier
@@ -119,7 +124,7 @@ fun InteractionPane(movie: MovieModel, navController: NavHostController) {
             .height((size.height() / 7).dp)
     ) {
         SaveButton(movie, navController = navController)
-        RatingPanel(movie, navController = navController)
+        RatingPanel(movie, navController = navController, reviewList)
     }
 }
 
@@ -158,8 +163,9 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 
 
 @Composable
-fun RatingPanel(movie: MovieModel, navController: NavHostController) {
+fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList: List<ReviewModel>){
     val size = Size();
+    var avg =0;
     Column(
         modifier = Modifier
             .width((size.width() / 2).dp)
@@ -189,6 +195,18 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController) {
             }
 
         }
+        Button( onClick = {},
+            shape = RoundedCornerShape(20),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
+            contentPadding = PaddingValues(horizontal = 15.dp)
+        ){
+            if (!reviewList.isEmpty()) {
+                reviewList.forEach() { review -> avg += review.rating }
+                avg /= reviewList.size;
+            }
+            Text(avg.toFloat().toString()+ "/5")
+        }
+
     }
 
 }
@@ -236,6 +254,8 @@ private fun ReviewStars(rating: Number) {
         }
     }
 }
+
+
 
 
 @Composable
