@@ -54,8 +54,8 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     val context = AppContext.getInstance();
     GradientBox(){
         Column {
+            TopBar(title = "My Profile", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "My Profile", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture()

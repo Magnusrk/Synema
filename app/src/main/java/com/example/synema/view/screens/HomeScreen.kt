@@ -61,8 +61,9 @@ fun MoviesApp(homeViewModel: HomeViewModel) {
 
 
     Column (modifier = Modifier.fillMaxSize()){
+        TopBar("Synema", Alignment.CenterStart, 30.sp, search = true, navController = homeViewModel.getNav(), transparent = true)
         MainContainer(hasBottomNav = true) {
-            TopBar("Synema", Alignment.CenterStart, 30.sp, search = true, navController = homeViewModel.getNav())
+
 
                 TrendTopBar(homeViewModel.discoverList,search=true, homeViewModel.getNav())
 

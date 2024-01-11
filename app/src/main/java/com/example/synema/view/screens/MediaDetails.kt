@@ -39,6 +39,7 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
@@ -88,17 +89,21 @@ fun MediaDetails(
 
 
     //val movie : MovieModel = source.loadMovie(movieID.toString())
-
-    MainContainer {
-            TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
+    Column {
+        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
+        MainContainer (hasBottomNav = false){
             TitleFont(movie.title)
             MovieClip(movie.backdrop_url)
             InteractionPane(movie, navController,reviewList)
             DescriptionSection(movie.description)
             UserReviewSection(reviewList)
-        println(reviewList)
-            }
+            println(reviewList)
         }
+    }
+
+
+}
+
 
 
 
