@@ -21,12 +21,20 @@ class MyListViewModel : ViewModel() {
 
     val profileState = context.getProfileState()
 
+    val movieToDelete =  mutableStateOf("")
+    val watchlistID =  mutableStateOf("")
+
     val loadedMovies = mutableStateOf(0)
     val moviesToLoad = mutableStateOf(0)
 
 
 
+    val deleteConfirmationPopupControl = mutableStateOf(false)
+
+
+
     fun getWatchlist(watchlistID : String){
+        this.watchlistID.value = watchlistID
         isLoading.value = true
         loadedMovies.value = 0
         watchSource.getWatchlistById(watchlistID.toString(), token = profileState.value.token) {
@@ -66,18 +74,34 @@ class MyListViewModel : ViewModel() {
         context.getNav().navigate("mediaDetails/$movieId")
     }
 
-    fun deleteMovieFromWatchlist(watchlistID: String, movieId: Int){
+    fun deleteMovieFromWatchlist(){
         watchSource.deleteMovieFromWatchlist(
-            watchlistID,
-            movieId.toString(),
+            watchlistID.value,
+            movieToDelete.value,
             profileState.value.token
-        ) {}
+        ) {
+            deleteConfirmationPopupControl.value = false
+            getWatchlist(watchlistID.value)
+
+
+
+        }
+
+
     }
 
 
 
     fun getNav() : NavHostController{
         return context.getNav()
+    }
+
+
+
+    fun promptDeletion(id : String, watch : String){
+        movieToDelete.value = id
+        watchlistID.value = watch
+        deleteConfirmationPopupControl.value=true
     }
 
 

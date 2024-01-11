@@ -51,4 +51,12 @@ class MockUserDataSource() : UserDataSource {
     override fun verifyToken(token: String, callback: (ApiResponse<Boolean>) -> Unit) {
         callback(ApiResponse(true))
     }
+
+    override fun userById(
+        username: String,
+        token: String,
+        callback: (ApiResponse<UserModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
 }
