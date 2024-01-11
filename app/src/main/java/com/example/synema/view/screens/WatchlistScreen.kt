@@ -62,14 +62,14 @@ import com.example.synema.viewmodel.Watchlists.WatchlistViewModel
 @Composable
 fun WatchList() {
 
-    val vm : WatchlistViewModel = viewModel()
+    val vm: WatchlistViewModel = viewModel()
     vm.loadWatchlists()
 
-    GradientBox(){
+    GradientBox() {
         LoadingWrapper(vm.isLoading) {
             Column {
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
-                MainContainer(hasBottomNav = true){
+                MainContainer(hasBottomNav = true) {
                     CreateWatchlistPopup(vm);
                     CreateDeletePopup(vm)
                     newWatchlist(vm)
@@ -86,7 +86,7 @@ fun WatchList() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateWatchlistPopup(vm : WatchlistViewModel){
+private fun CreateWatchlistPopup(vm: WatchlistViewModel) {
 
     if (vm.popupControl.value) {
         Popup(
@@ -108,25 +108,34 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
             ) {
                 PopUpHeader(openDialog = vm.popupControl, navController = vm.getNav())
-                WatchlistCreationPane(openDialog = vm.popupControl, watchlistName = vm.newWatchlistName, navController = vm.getNav())
-                Row(modifier = Modifier
-                    .height(50.dp)
-                    .fillMaxWidth()
-                    .background(Color(0xFF430B3D), shape= RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
-                    .padding(bottom=10.dp),
+                WatchlistCreationPane(
+                    openDialog = vm.popupControl,
+                    watchlistName = vm.newWatchlistName,
+                    navController = vm.getNav()
+                )
+                Row(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                        .background(
+                            Color(0xFF430B3D),
+                            shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                        )
+                        .padding(bottom = 10.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
 
-                ){
+                ) {
                     // Button to create watchlist
-                    Button( onClick = {
+                    Button(
+                        onClick = {
                             vm.createWatchlist()
 
-                    },
+                        },
                         shape = RoundedCornerShape(20),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
                         contentPadding = PaddingValues(horizontal = 20.dp)
-                    ){
+                    ) {
                         Row {
                             Text("Done")
                         }
@@ -141,8 +150,9 @@ private fun CreateWatchlistPopup(vm : WatchlistViewModel){
 
 
 }
+
 @Composable
-private fun CreateDeletePopup( vm : WatchlistViewModel) {
+private fun CreateDeletePopup(vm: WatchlistViewModel) {
 
     if (vm.deleteConfirmationPopupControl.value) {
         Popup(
@@ -167,8 +177,7 @@ private fun CreateDeletePopup( vm : WatchlistViewModel) {
 }
 
 @Composable
-private fun DeletePopupButton(vm : WatchlistViewModel) {
-
+private fun DeletePopupButton(vm: WatchlistViewModel) {
 
 
     Column(
@@ -189,19 +198,20 @@ private fun DeletePopupButton(vm : WatchlistViewModel) {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()){
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
             // Cancel Button
-            Button(onClick = { vm.deleteConfirmationPopupControl.value = false },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
-            ){
+            Button(
+                onClick = { vm.deleteConfirmationPopupControl.value = false },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF811C77)),
+            ) {
                 Text(text = "Cancel")
             }
             // Delete Button
             Button(
-                onClick = { vm.DeleteWatchlist()},
+                onClick = { vm.DeleteWatchlist() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAD2F2F)),
-            ){
-                Text(text="Delete")
+            ) {
+                Text(text = "Delete")
             }
         }
 
@@ -209,36 +219,42 @@ private fun DeletePopupButton(vm : WatchlistViewModel) {
 }
 
 
-
-
-
 @Composable
-private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHostController){
-    Row (modifier = Modifier
-        .fillMaxWidth()
-        .height(56.dp)
-        .background(color = Color(0xFF63105B), shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-        .padding(5.dp)
-        ,
+private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHostController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .background(
+                color = Color(0xFF63105B),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+            )
+            .padding(5.dp),
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
-        Row (){
+    ) {
+        Row() {
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                OpaqueButton(label = "Cancel", onClick = { openDialog.value = false}, modifier = Modifier.align(Alignment.Start))
+                OpaqueButton(
+                    label = "Cancel",
+                    onClick = { openDialog.value = false },
+                    modifier = Modifier.align(Alignment.Start)
+                )
             }
-            Column(modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .fillMaxWidth()) {
-                Text("Create watchlist", color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally), fontSize = 20.sp)
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    "Create watchlist",
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    fontSize = 20.sp
+                )
             }
 
 
         }
-
-
-
-
-
 
 
     }
@@ -247,19 +263,26 @@ private fun PopUpHeader(openDialog: MutableState<Boolean>, navController: NavHos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun WatchlistCreationPane(openDialog : MutableState<Boolean>, watchlistName: MutableState<String>, navController: NavHostController){
+private fun WatchlistCreationPane(
+    openDialog: MutableState<Boolean>,
+    watchlistName: MutableState<String>,
+    navController: NavHostController
+) {
 
-    Row(modifier = Modifier
-        .height(100.dp)
-        .background(Color(0xFF430B3D))){
-        Row(){
+    Row(
+        modifier = Modifier
+            .height(100.dp)
+            .background(Color(0xFF430B3D))
+    ) {
+        Row() {
             TextField(
                 value = watchlistName.value,
                 onValueChange = { watchlistName.value = it },
                 label = { Text("Watchlist Name") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top=16.dp).padding(horizontal = 20.dp)
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 20.dp)
             )
         }
 
@@ -270,16 +293,25 @@ private fun WatchlistCreationPane(openDialog : MutableState<Boolean>, watchlistN
 
 
 @Composable
-private fun MovieDisplay(){
+private fun MovieDisplay() {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-    ){
-        MoviePosterFrame(Arrangement.Bottom, "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg")
-        MoviePosterFrame(Arrangement.Center, "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg")
-        MoviePosterFrame(Arrangement.Top, "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999")
+    ) {
+        MoviePosterFrame(
+            Arrangement.Bottom,
+            "https://static.posters.cz/image/750/plakater/interstellar-ice-walk-i23290.jpg"
+        )
+        MoviePosterFrame(
+            Arrangement.Center,
+            "https://i.etsystatic.com/10683147/r/il/d4a024/4900691314/il_1080xN.4900691314_fu21.jpg"
+        )
+        MoviePosterFrame(
+            Arrangement.Top,
+            "https://www.hollywoodreporter.com/wp-content/uploads/2023/06/French-Film-Poster-Barbie-Warner-Bros..jpg?w=999"
+        )
     }
 }
 
@@ -297,14 +329,15 @@ private fun SynHeader() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun newWatchlist(vm: WatchlistViewModel){
+private fun newWatchlist(vm: WatchlistViewModel) {
 
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .height(100.dp)
-        .offset(34.dp, 33.dp)
-        .verticalScroll(rememberScrollState())
-    ){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .offset(34.dp, 33.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
 
         Box(modifier = Modifier
             .height(100.dp)
@@ -317,22 +350,26 @@ private fun newWatchlist(vm: WatchlistViewModel){
         )
 
         {
-            Image(painter = painterResource(id = R.drawable.actual_plus_symbol), contentDescription = null,
+            Image(
+                painter = painterResource(id = R.drawable.actual_plus_symbol),
+                contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .width(100.dp)
-                    .height(100.dp))
+                    .height(100.dp)
+            )
         }
-        Text(text = "New Watchlist", fontSize = 16.sp, color =Color.White, modifier = Modifier
-            .align(Alignment.CenterVertically)
-            .padding(27.dp)
+        Text(
+            text = "New Watchlist", fontSize = 16.sp, color = Color.White, modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(27.dp)
         )
     }
 
 }
 
 @Composable
-fun wathclistList(vm : WatchlistViewModel) {
+fun wathclistList(vm: WatchlistViewModel) {
 
     Column(
         modifier = Modifier
@@ -349,18 +386,8 @@ fun wathclistList(vm : WatchlistViewModel) {
                 .padding(8.dp)
         )
         Column {
-            vm.watchlistList.forEach(){
-                    watchlist -> watchlistCard(watchlist = watchlist, vm=vm)
-
-                /*
-                            items(watchlistList) { watchlist ->
-                            watchlistCard(
-                                    watchlist = watchlist,
-                                    modifier = Modifier.padding(8.dp),
-                                    navController
-                                )*/
-
-
+            vm.watchlistList.forEach() { watchlist ->
+                watchlistCard(watchlist = watchlist, vm = vm)
             }
         }
     }
@@ -368,7 +395,7 @@ fun wathclistList(vm : WatchlistViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
+fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -416,11 +443,8 @@ fun watchlistCard(watchlist: WatchlistModel, vm : WatchlistViewModel) {
 
             )
 
-        }
     }
-
-
-
+}
 
 
 @Composable
@@ -429,19 +453,23 @@ fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
         modifier = Modifier
             .size(45.dp)
             .background(Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
-    ){
-        AsyncImage(
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(4.dp)),
-            contentScale = ContentScale.Crop,
-            model = imageUrl
-        )
+    ) {
+        if (imageUrl != "https://i0.wp.com/godstedlund.dk/wp-content/uploads/2023/04/placeholder-5.png?w=1200&ssl=1") {
+            AsyncImage(
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop,
+                model = imageUrl
+            )
+        }
     }
+
 }
+
 @Composable
-fun ImageCardRow(movieUrls : List<String>) {
+fun ImageCardRow(movieUrls: List<String>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -454,10 +482,8 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            ImageCard(movieUrls[0], modifier = Modifier.
-            weight(2F))
-            ImageCard(movieUrls[1], modifier = Modifier
-                .weight(2F))
+            ImageCard(movieUrls[0], modifier = Modifier.weight(2F))
+            ImageCard(movieUrls[1], modifier = Modifier.weight(2F))
         }
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -468,13 +494,17 @@ fun ImageCardRow(movieUrls : List<String>) {
                 .weight(2F),
             horizontalArrangement = Arrangement.SpaceEvenly,
 
-            ){
-            ImageCard(movieUrls[2], modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
-            ImageCard (movieUrls[3], modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 2.dp))
+            ) {
+            ImageCard(
+                movieUrls[2], modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 2.dp)
+            )
+            ImageCard(
+                movieUrls[3], modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 2.dp)
+            )
         }
     }
 }

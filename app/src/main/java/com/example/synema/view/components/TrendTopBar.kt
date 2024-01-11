@@ -1,8 +1,10 @@
 package com.example.synema.view.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,19 +34,24 @@ val moviePosters = listOf(
     R.drawable.movieposter
 )
 */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TrendTopBar(
     movies:List<MovieModel>,
-    search: Boolean = false,
     navController: NavController
 ) {
-    //var selectedImageIndex by remember {mutableStateOf(0)}
+
+    val state = rememberLazyListState()
+
 
     LazyRow(
         modifier = Modifier
             .fillMaxWidth() // set the width to the maximum available space
-            .height(272.dp) // Adjust the height as needed
+            .height(272.dp), // Adjust the height as needed
         // .background(Color.Transparent) // You can set a transparent background
+        state = state,
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = state)
+
 
     ) {
         items(movies) {movie ->
@@ -63,7 +71,7 @@ fun TrendTopBar(
                         .background(Color.Black.copy(alpha = 0.6f))
                         .align(Alignment.BottomStart)
                 ) {
-                    Text(text = movie.title, color = Color.White)
+                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 5.dp, end = 5.dp))
                 }
             }
 

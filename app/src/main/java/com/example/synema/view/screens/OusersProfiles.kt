@@ -50,9 +50,10 @@ import com.example.synema.viewmodel.ProfileViewModel
 fun OUprofiles(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     val context = AppContext.getInstance();
     GradientBox(){
+
         Column {
+            TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "Other User", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader("Devon Jeffery")
                 ProfilePicture()
