@@ -29,6 +29,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -62,7 +64,6 @@ fun MediaDetails(
     profileState: MutableState<ProfileModel>,
     movieID: String?
 ) {
-
 
 
     val source = DependencyProvider.getInstance().getMovieSource();
@@ -100,16 +101,16 @@ fun MediaDetails(
     //val movie : MovieModel = source.loadMovie(movieID.toString())
     Column {
         TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
-        MainContainer (hasBottomNav = false){
+        MainContainer(hasBottomNav = false) {
             TitleFont(movie.title)
             MovieClip(movie.backdrop_url)
-            InteractionPane(movie, navController,reviewList)
+            InteractionPane(movie, navController, reviewList)
             DescriptionSection(movie.description)
             UserReviewSection(reviewList)
             println(reviewList)
         }
     }
-
+}
 
 @Composable
 fun InteractionPane(
