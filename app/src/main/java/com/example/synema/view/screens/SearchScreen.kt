@@ -2,16 +2,20 @@ package com.example.synema.view.screens
 
 import GradientBox
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -62,8 +66,11 @@ fun MovieList(vm : SearchViewModel) {
         TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = vm.getNav(), onChange = {
            vm.search(it)
         },
-            inputLabel = "Search movie")
+            inputLabel = "Search movie", filter = false, filterPopUp = {vm.filterPopUp.value = !vm.filterPopUp.value})
         LoadingWrapper(vm.isLoading) {
+            if(vm.filterPopUp.value){
+                FilterPopUp()
+            }
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp)
             ){
@@ -78,6 +85,21 @@ fun MovieList(vm : SearchViewModel) {
 
         }
 
+    }
+}
+
+
+@Composable
+fun FilterPopUp(){
+    Box(modifier = Modifier.fillMaxSize().padding(10.dp),
+        contentAlignment = Alignment.Center
+
+    ){
+        Column(modifier = Modifier.background(color = Color(0xFF430B3D), shape = RoundedCornerShape(5.dp)).height(200.dp).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Filter movies", color = Color.White, fontSize = 25.sp)
+        }
     }
 }
 

@@ -70,14 +70,14 @@ fun MyReviews(navController: NavHostController, profileState: MutableState<Profi
 
     GradientBox {
         Column {
-            MainContainer(hasBottomNav = true) {
-                TopBar(
-                    title = "My Reviews",
-                    alignment = Alignment.Center,
-                    backArrow = true,
-                    navController = navController,
+            TopBar(
+                title = "My Reviews",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
 
                 )
+            MainContainer(hasBottomNav = true) {
                 myReviewSection(reviewList)
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -155,7 +155,7 @@ private fun InnerReviewContainer(review : ReviewModel){
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp), text=movie.title, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
+            Text(modifier = Modifier.height(30.dp).width(200.dp), text=movie.title, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
             myRatingStars(review.rating*2)
         }
 

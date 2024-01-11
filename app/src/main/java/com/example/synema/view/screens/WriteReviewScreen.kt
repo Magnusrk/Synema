@@ -107,14 +107,15 @@ fun WriteReviewScreen(
 
     GradientBox {
         Column {
+            TopBar(
+                title = "Review ${movie.title}",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
+                fontSize = 15.sp
+            )
             MainContainer(hasBottomNav = true) {
-                TopBar(
-                    title = "Review ${movie.title}",
-                    alignment = Alignment.Center,
-                    backArrow = true,
-                    navController = navController,
-                    fontSize = 15.sp
-                )
+
                 Box(
                     modifier = Modifier
                         .padding(15.dp)

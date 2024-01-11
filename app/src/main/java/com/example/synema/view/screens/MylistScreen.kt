@@ -1,6 +1,11 @@
 package com.example.synema.view.screens
 import GradientBox
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,23 +13,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.LoadingWrapper
@@ -50,13 +50,14 @@ fun MyListScreen(
     GradientBox {
         LoadingWrapper (vm.isLoading){
         Column {
+            TopBar(
+                title = "My List",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = vm.getNav()
+            )
             MainContainer(hasBottomNav = true) {
-                TopBar(
-                    title = "My List",
-                    alignment = Alignment.Center,
-                    backArrow = true,
-                    navController = vm.getNav()
-                )
+
                     ListDetails(vm = vm, watchlistID = watchlistID)
 
             }
@@ -66,7 +67,6 @@ fun MyListScreen(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListDetails(vm : MyListViewModel, watchlistID: String?){
@@ -101,7 +101,8 @@ fun ListDetails(vm : MyListViewModel, watchlistID: String?){
                 Image(
                     painter = painterResource(id = R.drawable.heart),
                     contentDescription = null,
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(30.dp),
+                    colorFilter = ColorFilter.tint(Color.White)
                 )
             }
             Surface(
@@ -116,7 +117,8 @@ fun ListDetails(vm : MyListViewModel, watchlistID: String?){
                 Image(
                     painter = painterResource(id = R.drawable.edit_playlist),
                     contentDescription = null,
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(30.dp).background(Color.White),
+                    colorFilter = ColorFilter.tint(Color.White)
                 )
             }
 
