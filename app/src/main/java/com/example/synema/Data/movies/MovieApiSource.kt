@@ -241,6 +241,31 @@ class MovieApiSource : MovieDataSource {
 
     }
 
+    override fun similarMovies(movieId: String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<MovieModel>> = api.similar(movieId);
+
+        call.enqueue(object : Callback<List<MovieModel>> {
+            override fun onResponse(
+                call: Call<List<MovieModel>>,
+                response: Response<List<MovieModel>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                } else {
+                    callback(ApiResponse(null, true, "Couldn't load movies"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<MovieModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+
+    }
+
     override fun createReviewForMovie(
         movieId: String,
         review: String,

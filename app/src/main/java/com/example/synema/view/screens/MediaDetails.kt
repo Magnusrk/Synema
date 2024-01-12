@@ -82,6 +82,10 @@ fun MediaDetails(
         mutableStateOf(listOf())
     }
 
+    var similarMovies: List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
     var actorList: List<CreditsModel> by remember {
         mutableStateOf(listOf())
     }
@@ -110,6 +114,11 @@ fun MediaDetails(
     if (movieID != null) {
         source.loadMovie(movieID) {
             movie = it.getResult()!!
+            source.similarMovies(movie.id.toString()){
+                if(it.getResult() != null){
+                    similarMovies = it.getResult()!!;
+                }
+            }
         }
     }
 
@@ -134,7 +143,11 @@ fun MediaDetails(
                 InteractionPane(movie, navController, reviewList)
                 ActorList(actorList = actorList, header = "Cast", navController = navController)
                 DescriptionSection(movie.description)
-                UserReviewSection(reviewList)
+                if(!reviewList.isEmpty()){
+                    UserReviewSection(reviewList)
+                }
+
+                SimilarMoviesSection(movie, similarMovies, navController)
             }
 
     }
@@ -518,5 +531,88 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
 
     }
 }
+@Composable
+private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieModel>, nav : NavHostController){
 
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color = Color.Black)
+    )
+    MovieList(movieList = similarList, header = "Movies similar to " + movie.title , navController = nav)
+
+}
+
+
+
+@Composable
+private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+
+    var movList = movieList.shuffled();
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp)
+    ) {
+        Text(
+            text = header,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(8.dp)
+        )
+        LazyRow(modifier = modifier) {
+            items(movList) { movie ->
+                MovieCard(
+                    movie = movie,
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+        color = Color(0x00000000) // Set the color to transparent
+    ) {
+        Column (
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
+        ){
+            AsyncImage(
+                model = movie.poster_url,
+                contentDescription = null,
+                modifier = Modifier
+                    .width(95.dp)
+                    .height(135.dp)
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
+                ,
+                contentScale = ContentScale.FillBounds
+            )
+
+            Spacer(modifier =  Modifier.height(5.dp))
+            Text(
+                text = movie.title,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center
+
+            )
+        }
+
+    }
+}
 
