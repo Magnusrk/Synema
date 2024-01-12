@@ -230,7 +230,7 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
 private fun RatingStars(rating: Number) {
 
     val starImage = ImageBitmap.imageResource(id = R.drawable.stars6)
-    val bigStarImage = ImageBitmap.imageResource(id = R.drawable.stars_big)
+    //val bigStarImage = ImageBitmap.imageResource(id = R.drawable.stars_big)
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
 
