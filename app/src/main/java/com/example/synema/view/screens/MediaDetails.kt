@@ -6,6 +6,7 @@ import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -20,9 +21,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -38,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,8 +50,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
+import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -71,6 +78,10 @@ fun MediaDetails(
 
     val source = DependencyProvider.getInstance().getMovieSource();
     var reviewList: List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    var actorList: List<CreditsModel> by remember {
         mutableStateOf(listOf())
     }
 
@@ -100,6 +111,16 @@ fun MediaDetails(
         }
     }
 
+    if (movieID != null) {
+        source.loadCredits(movieID, profileState.value.token){
+            if (it.successful()) {
+                actorList = it.getResult()!!
+            }
+        }
+    }
+
+   // println(actorList[0])
+
 
     //val movie : MovieModel = source.loadMovie(movieID.toString())
     Column {
@@ -109,6 +130,7 @@ fun MediaDetails(
                 TitleFont(movie.title)
                 MovieClip(movie.backdrop_url)
                 InteractionPane(movie, navController, reviewList)
+                ActorList(actorList = actorList, header = "Cast", navController = navController)
                 DescriptionSection(movie.description)
                 UserReviewSection(reviewList)
             }
@@ -245,11 +267,13 @@ private fun RatingStars(rating: Number) {
 
                 drawImage(image = starImage)
             }
-            Canvas(modifier = Modifier.fillMaxSize().graphicsLayer (alpha = 0.99f)
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer(alpha = 0.99f)
             ) {
 
                 drawRect(
-                    color = Color(0xFF4180FF),
+                    color = Color(0xFFC96E0E),
                     size = size,
                 )
                 drawImage(image = starImage, blendMode = BlendMode.DstAtop)
@@ -399,8 +423,82 @@ private fun InnerReviewContainer(review: ReviewModel) {
         }
 
     }
-
 }
 
+@Composable
+private fun ActorList(actorList: List<CreditsModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp)
+    ) {
+        Text(
+            text = header,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(8.dp)
+        )
+        LazyRow(modifier = modifier) {
+            items(actorList) { actor ->
+                ActorCard(
+                    actor = actor,
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+        color = Color(0xFFECB0E6)
+    ) {
+        Column (
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
+        ){
+            AsyncImage(
+                model = actor.picture_path,
+                contentDescription = null,
+                modifier = Modifier
+                    .width(95.dp)
+                    .height(135.dp),
+                contentScale = ContentScale.FillBounds
+            )
+
+            Spacer(modifier =  Modifier.height(5.dp))
+            Text(
+                text = actor.character,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center
+
+            )
+            Text(
+                text = actor.name,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier =  Modifier.height(5.dp))
+        }
+
+    }
+}
 
 

@@ -50,6 +50,7 @@ import com.example.synema.viewmodel.ProfileViewModel
 @Composable
 fun Profile(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     val context = AppContext.getInstance();
+    println("Pic: " + context.getProfileState().value.profilePicture)
     GradientBox(){
         Column {
             TopBar(title = "My Profile", Alignment.Center)

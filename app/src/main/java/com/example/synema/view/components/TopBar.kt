@@ -122,6 +122,8 @@ fun TopBar(
                     focusedLabelColor = Color.White,
                     unfocusedIndicatorColor = Color(0xFFC5AC29),
                     focusedIndicatorColor = Color(0xFF811C77),
+                    unfocusedTextColor = Color(0xFFBF76FF),
+                    focusedTextColor = Color.White
                 )
             )
             if(filter){
