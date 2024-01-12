@@ -1,8 +1,10 @@
 package com.example.synema.Data.movies
+
 import android.annotation.SuppressLint
 import android.util.Log
 import com.example.synema.controller.MovieAPI
 import com.example.synema.model.ApiResponse
+import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -42,6 +44,30 @@ class MovieApiSource : MovieDataSource {
             }
 
             override fun onFailure(call: Call<MovieModel>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+    }
+
+    override fun loadCredits(id: String,token: String, callback: (ApiResponse<List<CreditsModel>>) -> Unit){
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<CreditsModel>> = api.getCreditsById(id)
+
+        call.enqueue(object : Callback<List<CreditsModel>> {
+            override fun onResponse(
+                call: Call<List<CreditsModel>>,
+                response: Response<List<CreditsModel>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                } else {
+                    callback(ApiResponse(null, true, "Couldn't load credits"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<CreditsModel>>, t: Throwable) {
                 callback(ApiResponse(null, true, t.message!!));
             }
 
@@ -161,7 +187,6 @@ class MovieApiSource : MovieDataSource {
      */
 
 
-
     override fun loadDiscoverMovies(
         genres: String,
         callback: (ApiResponse<List<MovieModel>>) -> Unit
@@ -253,7 +278,11 @@ class MovieApiSource : MovieDataSource {
     ) {
         val api = retrofit.create(MovieAPI::class.java)
 
-        val createReviewCall: Call<String> = api.createReviewForMovie(movieId, ReviewModel(review,rating,movieId,profileModel.name, profileModel.id), token)
+        val createReviewCall: Call<String> = api.createReviewForMovie(
+            movieId,
+            ReviewModel(review, rating, movieId, profileModel.name, profileModel.id),
+            token
+        )
 
         createReviewCall.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -314,14 +343,17 @@ class MovieApiSource : MovieDataSource {
     ) {
         val api = retrofit.create(MovieAPI::class.java)
 
-        val getReviewsCall: Call<List<ReviewModel>> = api.getReviewsForMovie(movieId,token)
+        val getReviewsCall: Call<List<ReviewModel>> = api.getReviewsForMovie(movieId, token)
 
         getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
             @SuppressLint("SuspiciousIndentation")
-            override fun onResponse(call: Call<List<ReviewModel>>, response: Response<List<ReviewModel>>) {
+            override fun onResponse(
+                call: Call<List<ReviewModel>>,
+                response: Response<List<ReviewModel>>
+            ) {
                 if (response.isSuccessful) {
                     val reviews = response.body()
-                        callback(ApiResponse(result = reviews, statusMessage = "success"))
+                    callback(ApiResponse(result = reviews, statusMessage = "success"))
 
                 } else {
                     // Failed to fetch reviews or other error occurred
@@ -345,7 +377,10 @@ class MovieApiSource : MovieDataSource {
 
         getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
             @SuppressLint("SuspiciousIndentation")
-            override fun onResponse(call: Call<List<ReviewModel>>, response: Response<List<ReviewModel>>) {
+            override fun onResponse(
+                call: Call<List<ReviewModel>>,
+                response: Response<List<ReviewModel>>
+            ) {
                 if (response.isSuccessful) {
                     val reviews = response.body()
                     callback(ApiResponse(result = reviews, statusMessage = "success"))
