@@ -66,7 +66,6 @@ fun MoviesApp(homeViewModel: HomeViewModel) {
         TopBar("Synema", Alignment.CenterStart, 30.sp, search = true, navController = homeViewModel.getNav(), transparent = true)
         MainContainer(hasBottomNav = true) {
 
-
                 TrendTopBar(homeViewModel.discoverList, homeViewModel.getNav())
 
                 MovieList(
@@ -128,9 +127,9 @@ private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier
         )
         LazyRow(modifier = modifier) {
             items(key = {
-                movieList[it % movieList.size].id
+                movList[it % movList.size].id
             }, count = Int.MAX_VALUE) { index ->
-                    val item = movieList[index % movieList.size]
+                    val item = movList[index % movList.size]
                 MovieCard(
                     movie = item,
                     modifier = Modifier.padding(8.dp),
