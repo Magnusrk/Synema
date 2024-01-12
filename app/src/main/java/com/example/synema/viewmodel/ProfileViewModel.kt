@@ -23,6 +23,9 @@ class ProfileViewModel : ViewModel() {
 
     }
 
+    fun EditProfile(){
+        context.getNav().navigate("editprofile")
+    }
 
 
 }

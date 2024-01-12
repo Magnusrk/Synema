@@ -35,6 +35,7 @@ fun MainView() {
             )
         }
         composable("profile") { Profile(navController, profileState) }
+        composable("editprofile") { EditProfile(navController, profileState) }
         composable("mediaDetails/{movieID}",
             arguments = listOf(navArgument("movieID") { type = NavType.StringType })
         )
