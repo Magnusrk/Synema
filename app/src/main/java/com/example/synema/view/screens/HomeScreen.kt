@@ -65,7 +65,7 @@ fun MoviesApp(homeViewModel: HomeViewModel) {
         MainContainer(hasBottomNav = true) {
 
 
-                TrendTopBar(homeViewModel.discoverList,search=true, homeViewModel.getNav())
+                TrendTopBar(homeViewModel.discoverList, homeViewModel.getNav())
 
                 MovieList(
                     movieList = homeViewModel.newList,
