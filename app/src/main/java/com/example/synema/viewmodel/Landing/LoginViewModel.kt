@@ -22,6 +22,8 @@ class LoginViewModel : ViewModel() {
 
     var movieBanners =  mutableStateListOf<MovieModel>()
 
+    var isLoading = mutableStateOf(true)
+
     fun editEmail(it : String) {email.value = it}
     fun editPassword(it : String) {password.value = it}
 
@@ -29,6 +31,7 @@ class LoginViewModel : ViewModel() {
 
      fun login(c: Context) {
         val source = DependencyProvider.getInstance().getUserSource();
+         isLoading.value = true
         source.LoginUser(email.value, password.value, callback = {
             if(it.successful()){
                 context.setProfileState(it.getResult()?.profile!!);
@@ -36,10 +39,12 @@ class LoginViewModel : ViewModel() {
                     DataStoreManager(c).saveToDataStore(context.getProfileState().value);
                 }.let {
                     context.getNav().navigate("home")
+                    isLoading.value = false
                 }
 
             } else{
                 error.value = (it.getStatus())
+                isLoading.value = false
             }
         });
     }
@@ -49,11 +54,13 @@ class LoginViewModel : ViewModel() {
     }
 
      fun getMoviePosters(){
+         isLoading.value = true
         val dataSource = DependencyProvider.getInstance().getMovieSource();
         dataSource.loadDiscoverMovies (){
             it.getResult()?.let {movieModel ->
                 movieBanners.clear()
                 movieBanners.addAll(movieModel)
+                isLoading.value = false
             }
         }
     }

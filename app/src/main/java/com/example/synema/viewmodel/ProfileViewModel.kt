@@ -12,6 +12,7 @@ class ProfileViewModel : ViewModel() {
 
     var context = AppContext.getInstance();
 
+
      fun logout(c: Context) {
          context.setProfileState(ProfileModel("","","","","",""));
          viewModelScope.launch {
@@ -23,6 +24,9 @@ class ProfileViewModel : ViewModel() {
 
     }
 
+    fun EditProfile(){
+        context.getNav().navigate("editprofile")
+    }
 
 
 }

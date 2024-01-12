@@ -52,11 +52,25 @@ class MockUserDataSource() : UserDataSource {
         callback(ApiResponse(true))
     }
 
-    override fun userById(
+    override fun userByUsername(
         username: String,
         token: String,
-        callback: (ApiResponse<UserModel>) -> Unit
+        callback: (ApiResponse<List<ProfileModel>>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
+
+    override fun userById(
+        id: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+
+
 }
+
+
+

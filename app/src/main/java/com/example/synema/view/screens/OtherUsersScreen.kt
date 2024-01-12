@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
@@ -40,48 +41,52 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
+import com.example.synema.viewmodel.SearchUsersViewModel
 import com.example.synema.viewmodel.SearchViewModel
+
+
 
 
 @Composable
 fun OtherUsers(navController: NavHostController, profileState: MutableState<ProfileModel>) {
 
-    val vm: SearchViewModel = viewModel()
+    var vm: SearchUsersViewModel = viewModel()
     vm.initSearch()
-
-    GradientBox {
-        Column {
-            TopBar(
-                "",
-                Alignment.CenterStart,
-                20.sp,
-                backArrow = true,
-                transparent = true,
-                search = false,
-                textInput = true,
-                navController = vm.getNav(),
-                onChange = {
-                    vm.search(it)
-                },
-                inputLabel = "Search"
-            )
-            MainContainer(hasBottomNav = true, scrollAble = false) {
-                UsersList(vm)
+    SynemaTheme {
+            GradientBox {
+                Column {
+                    TopBar(
+                        "",
+                        Alignment.CenterStart,
+                        20.sp,
+                        backArrow = true,
+                        transparent = true,
+                        search = false,
+                        textInput = true,
+                        navController = vm.getNav(),
+                        onChange = {
+                            vm.search(it)
+                        },
+                        inputLabel = "Search"
+                    )
+                    MainContainer(hasBottomNav = true, scrollAble = false) {
+                        UsersList(vm)
+                    }
+                    BottomBar(navController = navController)
+                }
             }
-            BottomBar(navController = navController)
         }
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsersList(vm: SearchViewModel) {
+private fun UsersList(vm : SearchUsersViewModel) {
 
         LoadingWrapper(vm.isLoading) {
-            LazyColumn {
-                items(vm.movieList.size) { index ->//change this to userList
+            LazyColumn{
+                items(vm.usersList.size) { index ->//change this to userList
                     UserCard(
-                        movie = vm.movieList[index],
+                        user = vm.usersList[index],
                         modifier = Modifier.padding(8.dp),
                         vm.getNav()
                     )
@@ -90,42 +95,44 @@ fun UsersList(vm: SearchViewModel) {
 
         }
 
-}
+    }
+
 
 @Composable
-fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController: NavHostController) {
+fun UserCard(user: ProfileModel, modifier: Modifier = Modifier, navController : NavHostController) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
         color = Color(0x00000000) // Set the color to transparent
     ) {
-        Column(
+        Column (
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .width(500.dp)
                 .height(50.dp)
                 .background(Color(0xFF322236).copy(alpha = 0.3F))
-                .clickable { navController.navigate("ouprofiles") }
+                .clickable { navController.navigate("ouprofiles/"+user.id) }
 
 
-        ) {
-            Row(
+        ){
+            Row (
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+            ){
                 AsyncImage(
-                    model = R.drawable.devon,
+                    model = user.profilePicture,
                     contentDescription = null,
                     modifier = Modifier
                         .size(45.dp)
                         .clip(CircleShape)
-                        .border(2.dp, Color(0x00000000), CircleShape),
+                        .border(2.dp, Color(0x00000000), CircleShape)
+                    ,
                     contentScale = ContentScale.Crop
                 )
 
                 Text(
-                    text = "user",
+                    text = user.name,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -133,7 +140,7 @@ fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController: Na
                     maxLines = 2,
                     lineHeight = 55.sp,
 
-                    )
+                )
             }
         }
 
