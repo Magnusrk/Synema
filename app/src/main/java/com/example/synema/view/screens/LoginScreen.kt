@@ -31,8 +31,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.viewmodel.Landing.LoginViewModel
+import kotlin.math.log
 
 
 @Composable
@@ -52,19 +54,18 @@ private fun ContentContainer(loginViewModel: LoginViewModel){
             .fillMaxSize()
             .padding(14.dp)
     ){
-        SynHeader()
-        MovieDisplay(loginViewModel);
-        UserLoginArea(loginViewModel);
+        LoadingWrapper(loginViewModel.isLoading, hasLogo = true) {
+            SynHeader()
+            MovieDisplay(loginViewModel);
+            UserLoginArea(loginViewModel);
+        }
+
     }
 }
 
 
 @Composable
 private fun MovieDisplay(loginViewModel: LoginViewModel){
-
-
-
-
 
     Row(
         horizontalArrangement = Arrangement.Center,
