@@ -29,7 +29,10 @@ import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -405,13 +408,13 @@ fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
         Box(
             modifier = Modifier
                 .size(100.dp, 100.dp)
-                .background(color = Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
+                .background(color = Color(0xFFB15FA8))
                 .clickable(onClick = {
                     vm
                         .getNav()
                         .navigate("watchlists/" + watchlist.watchlist_id)
                 })
-                .padding(4.dp)
+                .padding(0.dp)
 
         ) {
             ImageCardRow(watchlist.icons)
@@ -449,15 +452,15 @@ fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
 fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
-            .size(45.dp)
-            .background(Color(0xFFB15FA8), shape = RoundedCornerShape(4.dp))
+            .size(50.dp)
+            .background(Color(0xFFB15FA8), /*shape = RoundedCornerShape(4.dp)*/)
     ) {
         if (imageUrl != "https://i0.wp.com/godstedlund.dk/wp-content/uploads/2023/04/placeholder-5.png?w=1200&ssl=1") {
             AsyncImage(
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp)),
+                    .fillMaxSize(),
+                    //.clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop,
                 model = imageUrl
             )
@@ -470,21 +473,21 @@ fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
 fun ImageCardRow(movieUrls: List<String>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
+        //verticalArrangement = Arrangement.SpaceEvenly,
+       // horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(2F),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            //horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             ImageCard(movieUrls[0], modifier = Modifier.weight(2F))
             ImageCard(movieUrls[1], modifier = Modifier.weight(2F))
         }
 
-        Spacer(modifier = Modifier.height(2.dp))
+        //Spacer(modifier = Modifier.height(2.dp))
 
         Row(
             modifier = Modifier
@@ -496,12 +499,12 @@ fun ImageCardRow(movieUrls: List<String>) {
             ImageCard(
                 movieUrls[2], modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 2.dp)
+                    //.padding(bottom = 2.dp)
             )
             ImageCard(
                 movieUrls[3], modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 2.dp)
+                    //.padding(bottom = 2.dp)
             )
         }
     }
