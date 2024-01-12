@@ -2,6 +2,7 @@ package com.example.synema.Data.movies
 
 import com.example.synema.R
 import com.example.synema.model.ApiResponse
+import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -63,71 +64,80 @@ class MockMovieDataSource : MovieDataSource {
         )
     }
 
- /* override fun loadReviews() : List <ReviewModel>{
-        return listOf(
-            ReviewModel(
-                ProfileModel(
-                    "test",
-                    "Chuck Norris",
-                    "",
-                    "bio"),
-                """Amazing, Nolan is finally back and he's so hot!
-                    |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
-                """.trimMargin(),
-                5,
-                MovieModel(
-                    507089,
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "Five Nights at Freddy's",
-                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
-                    "2023-10-25"
-                )
-            ),
-            ReviewModel(
-                ProfileModel(
-                    "test2",
-                    "Steve Jobs",
-                    "",
-                    "bio"),
-                "Mid",
-                3,
-                MovieModel(
-                    507089,
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "Five Nights at Freddy's",
-                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
-                    "2023-10-25"
-                )
-
-            ),
-            ReviewModel(
-                ProfileModel(
-                    "test3",
-                    "Carl Sagan",
-                    "",
-                    "bio"),
-                "I liked the black hole part!",
-                4,
-                MovieModel(
-                    507089,
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
-                    "Five Nights at Freddy's",
-                    "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
-                    8.4/2,
-                    "2023-10-25"
-                )
-            )
-        )
-
+    override fun loadCredits(
+        id: String,
+        token: String,
+        callback: (ApiResponse<List<CreditsModel>>) -> Unit
+    ) {
+        TODO("Not yet implemented")
     }
 
 
-  */
+    /* override fun loadReviews() : List <ReviewModel>{
+           return listOf(
+               ReviewModel(
+                   ProfileModel(
+                       "test",
+                       "Chuck Norris",
+                       "",
+                       "bio"),
+                   """Amazing, Nolan is finally back and he's so hot!
+                       |With all the rampant think pieces questioning the probability of every science fiction film that comes out, it's comforting to across a movie that doesn't really claim to have any of the answers.
+                   """.trimMargin(),
+                   5,
+                   MovieModel(
+                       507089,
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "Five Nights at Freddy's",
+                       "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                       8.4/2,
+                       "2023-10-25"
+                   )
+               ),
+               ReviewModel(
+                   ProfileModel(
+                       "test2",
+                       "Steve Jobs",
+                       "",
+                       "bio"),
+                   "Mid",
+                   3,
+                   MovieModel(
+                       507089,
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "Five Nights at Freddy's",
+                       "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                       8.4/2,
+                       "2023-10-25"
+                   )
+
+               ),
+               ReviewModel(
+                   ProfileModel(
+                       "test3",
+                       "Carl Sagan",
+                       "",
+                       "bio"),
+                   "I liked the black hole part!",
+                   4,
+                   MovieModel(
+                       507089,
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/A4j8S6moJS2zNtRR8oWF08gRnL5.jpg",
+                       "Five Nights at Freddy's",
+                       "Recently fired and desperate for work, a troubled young man named Mike agrees to take a position as a night security guard at an abandoned theme restaurant: Freddy Fazbear's Pizzeria. But he soon discovers that nothing at Freddy's is what it seems.",
+                       8.4/2,
+                       "2023-10-25"
+                   )
+               )
+           )
+
+       }
+
+
+     */
 
 
     override fun loadDiscoverMovies(genres : String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
