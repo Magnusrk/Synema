@@ -36,7 +36,9 @@ import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
+import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.LoadingWrapper
+import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.SearchViewModel
 
@@ -44,31 +46,39 @@ import com.example.synema.viewmodel.SearchViewModel
 @Composable
 fun OtherUsers(navController: NavHostController, profileState: MutableState<ProfileModel>) {
 
-    var vm : SearchViewModel = viewModel()
+    val vm: SearchViewModel = viewModel()
     vm.initSearch()
-    SynemaTheme {
-        GradientBox {
-            UsersList(vm)
 
+    GradientBox {
+        Column {
+            TopBar(
+                "",
+                Alignment.CenterStart,
+                20.sp,
+                backArrow = true,
+                transparent = true,
+                search = false,
+                textInput = true,
+                navController = vm.getNav(),
+                onChange = {
+                    vm.search(it)
+                },
+                inputLabel = "Search"
+            )
+            MainContainer(hasBottomNav = true, scrollAble = false) {
+                UsersList(vm)
+            }
+            BottomBar(navController = navController)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsersList(vm : SearchViewModel) {
+fun UsersList(vm: SearchViewModel) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-
-    ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = vm.getNav(), onChange = {
-            vm.search(it)
-        },
-            inputLabel = "Search")
         LoadingWrapper(vm.isLoading) {
-            LazyColumn{
+            LazyColumn {
                 items(vm.movieList.size) { index ->//change this to userList
                     UserCard(
                         movie = vm.movieList[index],
@@ -76,21 +86,20 @@ fun UsersList(vm : SearchViewModel) {
                         vm.getNav()
                     )
                 }
-           }
+            }
 
         }
 
-    }
 }
 
 @Composable
-fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
+fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController: NavHostController) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
         color = Color(0x00000000) // Set the color to transparent
     ) {
-        Column (
+        Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
@@ -100,19 +109,18 @@ fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController : N
                 .clickable { navController.navigate("ouprofiles") }
 
 
-        ){
-            Row (
+        ) {
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ){
+            ) {
                 AsyncImage(
                     model = R.drawable.devon,
                     contentDescription = null,
                     modifier = Modifier
                         .size(45.dp)
                         .clip(CircleShape)
-                        .border(2.dp, Color(0x00000000), CircleShape)
-                    ,
+                        .border(2.dp, Color(0x00000000), CircleShape),
                     contentScale = ContentScale.Crop
                 )
 
@@ -125,7 +133,7 @@ fun UserCard(movie: MovieModel, modifier: Modifier = Modifier, navController : N
                     maxLines = 2,
                     lineHeight = 55.sp,
 
-                )
+                    )
             }
         }
 
