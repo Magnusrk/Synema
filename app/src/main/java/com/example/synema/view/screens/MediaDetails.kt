@@ -273,7 +273,7 @@ private fun RatingStars(rating: Number) {
             ) {
 
                 drawRect(
-                    color = Color(0xFF4180FF),
+                    color = Color(0xFFC96E0E),
                     size = size,
                 )
                 drawImage(image = starImage, blendMode = BlendMode.DstAtop)

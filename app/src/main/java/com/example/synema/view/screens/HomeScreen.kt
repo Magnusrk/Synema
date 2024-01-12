@@ -48,7 +48,7 @@ fun HomeScreen() {
     SynemaTheme {
         // A surface container using the 'background' color from the theme
             GradientBox {
-                LoadingWrapper(homeViewModel.isLoading) {
+                LoadingWrapper(homeViewModel.isLoading, hasLogo = true) {
                     MoviesApp(homeViewModel = homeViewModel)
                 }
 
