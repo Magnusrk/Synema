@@ -11,4 +11,5 @@ data class MovieModel(
     val description : String,
     val rating : Number,
     val release_date : String,
+    val tagline : String
 )

@@ -50,11 +50,15 @@ fun TrendTopBar(
             .height(272.dp), // Adjust the height as needed
         // .background(Color.Transparent) // You can set a transparent background
         state = state,
-        flingBehavior = rememberSnapFlingBehavior(lazyListState = state)
+        flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
+
 
 
     ) {
-        items(movies) {movie ->
+        items(key = {
+            movies[it % movies.size].id
+        },count = Int.MAX_VALUE) { index ->
+            val movie = movies[index % movies.size]
             val imageModifier = Modifier
                 .size(400.dp)
                 .clickable { navController.navigate("mediaDetails/" + movie.id) }
@@ -76,6 +80,7 @@ fun TrendTopBar(
             }
 
         }
+
     }
 }
 

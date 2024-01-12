@@ -25,6 +25,7 @@ class WatchlistViewModel : ViewModel() {
     private val profileState = context.getProfileState()
 
     fun loadWatchlists(){
+        println(profileState.value.token)
         isLoading.value = true;
         dataSource.read_db(profileState.value.token){
             if (it.successful()) {
@@ -41,6 +42,8 @@ class WatchlistViewModel : ViewModel() {
     fun createWatchlist(){
         isLoading.value = true
         popupControl.value = false
+        println("token=" + profileState.value.token)
+        println("NewWL name = " + newWatchlistName.value)
         dataSource.createWatchlist(newWatchlistName.value, profileState.value.token){
             context.getNav().currentDestination?.let { context.getNav().navigate(it.id) }
         }

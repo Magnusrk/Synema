@@ -1,6 +1,9 @@
 package com.example.synema.viewmodel.Landing
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -40,17 +43,29 @@ class SignupViewModel : ViewModel() {
         source.signupUser(username.value, email.value, password.value) {
             if (it.successful()) {
                 context.setProfileState(it.getResult()?.profile!!);
+                loginAfterSignUp(c, email.value, password.value)
+
+            } else{
+                error.value = (it.getStatus())
+            }
+        };
+    }
+
+    fun loginAfterSignUp(c: Context, email : String, password : String) {
+        val source = DependencyProvider.getInstance().getUserSource();
+        source.LoginUser(email, password, callback = {
+            if(it.successful()){
+                context.setProfileState(it.getResult()?.profile!!);
                 viewModelScope.launch {
-                    DataStoreManager(c).saveToDataStore(context.getProfileState().value)
+                    DataStoreManager(c).saveToDataStore(context.getProfileState().value);
                 }.let {
-                    error.value = context.getProfileState().value.token
                     context.getNav().navigate("home")
                 }
 
             } else{
                 error.value = (it.getStatus())
             }
-        };
+        });
     }
 
 }
