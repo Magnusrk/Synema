@@ -497,6 +497,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 color = Color.Black,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
+                minLines = 2,
                 lineHeight = 12.sp,
                 textAlign = TextAlign.Center
 
@@ -508,6 +509,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 color = Color.Black,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
+                minLines = 2,
                 lineHeight = 12.sp,
                 textAlign = TextAlign.Center,
             )
