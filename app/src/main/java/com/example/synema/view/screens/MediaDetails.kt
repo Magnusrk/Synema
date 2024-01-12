@@ -6,6 +6,7 @@ import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -20,9 +21,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -38,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.MovieModel
@@ -74,6 +80,10 @@ fun MediaDetails(
         mutableStateOf(listOf())
     }
 
+    var similarMovies: List<MovieModel> by remember {
+        mutableStateOf(listOf())
+    }
+
     source.getReviewsForMovie(movieID.toString(), profileState.value.token) {
         if (it.successful()) {
             it.getResult()?.let { reviewModel ->
@@ -97,6 +107,11 @@ fun MediaDetails(
     if (movieID != null) {
         source.loadMovie(movieID) {
             movie = it.getResult()!!
+            source.similarMovies(movie.id.toString()){
+                if(it.getResult() != null){
+                    similarMovies = it.getResult()!!;
+                }
+            }
         }
     }
 
@@ -110,7 +125,11 @@ fun MediaDetails(
                 MovieClip(movie.backdrop_url)
                 InteractionPane(movie, navController, reviewList)
                 DescriptionSection(movie.description)
-                UserReviewSection(reviewList)
+                if(!reviewList.isEmpty()){
+                    UserReviewSection(reviewList)
+                }
+
+                SimilarMoviesSection(movie, similarMovies, navController)
             }
 
     }
@@ -245,7 +264,9 @@ private fun RatingStars(rating: Number) {
 
                 drawImage(image = starImage)
             }
-            Canvas(modifier = Modifier.fillMaxSize().graphicsLayer (alpha = 0.99f)
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer(alpha = 0.99f)
             ) {
 
                 drawRect(
@@ -402,5 +423,88 @@ private fun InnerReviewContainer(review: ReviewModel) {
 
 }
 
+@Composable
+private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieModel>, nav : NavHostController){
 
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color = Color.Black)
+    )
+    MovieList(movieList = similarList, header = "Movies similar to " + movie.title , navController = nav)
+
+}
+
+
+
+@Composable
+private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+
+    var movList = movieList.shuffled();
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp)
+    ) {
+        Text(
+            text = header,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(8.dp)
+        )
+        LazyRow(modifier = modifier) {
+            items(movList) { movie ->
+                MovieCard(
+                    movie = movie,
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+        color = Color(0x00000000) // Set the color to transparent
+    ) {
+        Column (
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
+        ){
+            AsyncImage(
+                model = movie.poster_url,
+                contentDescription = null,
+                modifier = Modifier
+                    .width(95.dp)
+                    .height(135.dp)
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
+                ,
+                contentScale = ContentScale.FillBounds
+            )
+
+            Spacer(modifier =  Modifier.height(5.dp))
+            Text(
+                text = movie.title,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center
+
+            )
+        }
+
+    }
+}
 

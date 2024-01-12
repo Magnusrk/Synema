@@ -148,6 +148,10 @@ class MockMovieDataSource : MovieDataSource {
         ))
     }
 
+    override fun similarMovies(movieId: String, callback: (ApiResponse<List<MovieModel>>) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
     override fun createReviewForMovie(
         movieId: String,
         review: String,

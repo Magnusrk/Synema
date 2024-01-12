@@ -1,6 +1,7 @@
 package com.example.synema.view.screens
 
 import GradientBox
+import android.content.ClipData
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -109,7 +110,7 @@ fun MoviesApp(homeViewModel: HomeViewModel) {
 
 
 @Composable
-fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
 
     var movList = movieList.shuffled();
     Column(
@@ -126,9 +127,12 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
                 .padding(8.dp)
         )
         LazyRow(modifier = modifier) {
-            items(movList) { movie ->
+            items(key = {
+                movieList[it % movieList.size].id
+            }, count = Int.MAX_VALUE) { index ->
+                    val item = movieList[index % movieList.size]
                 MovieCard(
-                    movie = movie,
+                    movie = item,
                     modifier = Modifier.padding(8.dp),
                     navController
                 )
@@ -139,7 +143,7 @@ fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier, header
 
 
 @Composable
-fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
+private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navController : NavHostController) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
