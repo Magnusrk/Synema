@@ -460,7 +460,7 @@ fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize(),
-                    //.clip(RoundedCornerShape(4.dp)),
+                //.clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop,
                 model = imageUrl
             )
@@ -474,7 +474,7 @@ fun ImageCardRow(movieUrls: List<String>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         //verticalArrangement = Arrangement.SpaceEvenly,
-       // horizontalAlignment = Alignment.CenterHorizontally
+        // horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
         Row(
@@ -499,12 +499,12 @@ fun ImageCardRow(movieUrls: List<String>) {
             ImageCard(
                 movieUrls[2], modifier = Modifier
                     .fillMaxSize()
-                    //.padding(bottom = 2.dp)
+                //.padding(bottom = 2.dp)
             )
             ImageCard(
                 movieUrls[3], modifier = Modifier
                     .fillMaxSize()
-                    //.padding(bottom = 2.dp)
+                //.padding(bottom = 2.dp)
             )
         }
     }
