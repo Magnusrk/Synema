@@ -80,9 +80,10 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
 
     val context = AppContext.getInstance();
     GradientBox(){
+
         Column {
+            TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                TopBar(title = "Other User", Alignment.Center)
                 EditProfileButton()
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)

@@ -43,11 +43,12 @@ import com.example.synema.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen() {
     val homeViewModel : HomeViewModel = viewModel()
+    println("Token: " + AppContext.getInstance().getProfileState().value.token)
     homeViewModel.loadMovies()
     SynemaTheme {
         // A surface container using the 'background' color from the theme
             GradientBox {
-                LoadingWrapper(homeViewModel.isLoading) {
+                LoadingWrapper(homeViewModel.isLoading, hasLogo = true) {
                     MoviesApp(homeViewModel = homeViewModel)
                 }
 

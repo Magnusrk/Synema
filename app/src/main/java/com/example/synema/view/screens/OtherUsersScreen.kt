@@ -37,7 +37,9 @@ import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.ui.theme.SynemaTheme
+import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.LoadingWrapper
+import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.SearchUsersViewModel
 import com.example.synema.viewmodel.SearchViewModel
@@ -53,6 +55,27 @@ fun OtherUsers(navController: NavHostController, profileState: MutableState<Prof
     SynemaTheme {
         GradientBox {
             UsersList(vm)
+
+    GradientBox {
+        Column {
+            TopBar(
+                "",
+                Alignment.CenterStart,
+                20.sp,
+                backArrow = true,
+                transparent = true,
+                search = false,
+                textInput = true,
+                navController = vm.getNav(),
+                onChange = {
+                    vm.search(it)
+                },
+                inputLabel = "Search"
+            )
+            MainContainer(hasBottomNav = true, scrollAble = false) {
+                UsersList(vm)
+            }
+            BottomBar(navController = navController)
         }
     }
 }
@@ -62,15 +85,6 @@ fun OtherUsers(navController: NavHostController, profileState: MutableState<Prof
 @Composable
 fun UsersList(vm : SearchUsersViewModel) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-
-    ) {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, transparent = true, search = false, textInput = true, navController = vm.getNav(), onChange = {
-            vm.search(it)
-        },
-            inputLabel = "Search")
         LoadingWrapper(vm.isLoading) {
             LazyColumn{
                 items(vm.usersList.size) { index ->//change this to userList
@@ -80,7 +94,7 @@ fun UsersList(vm : SearchUsersViewModel) {
                         vm.getNav()
                     )
                 }
-           }
+            }
 
         }
 
