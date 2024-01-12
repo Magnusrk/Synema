@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -101,6 +102,7 @@ fun MediaDetails(
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )
@@ -144,7 +146,20 @@ fun InteractionPane(
     navController: NavHostController,
     reviewList: List<ReviewModel>
 ){
-    val size = Size();
+    val size = Size()
+    Text(
+        text = movie.tagline,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
+        color = Color.Black,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+        lineHeight = 15.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
+    )
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,6 +168,7 @@ fun InteractionPane(
         SaveButton(movie, navController = navController)
         RatingPanel(movie, navController = navController, reviewList)
     }
+
 }
 
 @Composable

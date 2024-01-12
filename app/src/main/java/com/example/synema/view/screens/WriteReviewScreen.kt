@@ -76,6 +76,7 @@ fun WriteReviewScreen(
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )
