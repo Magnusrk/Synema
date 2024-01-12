@@ -151,12 +151,10 @@ fun MediaDetails(
                 InteractionPane(movie, navController, reviewList)
                 ActorList(actorList = actorList, header = "Cast", navController = navController)
                 DescriptionSection(movie.description)
+                SimilarMoviesSection(movie, similarMovies, navController)
                 if(!reviewList.isEmpty()){
                     UserReviewSection(reviewList)
                 }
-
-                SimilarMoviesSection(movie, similarMovies, navController)
-                UserReviewSection(reviewList)
             }
 
 
@@ -172,14 +170,12 @@ fun InteractionPane(
     reviewList: List<ReviewModel>
 ) {
     val size = Size();
-){
-    val size = Size()
     Text(
         text = movie.tagline,
         fontSize = 15.sp,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Italic,
-        color = Color.Black,
+        color = Color.White,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
         lineHeight = 15.sp,
@@ -490,7 +486,7 @@ private fun ActorList(actorList: List<CreditsModel>, modifier: Modifier = Modifi
             text = header,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -561,7 +557,7 @@ private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieMod
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = Color.Black)
+            .background(color = Color(0xFFB6842D))
     )
     MovieList(movieList = similarList, header = "Movies similar to " + movie.title , navController = nav)
 
@@ -582,7 +578,7 @@ private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier
             text = header,
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -606,28 +602,27 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
         color = Color(0x00000000) // Set the color to transparent
     ) {
-        Column (
+        Column(
             //verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(95.dp)
-        ){
+        ) {
             AsyncImage(
                 model = movie.poster_url,
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
                     .height(135.dp)
-                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
-                ,
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) },
                 contentScale = ContentScale.FillBounds
             )
 
-            Spacer(modifier =  Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = movie.title,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 lineHeight = 12.sp,
@@ -638,4 +633,5 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
 
     }
 }
+
 
