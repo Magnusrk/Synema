@@ -50,40 +50,37 @@ import com.example.synema.viewmodel.SearchViewModel
 @Composable
 fun OtherUsers(navController: NavHostController, profileState: MutableState<ProfileModel>) {
 
-    var vm : SearchUsersViewModel = viewModel()
+    var vm: SearchUsersViewModel = viewModel()
     vm.initSearch()
     SynemaTheme {
-        GradientBox {
-            UsersList(vm)
-
-    GradientBox {
-        Column {
-            TopBar(
-                "",
-                Alignment.CenterStart,
-                20.sp,
-                backArrow = true,
-                transparent = true,
-                search = false,
-                textInput = true,
-                navController = vm.getNav(),
-                onChange = {
-                    vm.search(it)
-                },
-                inputLabel = "Search"
-            )
-            MainContainer(hasBottomNav = true, scrollAble = false) {
-                UsersList(vm)
+            GradientBox {
+                Column {
+                    TopBar(
+                        "",
+                        Alignment.CenterStart,
+                        20.sp,
+                        backArrow = true,
+                        transparent = true,
+                        search = false,
+                        textInput = true,
+                        navController = vm.getNav(),
+                        onChange = {
+                            vm.search(it)
+                        },
+                        inputLabel = "Search"
+                    )
+                    MainContainer(hasBottomNav = true, scrollAble = false) {
+                        UsersList(vm)
+                    }
+                    BottomBar(navController = navController)
+                }
             }
-            BottomBar(navController = navController)
         }
     }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsersList(vm : SearchUsersViewModel) {
+private fun UsersList(vm : SearchUsersViewModel) {
 
         LoadingWrapper(vm.isLoading) {
             LazyColumn{
@@ -99,7 +96,7 @@ fun UsersList(vm : SearchUsersViewModel) {
         }
 
     }
-}
+
 
 @Composable
 fun UserCard(user: ProfileModel, modifier: Modifier = Modifier, navController : NavHostController) {
