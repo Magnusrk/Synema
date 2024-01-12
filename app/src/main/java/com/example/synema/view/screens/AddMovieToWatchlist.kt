@@ -52,6 +52,7 @@ fun AddMovieToWatchlist(navController : NavHostController, profileState: Mutable
             "Loading...",
             "Loading...",
             0,
+            "",
             ""
         )
         )

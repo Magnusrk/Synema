@@ -50,6 +50,7 @@ import com.example.synema.viewmodel.ProfileViewModel
 @Composable
 fun Profile(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     val context = AppContext.getInstance();
+    println("Pic: " + context.getProfileState().value.profilePicture)
     GradientBox(){
         Column {
             TopBar(title = "My Profile", Alignment.Center)
@@ -120,14 +121,20 @@ private fun ProfileNameHeader(name : String){
 private fun EditProfileButton(){
     var c = LocalContext.current;
     var profileViewModel : ProfileViewModel = viewModel()
-    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
-        .padding(10.dp)
+    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+        .padding(30.dp)
         .fillMaxWidth()){
         OpaqueButton("Edit profile", onClick = {
-            profileViewModel.logout(c);
-            },
+            profileViewModel.EditProfile()
+
+        },
          modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
+        OpaqueButton("Log out",onClick = {
+            profileViewModel.logout(c);
+        },
+            modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
     }
+
 }
 
 
@@ -148,12 +155,7 @@ private fun PersonalDescription() {
                 .align(Alignment.Center)
 
         ) {
-            Text(
-                "Writer by day, reviewer by night. I live \n" +
-                        "and breathe movies. \n" +
-                        "\n" +
-                        "Especially the weird ones ;P\n" +
-                        "Follo for more!",
+            Text( AppContext.getInstance().getProfileState().value.bio,
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()

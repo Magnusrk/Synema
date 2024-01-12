@@ -54,6 +54,7 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
+import com.example.synema.viewmodel.Watchlists.MyListViewModel
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -75,6 +76,7 @@ fun WriteReviewScreen(
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )

@@ -2,6 +2,7 @@ package com.example.synema.view.screens
 
 import GradientBox
 import MoviePosterFrame
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +24,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,8 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.controller.AppContext
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
@@ -46,8 +55,29 @@ import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.ProfileViewModel
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun OUprofiles(navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun OUprofiles(userid: String?,navController : NavHostController, profileState: MutableState<ProfileModel>) {
+    val dataSource = DependencyProvider.getInstance().getUserSource();
+
+    var user: ProfileModel by remember {
+        mutableStateOf(
+            ProfileModel(
+                "",
+                "",
+                "",
+                "Loading...",
+                "Loading...",
+                "",
+            )
+        )
+    }
+    dataSource.userById(userid.toString(),profileState.value.token) {
+        it.getResult()?.let { profileModel ->
+            user= it.getResult()!!
+        }
+    }
+
     val context = AppContext.getInstance();
     GradientBox(){
 
@@ -55,10 +85,10 @@ fun OUprofiles(navController : NavHostController, profileState: MutableState<Pro
             TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true){
                 EditProfileButton()
-                ProfileNameHeader("Devon Jeffery")
-                ProfilePicture()
+                ProfileNameHeader(user.name)
+                ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(7522, 955)
-                PersonalDescription()
+                PersonalDescription(user.bio)
                 Directories(context.getNav())
 
             }
@@ -78,23 +108,19 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
     }
 }
 @Composable
-private fun ProfilePicture(){
+private fun ProfilePicture1(profilePicture: String){
 
     Row (modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp), horizontalArrangement = Arrangement.Center){
-        Image(
-            painter = painterResource(R.drawable.devon),
-            contentDescription = null,
-            modifier = Modifier
-                .size(145.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Black, CircleShape)
-            ,
-            contentScale = ContentScale.Crop
-        )
+        AsyncImage(
+        model =profilePicture , contentDescription = null, modifier = Modifier
+            .size(145.dp)
+            .clip(CircleShape)
+            .border(2.dp, Color.Black, CircleShape),
+        contentScale = ContentScale.Crop
+    )
     }
-
 }
 
 @Composable
@@ -119,7 +145,7 @@ private fun EditProfileButton(){
 
 
 @Composable
-private fun PersonalDescription() {
+private fun PersonalDescription(bio: String) {
 
     Box(
         modifier = Modifier
@@ -136,7 +162,7 @@ private fun PersonalDescription() {
 
         ) {
             Text(
-                "subscribe for a full scale analysis of your favorite movies and the best ratings from me innit, gang gang!",
+                bio,
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()
