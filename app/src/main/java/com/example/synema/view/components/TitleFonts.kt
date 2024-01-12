@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -25,6 +26,7 @@ fun TitleFont(title : String) {
         title,
         fontFamily = titleFont,
         fontWeight = FontWeight.Bold,
+        color = Color.White,
         modifier = Modifier
             .graphicsLayer(alpha = 0.90f)
             .padding(10.dp)

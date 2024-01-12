@@ -59,6 +59,7 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.model.WatchlistModel
+import com.example.synema.view.components.DarkGradient
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.MovieClip
@@ -134,22 +135,31 @@ fun MediaDetails(
 
 
     //val movie : MovieModel = source.loadMovie(movieID.toString())
-    Column {
-        TopBar("", Alignment.CenterStart, 20.sp, backArrow = true, navController = navController)
+    DarkGradient {
+        Column {
+            TopBar(
+                "Synema",
+                Alignment.Center,
+                20.sp,
+                backArrow = true,
+                navController = navController
+            )
 
             MainContainer(hasBottomNav = false) {
-                TitleFont(movie.title)
                 MovieClip(movie.backdrop_url)
+                TitleFont(movie.title)
                 InteractionPane(movie, navController, reviewList)
                 ActorList(actorList = actorList, header = "Cast", navController = navController)
                 DescriptionSection(movie.description)
+                SimilarMoviesSection(movie, similarMovies, navController)
                 if(!reviewList.isEmpty()){
                     UserReviewSection(reviewList)
                 }
-
-                SimilarMoviesSection(movie, similarMovies, navController)
             }
 
+
+
+        }
     }
 }
 
@@ -158,14 +168,14 @@ fun InteractionPane(
     movie: MovieModel,
     navController: NavHostController,
     reviewList: List<ReviewModel>
-){
-    val size = Size()
+) {
+    val size = Size();
     Text(
         text = movie.tagline,
         fontSize = 15.sp,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Italic,
-        color = Color.Black,
+        color = Color.White,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
         lineHeight = 15.sp,
@@ -198,12 +208,13 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
         Text(
             text = movie.release_date,
             fontWeight = FontWeight.Bold,
+            color = Color.White,
             modifier = Modifier
                 .padding(start = 4.dp, top = 20.dp, bottom = 10.dp)
         )
         Button(
             onClick = { navController.navigate("mediaDetails/" + movie.id + "/save") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
@@ -219,7 +230,11 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 
 
 @Composable
-fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList: List<ReviewModel>){
+fun RatingPanel(
+    movie: MovieModel,
+    navController: NavHostController,
+    reviewList: List<ReviewModel>
+) {
     val size = Size();
     var avg = 0f
     Column(
@@ -235,8 +250,9 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
             onClick = {},
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
-            contentPadding = PaddingValues(horizontal = 5.dp)
-        ) {
+            contentPadding = PaddingValues(horizontal = 5.dp),
+
+            ) {
             RatingStars(movie.rating)
         }
 
@@ -254,22 +270,23 @@ fun RatingPanel(movie: MovieModel, navController: NavHostController, reviewList:
         }
 
 
-        Button( onClick = {},
+        Button(
+            onClick = {},
             modifier = Modifier.fillMaxWidth(0.75f),
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
-        ){
+        ) {
             if (!reviewList.isEmpty()) {
                 reviewList.forEach() { review -> avg += review.rating }
 
 
-                    avg /= reviewList.size;
+                avg /= reviewList.size;
 
 
             }
-            val solution:Double = avg.toDouble()
-            Text("User ratings: "+ solution.toString()+ "/5")
+            val solution: Double = avg.toDouble()
+            Text("User ratings: " + solution.toString() + "/5")
         }
 
     }
@@ -291,18 +308,20 @@ private fun RatingStars(rating: Number) {
                 .fillMaxWidth(rating.toFloat() / 10)
 
         ) {
-            Canvas(modifier = Modifier.fillMaxSize()
+            Canvas(
+                modifier = Modifier.fillMaxSize()
             ) {
 
                 drawImage(image = starImage)
             }
-            Canvas(modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer(alpha = 0.99f)
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(alpha = 0.99f)
             ) {
 
                 drawRect(
-                    color = Color(0xFFC96E0E),
+                    color = Color(0xFFB6842D),
                     size = size,
                 )
                 drawImage(image = starImage, blendMode = BlendMode.DstAtop)
@@ -313,14 +332,15 @@ private fun RatingStars(rating: Number) {
 
 @Composable
 private fun ReviewStars(rating: Number) {
-    Row ( horizontalArrangement = Arrangement.SpaceEvenly){
-        for( n  in 1..5){
-            if(rating.toFloat()/2 >= n.toFloat()){
-                InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(
-                    0xFFC96E0E
+    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        for (n in 1..5) {
+            if (rating.toFloat() / 2 >= n.toFloat()) {
+                InlineIcon(
+                    resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint = Color(
+                        0xFFB6842D
+                    )
                 )
-                )
-            } else{
+            } else {
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
             }
         }
@@ -328,25 +348,25 @@ private fun ReviewStars(rating: Number) {
 }
 
 
-
-
 @Composable
 fun DescriptionSection(desc: String) {
     Text(
         "Description",
         fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 10.dp, start = 20.dp)
+        modifier = Modifier.padding(bottom = 10.dp, start = 20.dp),
+        color = Color.White
     )
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = Color.Black)
+            .background(color = Color(0xFFB6842D))
     )
     Text(
         desc,
         textAlign = TextAlign.Justify,
-        modifier = Modifier.padding(top = 3.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+        modifier = Modifier.padding(top = 3.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
+        color = Color.White
     )
 
 }
@@ -357,13 +377,14 @@ fun UserReviewSection(reviewList: List<ReviewModel>) {
     Text(
         "User reviews",
         fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 10.dp, start = 20.dp)
+        modifier = Modifier.padding(bottom = 10.dp, start = 20.dp),
+        color = Color.White
     )
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = Color.Black)
+            .background(color = Color(0xFFB6842D))
     )
 
     Column() {
@@ -465,7 +486,7 @@ private fun ActorList(actorList: List<CreditsModel>, modifier: Modifier = Modifi
             text = header,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -538,7 +559,7 @@ private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieMod
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(color = Color.Black)
+            .background(color = Color(0xFFB6842D))
     )
     MovieList(movieList = similarList, header = "Movies similar to " + movie.title , navController = nav)
 
@@ -559,7 +580,7 @@ private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier
             text = header,
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
@@ -583,28 +604,27 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
         color = Color(0x00000000) // Set the color to transparent
     ) {
-        Column (
+        Column(
             //verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(95.dp)
-        ){
+        ) {
             AsyncImage(
                 model = movie.poster_url,
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
                     .height(135.dp)
-                    .clickable { navController.navigate("mediaDetails/" + movie.id) }
-                ,
+                    .clickable { navController.navigate("mediaDetails/" + movie.id) },
                 contentScale = ContentScale.FillBounds
             )
 
-            Spacer(modifier =  Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = movie.title,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 lineHeight = 12.sp,
@@ -615,4 +635,5 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
 
     }
 }
+
 
