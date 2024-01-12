@@ -55,6 +55,16 @@ public interface UserAPI {
     fun user_by_id(
         @Path("id") username: String,
         @Header("authorization") token : String): Call<ProfileModel>
-    }
+    @POST("/user/editbio/{id}")
+    fun editbio(
+    @Path("id") id: String,
+    @Body profileModel: ProfileModel,
+    @Header("authorization") token : String): Call<ProfileModel>
 
+    @POST("/user/editProfilePicture/{id}")
+    fun editProfilePicture(
+        @Path("id") id: String,
+        @Body profileModel: ProfileModel,
+        @Header("authorization") token : String): Call<ProfileModel>
+}
 
