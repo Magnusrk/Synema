@@ -38,6 +38,9 @@ public interface MovieAPI {
     @GET("movies/search")
     abstract fun searchMovies(@Query("query") query: String): Call<List<MovieModel>>
 
+    @GET("movies/{movieId}/similar")
+    abstract fun similar(@Path("movieId") movieId: String): Call<List<MovieModel>>
+
     @POST("/movie/{movieId}/reviews")
     fun createReviewForMovie(
         @Path("movieId") movieId: String,

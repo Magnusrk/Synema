@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +53,7 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.BottomBar
+import com.example.synema.view.components.DarkGradient
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
@@ -76,6 +79,7 @@ fun WriteReviewScreen(
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )
@@ -106,7 +110,7 @@ fun WriteReviewScreen(
         }
     }
 
-    GradientBox {
+    DarkGradient {
         Column {
             TopBar(
                 title = "Review ${movie.title}",
@@ -122,7 +126,7 @@ fun WriteReviewScreen(
                         .padding(15.dp)
                         .fillMaxWidth()
                         .height(75.dp)
-                        .background(color = Color(0xFF75146B), shape = RoundedCornerShape(4.dp))
+                        .background(color = Color(0xFF30072B), shape = RoundedCornerShape(4.dp))
                 ) {
                     RatingStars(rating)
                 }
@@ -147,7 +151,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB13563)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF502043)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -166,7 +170,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF912BB1)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF502043)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -191,7 +195,7 @@ fun ReviewBox(reviewText: MutableState<String>) {
             .fillMaxWidth()
             .height(400.dp)
             .padding(horizontal = 15.dp, vertical = 10.dp)
-            .background(Color.White, shape = RoundedCornerShape(4.dp)),
+            .background(Color(0xFF0C1729), shape = RoundedCornerShape(4.dp)),
     )
     {
         OutlinedTextField(
@@ -207,7 +211,8 @@ fun ReviewBox(reviewText: MutableState<String>) {
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                 )
-            }
+            },
+            textStyle = TextStyle(color = Color.White)
         )
     }
 }
@@ -230,7 +235,7 @@ private fun RatingStars(rating: MutableState<Int>) {
                     resourceID = R.drawable.icon_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFF4399FF)
+                    tint = Color(0xFFB6842D)
                 )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
@@ -248,7 +253,7 @@ private fun RatingStars(rating: MutableState<Int>) {
                     resourceID = R.drawable.icon_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFF4399FF)
+                    tint = Color(0xFFB6842D)
                 )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
@@ -266,7 +271,7 @@ private fun RatingStars(rating: MutableState<Int>) {
                     resourceID = R.drawable.icon_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFF4399FF)
+                    tint = Color(0xFFB6842D)
                 )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
@@ -284,7 +289,7 @@ private fun RatingStars(rating: MutableState<Int>) {
                     resourceID = R.drawable.icon_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFF4399FF)
+                    tint = Color(0xFFB6842D)
                 )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
@@ -302,7 +307,7 @@ private fun RatingStars(rating: MutableState<Int>) {
                     resourceID = R.drawable.icon_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFF4399FF)
+                    tint = Color(0xFFB6842D)
                 )
             } else {
                 InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)

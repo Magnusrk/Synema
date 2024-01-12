@@ -137,6 +137,7 @@ private fun InnerReviewContainer(review : ReviewModel){
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )
