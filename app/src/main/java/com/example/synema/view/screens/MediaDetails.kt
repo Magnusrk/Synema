@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +54,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
+import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -84,6 +86,10 @@ fun MediaDetails(
         mutableStateOf(listOf())
     }
 
+    var actorList: List<CreditsModel> by remember {
+        mutableStateOf(listOf())
+    }
+
     source.getReviewsForMovie(movieID.toString(), profileState.value.token) {
         if (it.successful()) {
             it.getResult()?.let { reviewModel ->
@@ -100,6 +106,7 @@ fun MediaDetails(
                 "Loading...",
                 "Loading...",
                 0,
+                "",
                 ""
             )
         )
@@ -115,6 +122,16 @@ fun MediaDetails(
         }
     }
 
+    if (movieID != null) {
+        source.loadCredits(movieID, profileState.value.token){
+            if (it.successful()) {
+                actorList = it.getResult()!!
+            }
+        }
+    }
+
+   // println(actorList[0])
+
 
     //val movie : MovieModel = source.loadMovie(movieID.toString())
     Column {
@@ -124,6 +141,7 @@ fun MediaDetails(
                 TitleFont(movie.title)
                 MovieClip(movie.backdrop_url)
                 InteractionPane(movie, navController, reviewList)
+                ActorList(actorList = actorList, header = "Cast", navController = navController)
                 DescriptionSection(movie.description)
                 if(!reviewList.isEmpty()){
                     UserReviewSection(reviewList)
@@ -141,7 +159,20 @@ fun InteractionPane(
     navController: NavHostController,
     reviewList: List<ReviewModel>
 ){
-    val size = Size();
+    val size = Size()
+    Text(
+        text = movie.tagline,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
+        color = Color.Black,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+        lineHeight = 15.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(start = 15.dp, top = 10.dp, bottom = 10.dp)
+    )
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -150,6 +181,7 @@ fun InteractionPane(
         SaveButton(movie, navController = navController)
         RatingPanel(movie, navController = navController, reviewList)
     }
+
 }
 
 @Composable
@@ -420,9 +452,83 @@ private fun InnerReviewContainer(review: ReviewModel) {
         }
 
     }
-
 }
 
+@Composable
+private fun ActorList(actorList: List<CreditsModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp)
+    ) {
+        Text(
+            text = header,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(8.dp)
+        )
+        LazyRow(modifier = modifier) {
+            items(actorList) { actor ->
+                ActorCard(
+                    actor = actor,
+                    modifier = Modifier.padding(8.dp),
+                    navController
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController : NavHostController) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp), // Customize the shape if needed
+        color = Color(0xFFECB0E6)
+    ) {
+        Column (
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(95.dp)
+        ){
+            AsyncImage(
+                model = actor.picture_path,
+                contentDescription = null,
+                modifier = Modifier
+                    .width(95.dp)
+                    .height(135.dp),
+                contentScale = ContentScale.FillBounds
+            )
+
+            Spacer(modifier =  Modifier.height(5.dp))
+            Text(
+                text = actor.character,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center
+
+            )
+            Text(
+                text = actor.name,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                lineHeight = 12.sp,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier =  Modifier.height(5.dp))
+        }
+
+    }
+}
 @Composable
 private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieModel>, nav : NavHostController){
 

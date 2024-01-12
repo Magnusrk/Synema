@@ -1,6 +1,7 @@
 package com.example.synema.controller
 
 
+import com.example.synema.model.ProfileModel
 import com.example.synema.model.UserModel
 import com.example.synema.model.WatchlistModel
 import okhttp3.ResponseBody
@@ -46,8 +47,24 @@ public interface UserAPI {
 
 
     @GET("/user/{username}")
-    @FormUrlEncoded
     fun user_by_username(
         @Path("username") username: String,
-        @Header("authorization") token : String): Call<UserModel>
-    }
+        @Header("authorization") token : String): Call<List<ProfileModel>>
+
+    @GET("/user/profile/{id}")
+    fun user_by_id(
+        @Path("id") username: String,
+        @Header("authorization") token : String): Call<ProfileModel>
+    @POST("/user/editbio/{id}")
+    fun editbio(
+    @Path("id") id: String,
+    @Body profileModel: ProfileModel,
+    @Header("authorization") token : String): Call<ProfileModel>
+
+    @POST("/user/editProfilePicture/{id}")
+    fun editProfilePicture(
+        @Path("id") id: String,
+        @Body profileModel: ProfileModel,
+        @Header("authorization") token : String): Call<ProfileModel>
+}
+

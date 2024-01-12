@@ -9,11 +9,24 @@ import com.example.synema.model.UserModel
 
 
 interface UserDataSource {
-    fun LoginUser(email : String, password : String, callback : (ApiResponse<UserModel>) -> Unit);
+    fun LoginUser(email: String, password: String, callback: (ApiResponse<UserModel>) -> Unit);
 
-    fun signupUser(username : String, email: String,password: String, callback : (ApiResponse<UserModel>) -> Unit);
+    fun signupUser(
+        username: String,
+        email: String,
+        password: String,
+        callback: (ApiResponse<UserModel>) -> Unit
+    );
 
-    fun verifyToken(token: String, callback : (ApiResponse<Boolean>) -> Unit);
+    fun verifyToken(token: String, callback: (ApiResponse<Boolean>) -> Unit);
 
-    fun userById(username:String,token: String,callback: (ApiResponse<UserModel>) -> Unit)
+    fun userByUsername(
+        username: String,
+        token: String,
+        callback: (ApiResponse<List<ProfileModel>>) -> Unit
+    )
+
+    fun userById(id: String, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun editbio(id: String,profileModel: ProfileModel, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun editProfilePicture(id: String,profileModel: ProfileModel, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
 }

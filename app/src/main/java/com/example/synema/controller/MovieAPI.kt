@@ -1,5 +1,6 @@
 package com.example.synema.controller
 
+import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ReviewModel
 import retrofit2.Call
@@ -18,6 +19,9 @@ public interface MovieAPI {
     )
     @GET("movies/{id}")
     abstract fun getMovieById(@Path("id") id: String): Call<MovieModel>
+
+    @GET("movie/{id}/credits")
+    abstract fun getCreditsById(@Path("id") id: String): Call<List<CreditsModel>>
 
     @Headers(
         "Accept: application/json"

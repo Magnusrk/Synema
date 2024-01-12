@@ -100,16 +100,16 @@ class UserAPISource() : UserDataSource {
         )
     }
 
-    override fun userById(
+    override fun userByUsername(
         username: String,
         token: String,
-        callback: (ApiResponse<UserModel>) -> Unit
+        callback: (ApiResponse<List<ProfileModel>>) -> Unit
     ) {
         val api = retrofit.create(UserAPI::class.java)
-        val call: Call<UserModel> = api.user_by_username(username,token);
+        val call: Call<List<ProfileModel>> = api.user_by_username(username,token);
 
-        call.enqueue(object: Callback<UserModel?> {
-            override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
+        call.enqueue(object: Callback<List<ProfileModel>> {
+            override fun onResponse(call: Call<List<ProfileModel>>, response: Response<List<ProfileModel>>) {
                 if(response.isSuccessful) {
                     if (response.code() == 200) {
                         Log.d("Main", "success!" + response.body().toString())
@@ -122,7 +122,99 @@ class UserAPISource() : UserDataSource {
                 }
             }
 
-            override fun onFailure(call: Call<UserModel?>, t: Throwable) {
+            override fun onFailure(call: Call<List<ProfileModel>>, t: Throwable) {
+                Log.e("Main", "Login failed " + t.message.toString())
+                callback(ApiResponse(null, true, t.message!!));
+
+            }
+        })
+    }
+
+    override fun userById(
+        id: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        val api = retrofit.create(UserAPI::class.java)
+        val call: Call<ProfileModel> = api.user_by_id(id,token);
+
+        call.enqueue(object: Callback<ProfileModel> {
+            override fun onResponse(call: Call<ProfileModel>, response: Response<ProfileModel>) {
+                if(response.isSuccessful) {
+                    if (response.code() == 200) {
+                        Log.d("Main", "success!" + response.body().toString())
+                        callback(ApiResponse(response.body()!!))
+                    }
+                } else if(response.code() == 404){
+                    callback(ApiResponse(null, true, "User does not exist"))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't log in"))
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileModel>, t: Throwable) {
+                Log.e("Main", "Login failed " + t.message.toString())
+                callback(ApiResponse(null, true, t.message!!));
+
+            }
+        })
+    }
+
+    override fun editbio(
+        id: String,
+        profileModel: ProfileModel,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        val api = retrofit.create(UserAPI::class.java)
+        val call: Call<ProfileModel> = api.editbio(id,profileModel,token);
+
+        call.enqueue(object: Callback<ProfileModel> {
+            override fun onResponse(call: Call<ProfileModel>, response: Response<ProfileModel>) {
+                if(response.isSuccessful) {
+                    if (response.code() == 200) {
+                        Log.d("Main", "success!" + response.body().toString())
+                        callback(ApiResponse(response.body()!!))
+                    }
+                } else if(response.code() == 404){
+                    callback(ApiResponse(null, true, "User does not exist"))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't log in"))
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileModel>, t: Throwable) {
+                Log.e("Main", "Login failed " + t.message.toString())
+                callback(ApiResponse(null, true, t.message!!));
+
+            }
+        })
+    }
+
+    override fun editProfilePicture(
+        id: String,
+        profileModel: ProfileModel,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        val api = retrofit.create(UserAPI::class.java)
+        val call: Call<ProfileModel> = api.editProfilePicture(id,profileModel,token);
+
+        call.enqueue(object: Callback<ProfileModel> {
+            override fun onResponse(call: Call<ProfileModel>, response: Response<ProfileModel>) {
+                if(response.isSuccessful) {
+                    if (response.code() == 200) {
+                        Log.d("Main", "success!" + response.body().toString())
+                        callback(ApiResponse(response.body()!!))
+                    }
+                } else if(response.code() == 404){
+                    callback(ApiResponse(null, true, "User does not exist"))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't log in"))
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileModel>, t: Throwable) {
                 Log.e("Main", "Login failed " + t.message.toString())
                 callback(ApiResponse(null, true, t.message!!));
 
