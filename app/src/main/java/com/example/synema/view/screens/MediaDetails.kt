@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -44,6 +45,8 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -114,7 +117,7 @@ fun MediaDetails(
                     DescriptionSection(vm.movie.value.description)
                     SimilarMoviesSection(vm)
                     if(!vm.reviewList.isEmpty()){
-                        UserReviewSection(vm.reviewList)
+                        UserReviewSection(vm)
                     }
                 }
 
@@ -334,7 +337,7 @@ private fun DescriptionSection(desc: String) {
 }
 
 @Composable
-fun UserReviewSection(reviewList: List<ReviewModel>) {
+fun UserReviewSection(vm: MediaDetailsViewModel) {
 
     Text(
         "User reviews",
@@ -350,13 +353,13 @@ fun UserReviewSection(reviewList: List<ReviewModel>) {
     )
 
     Column() {
-        reviewList.forEach() { review -> UserReviewCard(review) }
+        vm.reviewList.forEach() { review -> UserReviewCard(vm,review) }
     }
 
 }
 
 @Composable
-private fun UserReviewCard(review: ReviewModel) {
+private fun UserReviewCard(vm: MediaDetailsViewModel, review: ReviewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -370,7 +373,7 @@ private fun UserReviewCard(review: ReviewModel) {
                 .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
 
         ) {
-            InnerReviewContainer(review)
+            InnerReviewContainer(vm, review)
         }
 
     }
@@ -379,7 +382,7 @@ private fun UserReviewCard(review: ReviewModel) {
 }
 
 @Composable
-private fun InnerReviewContainer(review: ReviewModel) {
+private fun InnerReviewContainer(vm: MediaDetailsViewModel, review: ReviewModel) {
     var expanded by remember { mutableStateOf(false) }
     var moreText by remember {
         mutableStateOf("More")
@@ -389,6 +392,16 @@ private fun InnerReviewContainer(review: ReviewModel) {
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            ClickableText(
+                text = AnnotatedString("@" + review.username),
+                style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                ),
+                onClick = {
+                    vm.getNav().navigate("ouprofiles/"+review.userid)
+                })
+            /*
             Text(
                 modifier = Modifier.height(30.dp),
                 text = "@" + review.username,
@@ -396,10 +409,13 @@ private fun InnerReviewContainer(review: ReviewModel) {
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis
             )
+
+             */
             ReviewStars(review.rating * 2)
         }
 
         if (expanded) {
+
             Text(
                 review.reviewText,
                 color = Color.White,

@@ -370,7 +370,7 @@ private fun newWatchlist(vm: WatchlistViewModel) {
 }
 
 @Composable
-fun wathclistList(vm: WatchlistViewModel) {
+private fun wathclistList(vm: WatchlistViewModel) {
 
     Column(
         modifier = Modifier
@@ -396,7 +396,7 @@ fun wathclistList(vm: WatchlistViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
+private fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -449,7 +449,7 @@ fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
 
 
 @Composable
-fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
+private fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .size(50.dp)
@@ -470,7 +470,7 @@ fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageCardRow(movieUrls: List<String>) {
+private fun ImageCardRow(movieUrls: List<String>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         //verticalArrangement = Arrangement.SpaceEvenly,

@@ -47,6 +47,7 @@ import com.example.synema.R
 import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
@@ -78,18 +79,30 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
         }
     }
 
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getOtherUserReviews(userid.toString(), profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+                reviewList = reviewModel
+            }
+        }
+    }
+
     val context = AppContext.getInstance();
     GradientBox(){
 
         Column {
             TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                EditProfileButton()
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, 955)
+                FollowersReviewsStatus(7522, reviewList.size)
                 PersonalDescription(user.bio)
-                Directories(context.getNav())
+                Directories(userid, context.getNav())
 
             }
             BottomBar(navController = navController)
@@ -129,20 +142,6 @@ private fun ProfileNameHeader(name : String){
         Text(text =name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
-@Composable
-private fun EditProfileButton(){
-    var c = LocalContext.current;
-    var profileViewModel : ProfileViewModel = viewModel()
-    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()){
-        OpaqueButton("Edit profile", onClick = {
-            profileViewModel.logout(c);
-        },
-            modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
-    }
-}
-
 
 @Composable
 private fun PersonalDescription(bio: String) {
@@ -213,7 +212,7 @@ private fun DirectoryCard(text : String, navController: NavHostController, route
 }
 
 @Composable
-private fun Directories(navController: NavHostController) {
+private fun Directories(userid: String?, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -222,13 +221,13 @@ private fun Directories(navController: NavHostController) {
 
         // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
 
-        DirectoryCard("Watchlist", navController = navController, route = "watchlists")
+        DirectoryCard("Watchlist", navController = navController, route = "otherUserLists/$userid")
         Spacer(modifier = Modifier.height(8.dp))
         //}
         DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Reviews", navController = navController, route = "myreviews")
+        DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
 
     }
 

@@ -175,7 +175,8 @@ private fun PersonalDescription() {
                 .align(Alignment.Center)
 
         ) {
-            Text( AppContext.getInstance().getProfileState().value.bio,
+            Text(
+                AppContext.getInstance().getProfileState().value.bio,
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()

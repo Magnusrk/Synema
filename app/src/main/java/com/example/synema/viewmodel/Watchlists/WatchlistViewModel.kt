@@ -39,6 +39,21 @@ class WatchlistViewModel : ViewModel() {
         }
     }
 
+    fun loadOtherUserList(userId: String){
+        println(profileState.value.token)
+        isLoading.value = true;
+        dataSource.read_otherUsers_db(userId, profileState.value.token){
+            if (it.successful()) {
+                it.getResult()?.let {watchlistModel ->
+                    watchlistList.clear()
+                    watchlistList.addAll(watchlistModel)
+                }
+            }
+            isLoading.value = false;
+
+        }
+    }
+
     fun createWatchlist(){
         isLoading.value = true
         popupControl.value = false
