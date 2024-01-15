@@ -106,6 +106,10 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledContainerColor = Color(0xFF736477),
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,
+                        focusedLabelColor = Color.White,
+                        disabledLabelColor = Color.White,
+                        errorLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White
                         //disabledTextColor = Color.LightGray
                     ),
                     modifier = Modifier
@@ -125,7 +129,11 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledContainerColor = Color(0xFF736477),
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,
-                        disabledTextColor = Color.LightGray
+                        disabledTextColor = Color.LightGray,
+                        focusedLabelColor = Color.White,
+                        disabledLabelColor = Color.White,
+                        errorLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White
                     ),
                     modifier = Modifier
                         .fillMaxWidth()

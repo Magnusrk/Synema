@@ -1,7 +1,6 @@
 package com.example.synema.view.screens
 
 import GradientBox
-import android.content.ClipData
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,7 +34,7 @@ import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.components.TrendTopBar
-import com.example.synema.viewmodel.HomeViewModel
+import com.example.synema.viewmodel.media.HomeViewModel
 
 
 

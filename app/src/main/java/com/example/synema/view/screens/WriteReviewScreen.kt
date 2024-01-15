@@ -25,9 +25,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -151,7 +153,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF502043)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF861B41)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -170,7 +172,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF502043)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -195,7 +197,7 @@ fun ReviewBox(reviewText: MutableState<String>) {
             .fillMaxWidth()
             .height(400.dp)
             .padding(horizontal = 15.dp, vertical = 10.dp)
-            .background(Color(0xFF0C1729), shape = RoundedCornerShape(4.dp)),
+            .background(Color(0xFF430B3D), shape = RoundedCornerShape(4.dp)),
     )
     {
         OutlinedTextField(
@@ -210,9 +212,20 @@ fun ReviewBox(reviewText: MutableState<String>) {
                     text = "${reviewText.value.length} / $maxChar",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
+                    color = Color.White,
                 )
             },
-            textStyle = TextStyle(color = Color.White)
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.White,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedLabelColor = Color.White,
+                disabledLabelColor = Color.White,
+                errorLabelColor = Color.White,
+                unfocusedLabelColor = Color.White
+            )
+
         )
     }
 }
