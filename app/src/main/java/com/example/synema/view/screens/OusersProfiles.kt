@@ -98,7 +98,6 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
         Column {
             TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true){
-                EditProfileButton()
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(7522, reviewList.size)
@@ -143,20 +142,6 @@ private fun ProfileNameHeader(name : String){
         Text(text =name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
-@Composable
-private fun EditProfileButton(){
-    var c = LocalContext.current;
-    var profileViewModel : ProfileViewModel = viewModel()
-    Row(horizontalArrangement = Arrangement.End, modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()){
-        OpaqueButton("Edit profile", onClick = {
-            profileViewModel.logout(c);
-        },
-            modifier= Modifier.defaultMinSize(minHeight = 8.dp) )
-    }
-}
-
 
 @Composable
 private fun PersonalDescription(bio: String) {
