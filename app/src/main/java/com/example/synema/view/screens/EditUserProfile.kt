@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
@@ -49,6 +50,7 @@ import com.example.synema.viewmodel.ProfileViewModel
 
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
+    val dataSource = DependencyProvider.getInstance().getUserSource();
 
     var updateName by remember { mutableStateOf(profileState.value.name) }
     var updateBio by remember { mutableStateOf(profileState.value.bio) }
@@ -76,14 +78,20 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
 
                     OpaqueButton("Save", onClick = {
                         // Update the original profileState with the edited fields when saving changes
+                        /*
                         profileState.value = profileState.value.copy(
                             name = updateName,
                             bio = updateBio,
                             profilePicture = updatePic
                         )
 
+                         */
+                        profileState.value.bio=updateBio
+                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
+                            navController.popBackStack()
+                        }
                         // Navigate back to the profile screen
-                        navController.popBackStack()
+
                     })
                 }
                 // Text field for editing name

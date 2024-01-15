@@ -27,6 +27,6 @@ interface UserDataSource {
     )
 
     fun userById(id: String, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
-    fun editbio(id: String,profileModel: ProfileModel, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun editbio(id: String,bio: String, token: String, callback: (ApiResponse<Boolean>) -> Unit)
     fun editProfilePicture(id: String,profileModel: ProfileModel, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
 }

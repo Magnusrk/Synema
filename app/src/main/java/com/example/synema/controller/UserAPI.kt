@@ -59,7 +59,7 @@ public interface UserAPI {
     fun editbio(
     @Path("id") id: String,
     @Body profileModel: ProfileModel,
-    @Header("authorization") token : String): Call<ProfileModel>
+    @Header("authorization") token : String): Call<Boolean>
 
     @POST("/user/editProfilePicture/{id}")
     fun editProfilePicture(
