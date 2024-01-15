@@ -5,24 +5,16 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,12 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
@@ -54,7 +42,6 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
-import com.example.synema.viewmodel.ProfileViewModel
 
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
@@ -67,7 +54,7 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                ProfilePicture(profileState.value, imageUrl = "https://postimg.cc/4nzy4Qwy") { selectedImageUri ->
+                ProfilePicture(profileState.value) { selectedImageUri ->
                     updatePic = selectedImageUri.toString()
                 }
                 Row(
@@ -108,7 +95,6 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledContainerColor = Color(0xFF736477),
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,
-                        //disabledTextColor = Color.LightGray
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -137,25 +123,19 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
             }
             BottomBar(navController = navController )
         }
-
     }
-
 }
+
+
+
+
 
 @Composable
 fun ProfilePicture(
     currentUser: ProfileModel,
-    imageUrl: String,
-    onImageSelected: (Uri) -> Unit
+    imageUrl: String = "https://postimg.cc/4nzy4Qwy",
+    onImageSelected: (Uri) -> Unit = {}
 ) {
-    var imageUri by rememberSaveable { mutableStateOf(currentUser.profilePicture) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            imageUri = it.toString()
-            onImageSelected(it)
-        }
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -170,13 +150,14 @@ fun ProfilePicture(
                 .clip(CircleShape)
                 .border(2.dp, Color.Black, CircleShape)
                 .clickable {
-                    // Launch the image picker when the profile picture is clicked
-                    launcher.launch("image/*")
+                    if (imageUrl.isNotEmpty()) {
+                        onImageSelected(Uri.parse(imageUrl))
+                    }
                 }
         ) {
-            if (imageUri.isEmpty()) {
-                Image(
-                    painter = painterResource(R.drawable.profile_picture_placeholder),
+            if (imageUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = imageUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -185,7 +166,7 @@ fun ProfilePicture(
                 )
             } else {
                 AsyncImage(
-                    model = imageUrl,
+                    model = currentUser.profilePicture,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -196,6 +177,13 @@ fun ProfilePicture(
         }
     }
 }
+
+
+
+
+
+
+
 /*
 @Composable
 private fun ProfilePicture(currentUser: ProfileModel) {
