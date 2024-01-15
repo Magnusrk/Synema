@@ -214,7 +214,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
         )
         Button(
             onClick = { navController.navigate("mediaDetails/" + movie.id + "/save") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
@@ -507,7 +507,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
-        color = Color(0xFFECB0E6)
+        color = Color(0xFF430B3D)
     ) {
         Column (
             //verticalArrangement = Arrangement.Center,
@@ -528,19 +528,19 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 text = actor.character,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 minLines = 2,
                 lineHeight = 12.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
 
             )
             Text(
                 text = actor.name,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 minLines = 2,
