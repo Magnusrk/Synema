@@ -1,6 +1,7 @@
 package com.example.synema.Data.movies
 
 import com.example.synema.R
+import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
@@ -74,6 +75,10 @@ class MockMovieDataSource : MovieDataSource {
         token: String,
         callback: (ApiResponse<List<CreditsModel>>) -> Unit
     ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getActorDetails(actor_id: String, callback: (ApiResponse<ActorModel>) -> Unit) {
         TODO("Not yet implemented")
     }
 
@@ -167,6 +172,13 @@ class MockMovieDataSource : MovieDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun starringMovies(
+        actorId: String,
+        callback: (ApiResponse<List<MovieModel>>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun createReviewForMovie(
         movieId: String,
         review: String,
@@ -179,6 +191,14 @@ class MockMovieDataSource : MovieDataSource {
     }
 
     override fun getOwnReviews(token: String, callback: (ApiResponse<List<ReviewModel>>) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getOtherUserReviews(
+        userId: String,
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
         TODO("Not yet implemented")
     }
 

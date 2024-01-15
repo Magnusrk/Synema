@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -44,12 +45,15 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
@@ -59,77 +63,36 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.model.WatchlistModel
+import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.DarkGradient
 import com.example.synema.view.components.InlineIcon
+import com.example.synema.view.components.LoadingWrapper
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.MovieClip
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TitleFont
 import com.example.synema.view.components.TopBar
 import com.example.synema.view.utils.Size
+import com.example.synema.viewmodel.media.MediaDetailsViewModel
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaDetails(
-    navController: NavHostController,
-    profileState: MutableState<ProfileModel>,
     movieID: String?
 ) {
 
-
-    val source = DependencyProvider.getInstance().getMovieSource();
-    var reviewList: List<ReviewModel> by remember {
-        mutableStateOf(listOf())
-    }
-
-    var similarMovies: List<MovieModel> by remember {
-        mutableStateOf(listOf())
-    }
-
-    var actorList: List<CreditsModel> by remember {
-        mutableStateOf(listOf())
-    }
-
-    source.getReviewsForMovie(movieID.toString(), profileState.value.token) {
-        if (it.successful()) {
-            it.getResult()?.let { reviewModel ->
-                reviewList = reviewModel
-            }
-        }
-    }
-    var movie: MovieModel by remember {
-        mutableStateOf(
-            MovieModel(
-                0,
-                "",
-                "",
-                "Loading...",
-                "Loading...",
-                0,
-                "",
-                ""
-            )
-        )
-    }
-    if (movieID != null) {
-        source.loadMovie(movieID) {
-            movie = it.getResult()!!
-            source.similarMovies(movie.id.toString()){
-                if(it.getResult() != null){
-                    similarMovies = it.getResult()!!;
-                }
-            }
-        }
-    }
+    val vm : MediaDetailsViewModel = viewModel()
 
     if (movieID != null) {
-        source.loadCredits(movieID, profileState.value.token){
-            if (it.successful()) {
-                actorList = it.getResult()!!
-            }
-        }
+        vm.init(movieID)
+    } else {
+        vm.back()
     }
+
+
+
+
 
    // println(actorList[0])
 
@@ -142,20 +105,26 @@ fun MediaDetails(
                 Alignment.Center,
                 20.sp,
                 backArrow = true,
-                navController = navController
+                navController = vm.getNav()
             )
 
-            MainContainer(hasBottomNav = false) {
-                MovieClip(movie.backdrop_url)
-                TitleFont(movie.title)
-                InteractionPane(movie, navController, reviewList)
-                ActorList(actorList = actorList, header = "Cast", navController = navController)
-                DescriptionSection(movie.description)
-                SimilarMoviesSection(movie, similarMovies, navController)
-                if(!reviewList.isEmpty()){
-                    UserReviewSection(reviewList)
+            LoadingWrapper(vm.isLoading) {
+                MainContainer(hasBottomNav = true) {
+                    MovieClip(vm.movie.value.backdrop_url)
+                    TitleFont(vm.movie.value.title)
+                    InteractionPane(vm)
+                    ActorList(vm)
+                    DescriptionSection(vm.movie.value.description)
+                    SimilarMoviesSection(vm)
+                    if(!vm.reviewList.isEmpty()){
+                        UserReviewSection(vm)
+                    }
                 }
+
             }
+            BottomBar(navController = vm.getNav())
+
+
 
 
 
@@ -165,13 +134,11 @@ fun MediaDetails(
 
 @Composable
 fun InteractionPane(
-    movie: MovieModel,
-    navController: NavHostController,
-    reviewList: List<ReviewModel>
+    vm : MediaDetailsViewModel
 ) {
     val size = Size();
     Text(
-        text = movie.tagline,
+        text = vm.movie.value.tagline,
         fontSize = 15.sp,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Italic,
@@ -188,14 +155,14 @@ fun InteractionPane(
             .fillMaxWidth()
             .height((size.height() / 5).dp)
     ) {
-        SaveButton(movie, navController = navController)
-        RatingPanel(movie, navController = navController, reviewList)
+        SaveButton(vm)
+        RatingPanel(vm)
     }
 
 }
 
 @Composable
-fun SaveButton(movie: MovieModel, navController: NavHostController) {
+fun SaveButton(vm : MediaDetailsViewModel) {
     val size = Size();
     Column(
         modifier = Modifier
@@ -206,15 +173,15 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 
     ) {
         Text(
-            text = movie.release_date,
+            text = vm.movie.value.release_date,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier
                 .padding(start = 4.dp, top = 20.dp, bottom = 10.dp)
         )
         Button(
-            onClick = { navController.navigate("mediaDetails/" + movie.id + "/save") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
+            onClick = { vm.saveMovie() },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
@@ -231,9 +198,7 @@ fun SaveButton(movie: MovieModel, navController: NavHostController) {
 
 @Composable
 fun RatingPanel(
-    movie: MovieModel,
-    navController: NavHostController,
-    reviewList: List<ReviewModel>
+    vm : MediaDetailsViewModel
 ) {
     val size = Size();
     var avg = 0f
@@ -253,17 +218,17 @@ fun RatingPanel(
             contentPadding = PaddingValues(horizontal = 5.dp),
 
             ) {
-            RatingStars(movie.rating)
+            RatingStars(vm.movie.value.rating)
         }
 
         Button(
-            onClick = { navController.navigate("mediaDetails/" + movie.id + "/review") },
+            onClick = { vm.reviewMovie() },
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
         ) {
             Row {
-                Text("Review")
+                Text("Review", modifier = Modifier.padding(top = 4.dp))
                 InlineIcon(resourceID = R.drawable.edit_playlist)
             }
 
@@ -277,11 +242,11 @@ fun RatingPanel(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
             contentPadding = PaddingValues(horizontal = 15.dp)
         ) {
-            if (!reviewList.isEmpty()) {
-                reviewList.forEach() { review -> avg += review.rating }
+            if (!vm.reviewList.isEmpty()) {
+                vm.reviewList.forEach() { review -> avg += review.rating }
 
 
-                avg /= reviewList.size;
+                avg /= vm.reviewList.size;
 
 
             }
@@ -349,7 +314,7 @@ private fun ReviewStars(rating: Number) {
 
 
 @Composable
-fun DescriptionSection(desc: String) {
+private fun DescriptionSection(desc: String) {
     Text(
         "Description",
         fontWeight = FontWeight.Bold,
@@ -372,7 +337,7 @@ fun DescriptionSection(desc: String) {
 }
 
 @Composable
-fun UserReviewSection(reviewList: List<ReviewModel>) {
+fun UserReviewSection(vm: MediaDetailsViewModel) {
 
     Text(
         "User reviews",
@@ -388,13 +353,13 @@ fun UserReviewSection(reviewList: List<ReviewModel>) {
     )
 
     Column() {
-        reviewList.forEach() { review -> UserReviewCard(review) }
+        vm.reviewList.forEach() { review -> UserReviewCard(vm,review) }
     }
 
 }
 
 @Composable
-private fun UserReviewCard(review: ReviewModel) {
+private fun UserReviewCard(vm: MediaDetailsViewModel, review: ReviewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -408,7 +373,7 @@ private fun UserReviewCard(review: ReviewModel) {
                 .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
 
         ) {
-            InnerReviewContainer(review)
+            InnerReviewContainer(vm, review)
         }
 
     }
@@ -417,7 +382,7 @@ private fun UserReviewCard(review: ReviewModel) {
 }
 
 @Composable
-private fun InnerReviewContainer(review: ReviewModel) {
+private fun InnerReviewContainer(vm: MediaDetailsViewModel, review: ReviewModel) {
     var expanded by remember { mutableStateOf(false) }
     var moreText by remember {
         mutableStateOf("More")
@@ -427,6 +392,16 @@ private fun InnerReviewContainer(review: ReviewModel) {
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            ClickableText(
+                text = AnnotatedString("@" + review.username),
+                style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                ),
+                onClick = {
+                    vm.getNav().navigate("ouprofiles/"+review.userid)
+                })
+            /*
             Text(
                 modifier = Modifier.height(30.dp),
                 text = "@" + review.username,
@@ -434,10 +409,13 @@ private fun InnerReviewContainer(review: ReviewModel) {
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis
             )
+
+             */
             ReviewStars(review.rating * 2)
         }
 
         if (expanded) {
+
             Text(
                 review.reviewText,
                 color = Color.White,
@@ -476,26 +454,26 @@ private fun InnerReviewContainer(review: ReviewModel) {
 }
 
 @Composable
-private fun ActorList(actorList: List<CreditsModel>, modifier: Modifier = Modifier, header: String, navController : NavHostController) {
+private fun ActorList(vm : MediaDetailsViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 12.dp)
     ) {
         Text(
-            text = header,
+            text = "",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier
                 .padding(8.dp)
         )
-        LazyRow(modifier = modifier) {
-            items(actorList) { actor ->
+        LazyRow(modifier = Modifier) {
+            items(vm.actorList) { actor ->
                 ActorCard(
                     actor = actor,
                     modifier = Modifier.padding(8.dp),
-                    navController
+                    vm.getNav()
                 )
             }
         }
@@ -507,7 +485,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp), // Customize the shape if needed
-        color = Color(0xFFECB0E6)
+        color = Color(0xFF430B3D)
     ) {
         Column (
             //verticalArrangement = Arrangement.Center,
@@ -519,7 +497,10 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
-                    .height(135.dp),
+                    .height(135.dp)
+                    .clickable {
+                        navController.navigate("actor/" + actor.id)
+                    },
                 contentScale = ContentScale.FillBounds
             )
 
@@ -528,19 +509,19 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 text = actor.character,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 minLines = 2,
                 lineHeight = 12.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
 
             )
             Text(
                 text = actor.name,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black,
+                color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 minLines = 2,
@@ -553,7 +534,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
     }
 }
 @Composable
-private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieModel>, nav : NavHostController){
+private fun SimilarMoviesSection(vm: MediaDetailsViewModel){
 
     Box(
         modifier = Modifier
@@ -561,7 +542,7 @@ private fun SimilarMoviesSection(movie : MovieModel, similarList : List<MovieMod
             .height(1.dp)
             .background(color = Color(0xFFB6842D))
     )
-    MovieList(movieList = similarList, header = "Movies similar to " + movie.title , navController = nav)
+    MovieList(movieList = vm.similarMovies, header = "Movies similar to " + vm.movie.value.title , navController = vm.getNav())
 
 }
 

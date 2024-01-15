@@ -23,6 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +40,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.controller.AppContext
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
@@ -51,6 +57,20 @@ import com.example.synema.viewmodel.ProfileViewModel
 fun Profile(navController : NavHostController, profileState: MutableState<ProfileModel>) {
     val context = AppContext.getInstance();
     println("Pic: " + context.getProfileState().value.profilePicture)
+
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getOwnReviews(profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+                reviewList = reviewModel
+            }
+        }
+    }
+
     GradientBox(){
         Column {
             TopBar(title = "My Profile", Alignment.Center)
@@ -58,7 +78,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture(profileState.value)
-                FollowersReviewsStatus(76, 88)
+                FollowersReviewsStatus(76, reviewList.size)
                 PersonalDescription()
                 Directories(context.getNav())
 
@@ -119,8 +139,8 @@ private fun ProfileNameHeader(name : String){
 }
 @Composable
 private fun EditProfileButton(){
-    var c = LocalContext.current;
-    var profileViewModel : ProfileViewModel = viewModel()
+    val c = LocalContext.current;
+    val profileViewModel : ProfileViewModel = viewModel()
     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
         .padding(30.dp)
         .fillMaxWidth()){
@@ -155,7 +175,8 @@ private fun PersonalDescription() {
                 .align(Alignment.Center)
 
         ) {
-            Text( AppContext.getInstance().getProfileState().value.bio,
+            Text(
+                AppContext.getInstance().getProfileState().value.bio,
                 color = Color(0xFFC0AEDC),
                 modifier = Modifier
                     .fillMaxWidth()

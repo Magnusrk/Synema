@@ -3,6 +3,7 @@ package com.example.synema.Data.movies
 import android.annotation.SuppressLint
 import android.util.Log
 import com.example.synema.controller.MovieAPI
+import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
 import com.example.synema.model.MovieModel
@@ -68,6 +69,30 @@ class MovieApiSource : MovieDataSource {
             }
 
             override fun onFailure(call: Call<List<CreditsModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+    }
+
+    override fun getActorDetails(actor_id: String, callback: (ApiResponse<ActorModel>) -> Unit) {
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<ActorModel> = api.getActorDetails(actor_id)
+
+        call.enqueue(object : Callback<ActorModel> {
+            override fun onResponse(
+                call: Call<ActorModel>,
+                response: Response<ActorModel>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                } else {
+                    callback(ApiResponse(null, true, "Couldn't load credits"))
+                }
+            }
+
+            override fun onFailure(call: Call<ActorModel>, t: Throwable) {
                 callback(ApiResponse(null, true, t.message!!));
             }
 
@@ -266,6 +291,34 @@ class MovieApiSource : MovieDataSource {
 
     }
 
+    override fun starringMovies(
+        actorId: String,
+        callback: (ApiResponse<List<MovieModel>>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<MovieModel>> = api.starringMovies(actorId)
+
+        call.enqueue(object : Callback<List<MovieModel>> {
+            override fun onResponse(
+                call: Call<List<MovieModel>>,
+                response: Response<List<MovieModel>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                } else {
+                    callback(ApiResponse(null, true, "Couldn't load movies"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<MovieModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+
+    }
+
     override fun createReviewForMovie(
         movieId: String,
         review: String,
@@ -372,6 +425,37 @@ class MovieApiSource : MovieDataSource {
         val api = retrofit.create(MovieAPI::class.java)
 
         val getReviewsCall: Call<List<ReviewModel>> = api.getOwnReviews(token)
+
+        getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onResponse(
+                call: Call<List<ReviewModel>>,
+                response: Response<List<ReviewModel>>
+            ) {
+                if (response.isSuccessful) {
+                    val reviews = response.body()
+                    callback(ApiResponse(result = reviews, statusMessage = "success"))
+
+                } else {
+                    // Failed to fetch reviews or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<ReviewModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
+    override fun getOtherUserReviews(
+        userId: String,
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val getReviewsCall: Call<List<ReviewModel>> = api.getOtherUserReviews(userId, token)
 
         getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
             @SuppressLint("SuspiciousIndentation")

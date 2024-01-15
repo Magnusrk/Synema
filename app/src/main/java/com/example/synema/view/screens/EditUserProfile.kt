@@ -45,6 +45,7 @@ import com.example.synema.view.components.TopBar
 
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
+    val dataSource = DependencyProvider.getInstance().getUserSource();
 
     var updateName by remember { mutableStateOf(profileState.value.name) }
     var updateBio by remember { mutableStateOf(profileState.value.bio) }
@@ -54,9 +55,11 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
+                /*ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))*/
                 ProfilePicture(profileState.value) { selectedImageUri ->
                     updatePic = selectedImageUri.toString()
                 }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -79,8 +82,13 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                             profilePicture = updatePic
                         )
 
+                         */
+                        profileState.value.bio=updateBio
+                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
+                            navController.popBackStack()
+                        }
                         // Navigate back to the profile screen
-                        navController.popBackStack()
+
                     })
                 }
                 // Text field for editing name
@@ -95,6 +103,11 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledContainerColor = Color(0xFF736477),
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,
+                        focusedLabelColor = Color.White,
+                        disabledLabelColor = Color.White,
+                        errorLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White
+                        //disabledTextColor = Color.LightGray
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -113,16 +126,21 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledContainerColor = Color(0xFF736477),
                         unfocusedTextColor = Color.White,
                         focusedTextColor = Color.White,
-                        disabledTextColor = Color.LightGray
+                        disabledTextColor = Color.LightGray,
+                        focusedLabelColor = Color.White,
+                        disabledLabelColor = Color.White,
+                        errorLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 )
-
             }
             BottomBar(navController = navController )
         }
+    }
+}
     }
 }
 
@@ -185,7 +203,7 @@ fun ProfilePicture(
 
 
 /*
-@Composable
+/*@Composable
 private fun ProfilePicture(currentUser: ProfileModel) {
 
     Row(
@@ -217,44 +235,4 @@ private fun ProfilePicture(currentUser: ProfileModel) {
         }
     }
 }
-
-@Composable
-fun ProfileImage(currentUser: ProfileModel){
-    val imageUri = rememberSaveable{ mutableStateOf("") }
-    val painter = rememberImagePainter(
-        if(imageUri.value.isEmpty())
-        R.drawable.profile_picture_placeholder
-        else
-        imageUri.value
-    )
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()
-    ){ uri: Uri? ->
-        uri?.let{imageUri.value = it.toString()}
-    }
-    println(currentUser.name)
-    println(currentUser.profilePicture)
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Card(
-            shape = CircleShape,
-            modifier = Modifier
-                .padding(8.dp)
-                .size(100.dp)
-        ){
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .clickable{launcher.launch("image/*") },
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-}
 */
- */
