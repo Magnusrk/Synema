@@ -223,7 +223,7 @@ fun RatingPanel(
             contentPadding = PaddingValues(horizontal = 15.dp)
         ) {
             Row {
-                Text("Review")
+                Text("Review", modifier = Modifier.padding(top = 4.dp))
                 InlineIcon(resourceID = R.drawable.edit_playlist)
             }
 
