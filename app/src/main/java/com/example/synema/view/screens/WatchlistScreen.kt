@@ -28,20 +28,14 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -49,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.WatchlistModel
 import androidx.compose.ui.window.Popup
@@ -73,11 +66,11 @@ fun WatchList() {
             Column {
                 TopBar(title = "My Watchlists", alignment = Alignment.Center)
                 MainContainer(hasBottomNav = true) {
-                    CreateWatchlistPopup(vm);
+                    CreateWatchlistPopup(vm)
                     CreateDeletePopup(vm)
                     newWatchlist(vm)
                     wathclistList(vm)
-                };
+                }
                 BottomBar(navController = vm.getNav())
             }
         }
@@ -345,7 +338,7 @@ private fun newWatchlist(vm: WatchlistViewModel) {
             .width(100.dp)
             .background(Color(0xFFB15FA8))
             .clickable {
-                vm.popupControl.value = true;
+                vm.popupControl.value = true
 
             }
         )

@@ -1,9 +1,13 @@
 package com.example.synema.view.screens
 
 import GradientBox
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +19,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -25,6 +32,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
@@ -58,8 +67,9 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
-
+                ProfilePicture(profileState.value, imageUrl = "https://postimg.cc/4nzy4Qwy") { selectedImageUri ->
+                    updatePic = selectedImageUri.toString()
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -132,7 +142,61 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
 
 }
 
+@Composable
+fun ProfilePicture(
+    currentUser: ProfileModel,
+    imageUrl: String,
+    onImageSelected: (Uri) -> Unit
+) {
+    var imageUri by rememberSaveable { mutableStateOf(currentUser.profilePicture) }
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            imageUri = it.toString()
+            onImageSelected(it)
+        }
+    }
 
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Card(
+            shape = CircleShape,
+            modifier = Modifier
+                .padding(8.dp)
+                .size(145.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Black, CircleShape)
+                .clickable {
+                    // Launch the image picker when the profile picture is clicked
+                    launcher.launch("image/*")
+                }
+        ) {
+            if (imageUri.isEmpty()) {
+                Image(
+                    painter = painterResource(R.drawable.profile_picture_placeholder),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    }
+}
+/*
 @Composable
 private fun ProfilePicture(currentUser: ProfileModel) {
 
@@ -165,3 +229,44 @@ private fun ProfilePicture(currentUser: ProfileModel) {
         }
     }
 }
+
+@Composable
+fun ProfileImage(currentUser: ProfileModel){
+    val imageUri = rememberSaveable{ mutableStateOf("") }
+    val painter = rememberImagePainter(
+        if(imageUri.value.isEmpty())
+        R.drawable.profile_picture_placeholder
+        else
+        imageUri.value
+    )
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()
+    ){ uri: Uri? ->
+        uri?.let{imageUri.value = it.toString()}
+    }
+    println(currentUser.name)
+    println(currentUser.profilePicture)
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Card(
+            shape = CircleShape,
+            modifier = Modifier
+                .padding(8.dp)
+                .size(100.dp)
+        ){
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clickable{launcher.launch("image/*") },
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
+*/
+ */
