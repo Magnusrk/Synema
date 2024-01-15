@@ -219,7 +219,11 @@ fun ReviewBox(reviewText: MutableState<String>) {
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White,
                 focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                unfocusedTextColor = Color.White,
+                focusedLabelColor = Color.White,
+                disabledLabelColor = Color.White,
+                errorLabelColor = Color.White,
+                unfocusedLabelColor = Color.White
             )
 
         )
