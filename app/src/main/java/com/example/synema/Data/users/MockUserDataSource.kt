@@ -70,12 +70,13 @@ class MockUserDataSource() : UserDataSource {
 
     override fun editbio(
         id: String,
-        profileModel: ProfileModel,
+        bio: String,
         token: String,
-        callback: (ApiResponse<ProfileModel>) -> Unit
+        callback: (ApiResponse<Boolean>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
+
 
     override fun editProfilePicture(
         id: String,
