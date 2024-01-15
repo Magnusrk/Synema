@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.controller.AppContext
 import com.example.synema.model.CreditsModel
+import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ReviewModel
 
@@ -23,6 +24,8 @@ class MediaDetailsViewModel : ViewModel() {
     val source = DependencyProvider.getInstance().getMovieSource();
 
     var reviewList = mutableStateListOf<ReviewModel>()
+
+    var imagesList = mutableStateListOf<ImagesModel>()
 
     var similarMovies = mutableStateListOf<MovieModel>()
 
@@ -52,6 +55,7 @@ class MediaDetailsViewModel : ViewModel() {
         loadMoviesAndSimilar()
         loadReviews()
         loadCredits()
+        loadImages()
     }
 
     fun loadMoviesAndSimilar(){
@@ -77,7 +81,14 @@ class MediaDetailsViewModel : ViewModel() {
         }
     }
 
-
+    fun loadImages(){
+        source.loadImages(movieID.value, profileState.token){
+            if (it.successful()) {
+                imagesList.clear()
+                imagesList.addAll(it.getResult()!!)
+            }
+        }
+    }
 
 
     fun loadReviews(){
