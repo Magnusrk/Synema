@@ -25,6 +25,14 @@ fun MainView() {
         composable("watchlists") { WatchList() }
         composable("myreviews") {MyReviews(navController, profileState)}
         composable("socials") {OtherUsers(navController, profileState) }
+        composable("otherUserReviews/{user_id}",
+            arguments = listOf(navArgument("user_id") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            OtherUsersReviews(
+                backStackEntry.arguments?.getString("user_id"),navController,profileState
+            )
+        }
         composable("ouprofiles/{user_id}",
         arguments = listOf(navArgument("user_id") { type = NavType.StringType })
         )

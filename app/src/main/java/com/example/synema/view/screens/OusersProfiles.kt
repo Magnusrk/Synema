@@ -47,6 +47,7 @@ import com.example.synema.R
 import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
@@ -78,6 +79,19 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
         }
     }
 
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getOtherUserReviews(userid.toString(), profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+                reviewList = reviewModel
+            }
+        }
+    }
+
     val context = AppContext.getInstance();
     GradientBox(){
 
@@ -87,9 +101,9 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
                 EditProfileButton()
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, 955)
+                FollowersReviewsStatus(7522, reviewList.size)
                 PersonalDescription(user.bio)
-                Directories(context.getNav())
+                Directories(userid, context.getNav())
 
             }
             BottomBar(navController = navController)
@@ -213,7 +227,7 @@ private fun DirectoryCard(text : String, navController: NavHostController, route
 }
 
 @Composable
-private fun Directories(navController: NavHostController) {
+private fun Directories(userid: String?, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -228,7 +242,7 @@ private fun Directories(navController: NavHostController) {
         DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Reviews", navController = navController, route = "myreviews")
+        DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
 
     }
 
