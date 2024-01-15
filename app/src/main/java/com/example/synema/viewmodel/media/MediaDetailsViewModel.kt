@@ -81,7 +81,7 @@ class MediaDetailsViewModel : ViewModel() {
 
 
     fun loadReviews(){
-        source.getReviewsForMovie(movieID.toString(), profileState.token) {
+        source.getReviewsForMovie(movieID.value, profileState.token) {
             if (it.successful()) {
                 it.getResult()?.let { reviewModel ->
                     reviewList.clear()
