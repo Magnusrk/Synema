@@ -66,5 +66,21 @@ public interface UserAPI {
         @Path("id") id: String,
         @Body profileModel: ProfileModel,
         @Header("authorization") token : String): Call<ProfileModel>
+
+    @GET("/user/{userid}/followers")
+    fun getFollowers(
+        @Path("userid") id: String,
+        @Body profileModel: ProfileModel,
+        @Header("authorization") token : String): Call<ProfileModel>
+    @GET("/user/{userid}/following")
+    fun getFollowing(
+        @Path("userid") id: String,
+        @Header("authorization") token : String): Call<ProfileModel>
+
+    @POST("/user/{currentUserId}/follow/{userid}")
+    fun followUser(
+        @Path("userid") id: String,
+        @Path("currentUserId") currentUserId: String,
+        @Header("authorization") token : String): Call<ProfileModel>
 }
 

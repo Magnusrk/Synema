@@ -87,6 +87,31 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun getFollowers(
+        userid: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFollowing(
+        userid: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun followUser(
+        userid: String,
+        currentUserId: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
 
 }
 
