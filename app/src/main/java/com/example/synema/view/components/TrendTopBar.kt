@@ -75,7 +75,7 @@ fun TrendTopBar(
                         .background(Color.Black.copy(alpha = 0.6f))
                         .align(Alignment.BottomStart)
                 ) {
-                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 8.dp, end = 8.dp))
+                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 15.dp, end = 15.dp))
                 }
             }
 
