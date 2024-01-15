@@ -4,6 +4,7 @@ import com.example.synema.R
 import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
+import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -74,6 +75,14 @@ class MockMovieDataSource : MovieDataSource {
         id: String,
         token: String,
         callback: (ApiResponse<List<CreditsModel>>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun loadImages(
+        id: String,
+        token: String,
+        callback: (ApiResponse<List<ImagesModel>>) -> Unit
     ) {
         TODO("Not yet implemented")
     }

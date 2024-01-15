@@ -3,6 +3,7 @@ package com.example.synema.Data.movies
 import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
+import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -14,6 +15,8 @@ interface MovieDataSource {
     fun loadMovie(id: String, callback: (ApiResponse<MovieModel>) -> Unit);
     fun loadMovies() : List<MovieModel>;
     fun loadCredits(id: String,token: String, callback: (ApiResponse <List<CreditsModel>>) -> Unit)
+
+    fun loadImages(id: String, token: String, callback: (ApiResponse<List<ImagesModel>>) -> Unit)
 
     fun getActorDetails(actor_id: String, callback: (ApiResponse <ActorModel>) -> Unit)
 

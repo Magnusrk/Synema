@@ -75,7 +75,7 @@ fun TrendTopBar(
                         .background(Color.Black.copy(alpha = 0.6f))
                         .align(Alignment.BottomStart)
                 ) {
-                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 5.dp, end = 5.dp))
+                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 15.dp, end = 15.dp))
                 }
             }
 
@@ -84,33 +84,4 @@ fun TrendTopBar(
     }
 }
 
-
-// working trend top bar unscrollable
-/*
-@Composable
-fun TrendTopBar(
-   // search: Boolean = false,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth() // set the width to the maximum available space
-            .height(272.dp) // Adjust the height as needed
-           // .background(Color.Transparent) // You can set a transparent background
-
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val imageModifier = Modifier
-                .size(400.dp)
-            Image(
-                //adds image
-                painter = painterResource(id = R.drawable.intersteller),
-                contentDescription = null,
-                contentScale = ContentScale.Crop, //crop image to fit the container
-                modifier = imageModifier // apply the imagemodifier to the image
-            )
-        }
-    }
-}*/
 
