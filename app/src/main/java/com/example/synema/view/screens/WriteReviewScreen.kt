@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
@@ -54,6 +55,7 @@ import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.view.components.BlackGround
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.DarkGradient
 import com.example.synema.view.components.InlineIcon
@@ -112,7 +114,7 @@ fun WriteReviewScreen(
         }
     }
 
-    DarkGradient {
+    BlackGround {
         Column {
             TopBar(
                 title = "Review ${movie.title}",
@@ -128,7 +130,7 @@ fun WriteReviewScreen(
                         .padding(15.dp)
                         .fillMaxWidth()
                         .height(75.dp)
-                        .background(color = Color(0xFF30072B), shape = RoundedCornerShape(4.dp))
+                        .background(color = Color(0xFF1F1B1F), shape = RoundedCornerShape(4.dp))
                 ) {
                     RatingStars(rating)
                 }
@@ -153,7 +155,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF861B41)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAC215D)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -172,7 +174,7 @@ fun WriteReviewScreen(
                                 }
                             },
                             shape = RoundedCornerShape(20),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4E3881)),
                             contentPadding = PaddingValues(horizontal = 15.dp),
                             modifier = Modifier.size(width = 150.dp, height = 50.dp)
                         ) {
@@ -197,7 +199,7 @@ fun ReviewBox(reviewText: MutableState<String>) {
             .fillMaxWidth()
             .height(400.dp)
             .padding(horizontal = 15.dp, vertical = 10.dp)
-            .background(Color(0xFF430B3D), shape = RoundedCornerShape(4.dp)),
+            .background(Color(0xFF302430), shape = RoundedCornerShape(4.dp)),
     )
     {
         OutlinedTextField(
@@ -241,17 +243,24 @@ private fun RatingStars(rating: MutableState<Int>) {
             contentPadding = PaddingValues(horizontal = 5.dp),
             border = BorderStroke(0.dp, Color.Transparent),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier
+                .fillMaxHeight()
+
+
         ) {
             if (rating.value > 0) {
                 InlineIcon(
-                    resourceID = R.drawable.icon_star,
+                    resourceID = R.drawable.new_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFFB6842D)
-                )
+                    tint = Color(0xFF4E3881)
+
+                    )
             } else {
-                InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
+                InlineIcon(
+                    resourceID = R.drawable.new_star, size = size, spacing = spacing,
+                    tint = Color(0xFF9793B9)
+                )
             }
         }
         Button(
@@ -263,13 +272,17 @@ private fun RatingStars(rating: MutableState<Int>) {
         ) {
             if (rating.value > 1) {
                 InlineIcon(
-                    resourceID = R.drawable.icon_star,
+                    resourceID = R.drawable.new_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFFB6842D)
+                    tint = Color(0xFF673881)
+
                 )
             } else {
-                InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
+                InlineIcon(
+                    resourceID = R.drawable.new_star, size = size, spacing = spacing,
+                    tint = Color(0xFF9793B9)
+                )
             }
         }
         Button(
@@ -277,17 +290,26 @@ private fun RatingStars(rating: MutableState<Int>) {
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()
-        ) {
+            modifier = Modifier
+                .fillMaxHeight(),
+
+
+            ) {
+
             if (rating.value > 2) {
                 InlineIcon(
-                    resourceID = R.drawable.icon_star,
+                    resourceID = R.drawable.new_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFFB6842D)
+                    tint = Color(0xFF7B3599)
+
+
                 )
             } else {
-                InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
+                InlineIcon(
+                    resourceID = R.drawable.new_star, size = size, spacing = spacing,
+                    tint = Color(0xFF9793B9)
+                )
             }
         }
         Button(
@@ -298,14 +320,20 @@ private fun RatingStars(rating: MutableState<Int>) {
             modifier = Modifier.fillMaxHeight()
         ) {
             if (rating.value > 3) {
+
                 InlineIcon(
-                    resourceID = R.drawable.icon_star,
+                    resourceID = R.drawable.new_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFFB6842D)
+                    tint = Color(0xFFA72BA4)
+
+
                 )
             } else {
-                InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
+                InlineIcon(
+                    resourceID = R.drawable.new_star, size = size, spacing = spacing,
+                    tint = Color(0xFF9793B9)
+                )
             }
         }
         Button(
@@ -313,17 +341,22 @@ private fun RatingStars(rating: MutableState<Int>) {
             border = BorderStroke(0.dp, Color.Transparent),
             contentPadding = PaddingValues(horizontal = 5.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Transparent),
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier
+                .fillMaxHeight()
+
         ) {
             if (rating.value > 4) {
                 InlineIcon(
-                    resourceID = R.drawable.icon_star,
+                    resourceID = R.drawable.new_star,
                     size = size,
                     spacing = spacing,
-                    tint = Color(0xFFB6842D)
+                    tint = Color(0xFFAC215D)
                 )
             } else {
-                InlineIcon(resourceID = R.drawable.whitestar, size = size, spacing = spacing)
+                InlineIcon(
+                    resourceID = R.drawable.new_star, size = size, spacing = spacing,
+                    tint = Color(0xFF9793B9)
+                )
             }
         }
     }

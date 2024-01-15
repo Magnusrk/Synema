@@ -1,7 +1,9 @@
 package com.example.synema.view.components
 
+import android.text.style.BackgroundColorSpan
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
