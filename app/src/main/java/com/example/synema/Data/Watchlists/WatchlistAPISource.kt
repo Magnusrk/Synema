@@ -72,6 +72,28 @@ class WatchlistAPISource: WatchlistDataSource {
         })
     }
 
+    override fun read_otherUsers_db(userId : String, token : String, callback: (ApiResponse<List<WatchlistModel>>) -> Unit) {
+        val api = retrofit.create(WatchlistAPI::class.java)
+        Log.d("Main", token);
+
+        val getAllWatchlistsCall: Call<List<WatchlistModel>> = api.read_otherUsers_db(userId, token)
+
+        getAllWatchlistsCall.enqueue(object : Callback<List<WatchlistModel>> {
+            override fun onResponse(call: Call<List<WatchlistModel>>, response: Response<List<WatchlistModel>>) {
+                if (response.isSuccessful) {
+                    callback(ApiResponse(result = response.body()!!, statusMessage = "success"))
+                } else {
+                    // Failed to fetch watchlists
+                    callback(ApiResponse(result = null, statusMessage = "failed", error = true))
+                }
+            }
+
+            override fun onFailure(call: Call<List<WatchlistModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString(),error=true))
+            }
+        })
+    }
+
 
 
      override fun getWatchlistById(watchlistId: String,token: String, callback: (ApiResponse<WatchlistModel>) -> Unit) {

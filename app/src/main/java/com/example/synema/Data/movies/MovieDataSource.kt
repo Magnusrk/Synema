@@ -28,6 +28,8 @@ interface MovieDataSource {
     fun createReviewForMovie(movieId: String, review: String,rating: Int, token: String, profileModel: ProfileModel, callback: (ApiResponse<String>) -> Unit)
     fun getOwnReviews(token: String, callback: (ApiResponse<List<ReviewModel>>) -> Unit)
 
+    fun getOtherUserReviews(userId: String, token: String, callback: (ApiResponse<List<ReviewModel>>) -> Unit)
+
     fun delete_review(movieId: String, token: String, profileModel: ProfileModel, callback: (ApiResponse<String>) -> Unit)
 
 }

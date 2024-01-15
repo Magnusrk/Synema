@@ -20,6 +20,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +40,7 @@ import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
+import com.example.synema.model.ReviewModel
 import com.example.synema.ui.theme.SynemaTheme
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.LoadingWrapper
@@ -50,7 +55,20 @@ import com.example.synema.viewmodel.SearchViewModel
 @Composable
 fun OtherUsers(navController: NavHostController, profileState: MutableState<ProfileModel>) {
 
-    var vm: SearchUsersViewModel = viewModel()
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var reviewList : List<ReviewModel> by remember {
+        mutableStateOf(listOf())
+    }
+
+    source.getOwnReviews(profileState.value.token){
+        if (it.successful()) {
+            it.getResult()?.let {reviewModel ->
+                reviewList = reviewModel
+            }
+        }
+    }
+
+    val vm: SearchUsersViewModel = viewModel()
     vm.initSearch()
     SynemaTheme {
             GradientBox {
@@ -81,7 +99,6 @@ fun OtherUsers(navController: NavHostController, profileState: MutableState<Prof
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UsersList(vm : SearchUsersViewModel) {
-
         LoadingWrapper(vm.isLoading) {
             LazyColumn{
                 items(vm.usersList.size) { index ->//change this to userList

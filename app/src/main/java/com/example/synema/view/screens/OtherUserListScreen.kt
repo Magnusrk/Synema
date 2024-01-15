@@ -44,7 +44,7 @@ import com.example.synema.viewmodel.Watchlists.WatchlistViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyListScreen(
+fun OtherUserListScreen(
     watchlistID: String?
 ) {
 
@@ -61,7 +61,7 @@ fun MyListScreen(
         LoadingWrapper (vm.isLoading){
         Column {
             TopBar(
-                title = "My List",
+                title = "List",
                 alignment = Alignment.Center,
                 backArrow = true,
                 navController = vm.getNav()
@@ -115,13 +115,15 @@ private fun ListDetails(vm : MyListViewModel, watchlistID: String?){
                         vm.promptDeletion(movie1.id.toString(), watchlistID)
                     }
                 }) {
-
+                /*
                 Image(
                     painter = painterResource(id = R.drawable.delete),
                     contentDescription = null,
                     modifier = Modifier.size(30.dp),
                     colorFilter = ColorFilter.tint(Color.White)
                 )
+
+                 */
             }
 
 

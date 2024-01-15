@@ -395,4 +395,35 @@ class MovieApiSource : MovieDataSource {
         })
     }
 
+    override fun getOtherUserReviews(
+        userId: String,
+        token: String,
+        callback: (ApiResponse<List<ReviewModel>>) -> Unit
+    ) {
+        val api = retrofit.create(MovieAPI::class.java)
+
+        val getReviewsCall: Call<List<ReviewModel>> = api.getOtherUserReviews(userId, token)
+
+        getReviewsCall.enqueue(object : Callback<List<ReviewModel>> {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onResponse(
+                call: Call<List<ReviewModel>>,
+                response: Response<List<ReviewModel>>
+            ) {
+                if (response.isSuccessful) {
+                    val reviews = response.body()
+                    callback(ApiResponse(result = reviews, statusMessage = "success"))
+
+                } else {
+                    // Failed to fetch reviews or other error occurred
+                    callback(ApiResponse(result = null, statusMessage = "failed"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<ReviewModel>>, t: Throwable) {
+                callback(ApiResponse(result = null, statusMessage = t.message.toString()))
+            }
+        })
+    }
+
 }
