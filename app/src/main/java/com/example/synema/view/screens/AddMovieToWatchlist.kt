@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -30,10 +31,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.WatchlistModel
@@ -168,3 +171,65 @@ private fun watchlistCard(watchlist: WatchlistModel, modifier: Modifier = Modifi
 
         }
     }
+
+@Composable
+private fun ImageCardRow(movieUrls: List<String>) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        //verticalArrangement = Arrangement.SpaceEvenly,
+        // horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2F),
+            //horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            ImageCard(movieUrls[0], modifier = Modifier.weight(2F))
+            ImageCard(movieUrls[1], modifier = Modifier.weight(2F))
+        }
+
+        //Spacer(modifier = Modifier.height(2.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2F),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+
+            ) {
+            ImageCard(
+                movieUrls[2], modifier = Modifier
+                    .fillMaxSize()
+                //.padding(bottom = 2.dp)
+            )
+            ImageCard(
+                movieUrls[3], modifier = Modifier
+                    .fillMaxSize()
+                //.padding(bottom = 2.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImageCard(imageUrl: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .background(Color(0xFFB15FA8), /*shape = RoundedCornerShape(4.dp)*/)
+    ) {
+        if (imageUrl != "https://i0.wp.com/godstedlund.dk/wp-content/uploads/2023/04/placeholder-5.png?w=1200&ssl=1") {
+            AsyncImage(
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize(),
+                //.clip(RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop,
+                model = imageUrl
+            )
+        }
+    }
+
+}

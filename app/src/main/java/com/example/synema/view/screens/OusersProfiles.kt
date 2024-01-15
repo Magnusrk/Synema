@@ -236,7 +236,7 @@ private fun Directories(userid: String?, navController: NavHostController) {
 
         // Button(onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10) ) {
 
-        DirectoryCard("Watchlist", navController = navController, route = "watchlists")
+        DirectoryCard("Watchlist", navController = navController, route = "otherUserLists/$userid")
         Spacer(modifier = Modifier.height(8.dp))
         //}
         DirectoryCard("Followers", navController = navController, route = "home")

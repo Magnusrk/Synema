@@ -16,6 +16,9 @@ interface WatchlistDataSource {
 
     fun read_db(token: String, callback: (ApiResponse<List<WatchlistModel>>) -> Unit)
 
+    fun read_otherUsers_db(userId: String, token: String, callback: (ApiResponse<List<WatchlistModel>>) -> Unit)
+
+
     fun addMovieToWatchlist(
         watchlistId: String,
         movieId: String,

@@ -38,6 +38,12 @@ public interface WatchlistAPI {
     @GET("/watchlist")
     abstract fun read_db(@Header("authorization") token : String): Call<List<WatchlistModel>>
 
+    @GET("/watchlist/user/{user_id}")
+    abstract fun read_otherUsers_db(
+        @Path("user_id") userId: String,
+        @Header("authorization") token : String): Call<List<WatchlistModel>>
+
+
     @GET("/watchlist/{watchlistId}")
     abstract fun getWatchlistById(@Path("watchlistId") watchlistId: String, @Header("authorization") token : String): Call<WatchlistModel>
 
