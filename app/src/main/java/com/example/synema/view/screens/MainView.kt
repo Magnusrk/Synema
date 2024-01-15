@@ -47,11 +47,7 @@ fun MainView() {
             arguments = listOf(navArgument("movieID") { type = NavType.StringType })
         )
         { backStackEntry ->
-            MediaDetails(
-                navController,
-                profileState,
-                backStackEntry.arguments?.getString("movieID")
-            )
+            MediaDetails(backStackEntry.arguments?.getString("movieID"))
         }
         composable("mediaDetails/{movieID}/save",
             arguments = listOf(navArgument("movieID") { type = NavType.StringType })
