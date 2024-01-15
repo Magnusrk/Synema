@@ -66,6 +66,7 @@ import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.model.WatchlistModel
+import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.DarkGradient
 import com.example.synema.view.components.InlineIcon
 import com.example.synema.view.components.LoadingWrapper
@@ -111,7 +112,7 @@ fun MediaDetails(
             )
 
             LoadingWrapper(vm.isLoading) {
-                MainContainer(hasBottomNav = false) {
+                MainContainer(hasBottomNav = true) {
                     MovieClip(vm.movie.value.backdrop_url)
                     TitleFont(vm.movie.value.title)
                     InteractionPane(vm)
@@ -125,6 +126,7 @@ fun MediaDetails(
                 }
 
             }
+            BottomBar(navController = vm.getNav())
 
 
 
@@ -316,7 +318,7 @@ private fun ReviewStars(rating: Number) {
 
 
 @Composable
-fun DescriptionSection(desc: String) {
+private fun DescriptionSection(desc: String) {
     Text(
         "Description",
         fontWeight = FontWeight.Bold,
@@ -499,7 +501,10 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
                 contentDescription = null,
                 modifier = Modifier
                     .width(95.dp)
-                    .height(135.dp),
+                    .height(135.dp)
+                    .clickable {
+                        navController.navigate("actor/" + actor.id)
+                    },
                 contentScale = ContentScale.FillBounds
             )
 

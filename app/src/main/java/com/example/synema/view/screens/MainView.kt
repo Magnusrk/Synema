@@ -75,6 +75,12 @@ fun MainView() {
         { backStackEntry ->
             MediaDetails(backStackEntry.arguments?.getString("movieID"))
         }
+        composable("actor/{actorID}",
+            arguments = listOf(navArgument("actorID") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            ActorDetails(backStackEntry.arguments?.getString("actorID"))
+        }
         composable("mediaDetails/{movieID}/save",
             arguments = listOf(navArgument("movieID") { type = NavType.StringType })
         )

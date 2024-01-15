@@ -1,5 +1,6 @@
 package com.example.synema.controller
 
+import com.example.synema.model.ActorModel
 import com.example.synema.model.CreditsModel
 import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
@@ -27,6 +28,12 @@ public interface MovieAPI {
     @GET("movie/{id}/images")
     abstract fun getImagesById(@Path("id") id: String): Call<List<ImagesModel>>
 
+
+    @GET("actor/{id}")
+    abstract fun getActorDetails(@Path("id") id: String): Call<ActorModel>
+
+    @GET("actor/{actorId}/movies")
+    abstract fun starringMovies(@Path("actorId") actorId: String): Call<List<MovieModel>>
 
     @Headers(
         "Accept: application/json"

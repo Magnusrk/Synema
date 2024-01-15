@@ -139,13 +139,10 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         .fillMaxWidth()
                         .padding(16.dp)
                 )
-
             }
             BottomBar(navController = navController )
         }
-
     }
-
 }
 
 
