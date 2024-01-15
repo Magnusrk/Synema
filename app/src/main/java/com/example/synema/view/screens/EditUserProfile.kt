@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
 import com.example.synema.view.components.BottomBar
@@ -43,9 +44,10 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
 
+
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
-    val dataSource = DependencyProvider.getInstance().getUserSource();
+    val dataSource = DependencyProvider.getInstance().getUserSource()
 
     var updateName by remember { mutableStateOf(profileState.value.name) }
     var updateBio by remember { mutableStateOf(profileState.value.bio) }
@@ -55,7 +57,6 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                /*ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))*/
                 ProfilePicture(profileState.value) { selectedImageUri ->
                     updatePic = selectedImageUri.toString()
                 }
@@ -82,15 +83,21 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                             profilePicture = updatePic
                         )
 
-                         */
-                        profileState.value.bio=updateBio
-                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
-                            navController.popBackStack()
+                        profileState.value.bio = updateBio
+                        dataSource.editbio(profileState.value.id, updateBio, profileState.value.token) {
+                            // Callback function after editing bio
                         }
-                        // Navigate back to the profile screen
 
+                        profileState.value.profilePicture = updatePic
+                        dataSource.editProfilePicture(profileState.value.id, updatePic, profileState.value.token) {
+                            // Callback function after editing profile picture
+                        }
+
+                        // Navigate back to the profile screen
+                        navController.popBackStack()
                     })
                 }
+
                 // Text field for editing name
                 TextField(
                     value = updateName,
@@ -107,7 +114,6 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledLabelColor = Color.White,
                         errorLabelColor = Color.White,
                         unfocusedLabelColor = Color.White
-                        //disabledTextColor = Color.LightGray
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -137,16 +143,10 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         .padding(16.dp)
                 )
             }
-            BottomBar(navController = navController )
+            BottomBar(navController = navController)
         }
     }
 }
-    }
-}
-
-
-
-
 
 @Composable
 fun ProfilePicture(
@@ -195,12 +195,6 @@ fun ProfilePicture(
         }
     }
 }
-
-
-
-
-
-
 
 /*
 /*@Composable

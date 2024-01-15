@@ -77,15 +77,16 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
-
     override fun editProfilePicture(
         id: String,
-        profileModel: ProfileModel,
+        profilePicture: String,
         token: String,
         callback: (ApiResponse<ProfileModel>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
+
+
 
     override fun getFollowers(
         userid: String,

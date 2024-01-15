@@ -192,12 +192,12 @@ class UserAPISource() : UserDataSource {
 
     override fun editProfilePicture(
         id: String,
-        profileModel: ProfileModel,
+        profilePicture: String,
         token: String,
         callback: (ApiResponse<ProfileModel>) -> Unit
     ) {
         val api = retrofit.create(UserAPI::class.java)
-        val call: Call<ProfileModel> = api.editProfilePicture(id,profileModel,token);
+        val call: Call<ProfileModel> = api.editProfilePicture(id,ProfileModel("","","","","",""),token);
 
         call.enqueue(object: Callback<ProfileModel> {
             override fun onResponse(call: Call<ProfileModel>, response: Response<ProfileModel>) {
