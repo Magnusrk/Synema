@@ -22,8 +22,8 @@ import com.example.synema.R
 
 @Composable
 fun BottomBar(navController: NavHostController){
-    val tabs = listOf("home", "watchlists", "socials", "profile")
-    val icons = listOf(R.drawable.theater_icon,R.drawable.eye_icon, R.drawable.social_icon, R.drawable.profile_icon)
+    val tabs = listOf("home", "watchlists", "socials", "feed", "profile")
+    val icons = listOf(R.drawable.theater_icon,R.drawable.eye_icon, R.drawable.social_icon, R.drawable.social_icon, R.drawable.profile_icon)
     val current = navController.currentBackStackEntry?.destination?.route
 
 

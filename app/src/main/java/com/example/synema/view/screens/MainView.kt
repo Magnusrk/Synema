@@ -25,6 +25,7 @@ fun MainView() {
         composable("watchlists") { WatchList() }
         composable("myreviews") {MyReviews(navController, profileState)}
         composable("socials") {OtherUsers(navController, profileState) }
+        composable("feed") { Feed(navController = navController, profileState = profileState) }
         composable("avatars") { AvatarList(navController, profileState) }
 
         composable("otherUserLists/{user_id}",
