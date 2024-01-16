@@ -186,6 +186,35 @@ class UserAPISource() : UserDataSource {
             }
         })
     }
+    override fun editusername(
+        id: String,
+        name: String,
+        token: String,
+        callback: (ApiResponse<Boolean>) -> Unit
+    ) {
+        val api = retrofit.create(UserAPI::class.java)
+        val call: Call<Boolean> = api.editusername(id, ProfileModel("","","",name,"",""),token);
+
+        call.enqueue(object: Callback<Boolean> {
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                if(response.isSuccessful) {
+                    if (response.code() == 200) {
+                        callback(ApiResponse(true))
+                    }
+                } else if(response.code() == 404){
+                    callback(ApiResponse(null, true, "User does not exist"))
+                } else{
+                    callback(ApiResponse(null, true, "Couldn't log in"))
+                }
+            }
+
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                Log.e("Main", "Login failed " + t.message.toString())
+                callback(ApiResponse(null, true, t.message!!));
+
+            }
+        })
+    }
 
     override fun editProfilePicture(
         id: String,
