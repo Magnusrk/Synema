@@ -1,7 +1,6 @@
 import android.util.Log
 import com.example.synema.controller.WatchlistAPI
 import com.example.synema.Data.Watchlists.WatchlistDataSource
-import com.example.synema.controller.MovieAPI
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.MovieModel
 import com.example.synema.model.WatchlistModel
@@ -67,7 +66,7 @@ class WatchlistAPISource: WatchlistDataSource {
             }
 
             override fun onFailure(call: Call<List<WatchlistModel>>, t: Throwable) {
-                callback(ApiResponse(result = null, statusMessage = t.message.toString(),error=true))
+                callback(ApiResponse(result = null, statusMessage = t.message.toString(), error =true))
             }
         })
     }
@@ -89,7 +88,7 @@ class WatchlistAPISource: WatchlistDataSource {
             }
 
             override fun onFailure(call: Call<List<WatchlistModel>>, t: Throwable) {
-                callback(ApiResponse(result = null, statusMessage = t.message.toString(),error=true))
+                callback(ApiResponse(result = null, statusMessage = t.message.toString(), error =true))
             }
         })
     }
