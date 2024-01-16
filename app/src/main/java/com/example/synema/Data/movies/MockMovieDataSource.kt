@@ -1,6 +1,5 @@
 package com.example.synema.Data.movies
 
-import com.example.synema.R
 import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
@@ -8,7 +7,6 @@ import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
-import com.example.synema.model.UserModel
 
 
 class MockMovieDataSource : MovieDataSource {

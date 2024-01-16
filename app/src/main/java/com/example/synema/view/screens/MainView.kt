@@ -101,5 +101,19 @@ fun MainView() {
                 backStackEntry.arguments?.getString("movieID")
             )
         }
+        composable("followers/{user_id}",arguments = listOf(navArgument("user_id") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            followers(
+                backStackEntry.arguments?.getString("user_id"),navController,profileState
+            )
+        }
+        composable("following/{user_id}",arguments = listOf(navArgument("user_id") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            FollowingScreen(
+                backStackEntry.arguments?.getString("user_id"),navController,profileState
+            )
+        }
     }
 }
