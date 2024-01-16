@@ -51,11 +51,13 @@ import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.model.WatchlistModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
+import com.example.synema.viewmodel.OUsersViewModel
 import com.example.synema.viewmodel.ProfileViewModel
 
 
@@ -161,8 +163,10 @@ private fun ProfilePicture1(profilePicture: String) {
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 private fun followButton(navController: NavHostController, userid: String?) {
+    val vm : OUsersViewModel = viewModel()
     val dataSource = DependencyProvider.getInstance().getUserSource();
 
     Row(
@@ -171,17 +175,47 @@ private fun followButton(navController: NavHostController, userid: String?) {
             .padding(30.dp),
         horizontalArrangement = Arrangement.End
     ) {
-        Button(
-            onClick = { dataSource.followUser(userid.toString(),AppContext.getInstance().getProfileState().value.id,AppContext.getInstance().getProfileState().value.token){
-                it.getResult()
+        if (!vm.followerList.contains(AppContext.profileState.value.id)) {
+            Button(
+                onClick = {
+                    dataSource.followUser(
+                        userid.toString(),
+                        AppContext.getInstance().getProfileState().value.id,
+                        AppContext.getInstance().getProfileState().value.token
+                    ) {
+                        it.getResult()
+                        vm.followerList.add(AppContext.profileState.value.id)
+                    }
+
+                }, shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF543B5B),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Follow")
             }
-                      }, shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF543B5B),
-                contentColor = Color.White
-            )
-        ) {
-            Text(text = "Follow")
+
+        } else{
+            Button(
+                onClick = {
+                    dataSource.unfollowUser(
+                        userid.toString(),
+                        AppContext.getInstance().getProfileState().value.id,
+                        AppContext.getInstance().getProfileState().value.token
+                    ) {
+                        it.getResult()
+                        vm.followerList.remove(AppContext.profileState.value.id)
+
+                    }
+                }, shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF543B5B),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Unfollow")
+            }
         }
     }
 }

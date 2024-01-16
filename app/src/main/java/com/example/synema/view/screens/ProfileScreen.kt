@@ -84,7 +84,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture(profileState.value)
-                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size, navController)
                 PersonalDescription()
                 Directories(context.getNav())
 
@@ -95,15 +95,38 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     }
 }
 
-@Composable
-private fun FollowersReviewsStatus(followers : Int, reviews : Int){
+/*@Composable
+private fun FollowersReviewsStatus(followers : Int, reviews : Int, navController: NavHostController){
     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
         .padding(30.dp)
-        .fillMaxWidth()){
+        .fillMaxWidth()
+        .clickable {
+            navController.navigate("myreviews")
+        }){
         Text("$followers followers", color = Color.White)
         Text("$reviews reviews", color = Color.White)
     }
+}*/
+@Composable
+private fun FollowersReviewsStatus(followers: Int, reviews: Int, navController: NavHostController) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(30.dp)
+            .fillMaxWidth()
+    ) {
+        OpaqueButton("$followers followers", onClick = {
+            navController.navigate("followers/${AppContext.getInstance().getProfileState().value.id}")
+        })
+
+        OpaqueButton("$reviews reviews", onClick = {
+            navController.navigate("myreviews")
+        })
+    }
 }
+
+
+
 @Composable
 fun ProfilePicture(currentUser: ProfileModel) {
 
