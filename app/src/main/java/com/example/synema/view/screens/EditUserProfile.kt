@@ -57,9 +57,9 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                //ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
-                EditProfilePicture(profileState.value, navController)
-                AvatarList(navController, profileState = profileState)
+                ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
+                //EditProfilePicture(profileState.value, navController)
+                //AvatarList(navController, profileState = profileState)
 
 
                 Row(
@@ -77,7 +77,6 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                     })
 
                    OpaqueButton("Save", onClick = {
-                        // Update the original profileState with the edited fields when saving changes
                         /*
                         profileState.value = profileState.value.copy(
                             name = updateName,
@@ -90,6 +89,11 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
                             navController.popBackStack()
                         }
+
+                       profileState.value.name=updateName
+                       dataSource.editusername(profileState.value.id,updateName,profileState.value.token){
+
+                       }
                        /* if (updatePic != profileState.value.profilePicture) {
                                                   profileState.value.profilePicture = updatePic
                                                   dataSource.editProfilePicture(
@@ -154,7 +158,7 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
     }
 }
 
-
+/*
 @Composable
 fun EditProfilePicture(
     currentUser: ProfileModel,
@@ -177,7 +181,7 @@ fun EditProfilePicture(
                 .clip(CircleShape)
                 .border(2.dp, Color.Black, CircleShape)
                 .clickable {
-                    navController.navigate("avatars")
+                    //navController.navigate("avatars")
                 }
         ) {
             Box(
@@ -210,8 +214,8 @@ fun EditProfilePicture(
 
 
 
-
-/*@Composable
+*/
+@Composable
 private fun ProfilePicture(currentUser: ProfileModel) {
 
     Row(
@@ -242,4 +246,5 @@ private fun ProfilePicture(currentUser: ProfileModel) {
             )
         }
     }
-}*/
+}
+

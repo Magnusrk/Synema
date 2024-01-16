@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 
 data class ProfileModel(
     val id: String = "",
-    val name: String,
+    var name: String,
     val email: String = "",
     var bio: String,
     var token : String = "none",
