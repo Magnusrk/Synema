@@ -117,7 +117,14 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
-
+    override fun unfollowUser(
+        userid: String,
+        currentUserId: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
 }
 
 
