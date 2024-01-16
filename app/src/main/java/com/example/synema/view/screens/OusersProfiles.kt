@@ -103,9 +103,16 @@ fun OUprofiles(
     GradientBox() {
 
         Column {
-            TopBar(title = "Other User", Alignment.Center)
+            TopBar(
+                title = "My Reviews",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
+
+                )
             MainContainer(hasBottomNav = true) {
-                ProfileNameHeader(user.name, navController)
+                followButton(navController = navController)
+                ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(7522, reviewList.size)
                 PersonalDescription(user.bio)
@@ -149,28 +156,33 @@ private fun ProfilePicture1(profilePicture: String) {
 }
 
 @Composable
-private fun ProfileNameHeader(name: String, navController: NavHostController) {
+private fun followButton(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(30.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.End
     ) {
-        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
-
         Button(
             onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF543B5B),
                 contentColor = Color.White
-
             )
-
-
         ) {
             Text(text = "Follow")
         }
+    }
+}
 
+
+@Composable
+private fun ProfileNameHeader(name: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center)
+    {
+        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
 
