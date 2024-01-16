@@ -3,6 +3,7 @@ package com.example.synema.view.screens
 import GradientBox
 import MoviePosterFrame
 import android.annotation.SuppressLint
+import android.text.style.BackgroundColorSpan
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -108,7 +111,7 @@ fun OUprofiles(
         Column {
             TopBar(title = "Other User", Alignment.Center)
             MainContainer(hasBottomNav = true) {
-                ProfileNameHeader(user.name)
+                ProfileNameHeader(user.name, navController)
                 ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription(user.bio)
@@ -152,14 +155,27 @@ private fun ProfilePicture1(profilePicture: String) {
 }
 
 @Composable
-private fun ProfileNameHeader(name: String) {
+private fun ProfileNameHeader(name: String, navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
-        horizontalArrangement = Arrangement.Start
+            .padding(30.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+
+        Button(
+            onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF543B5B),
+                contentColor = Color.White
+
+            )
+
+
+        ) {
+            Text(text = "Follow")
+        }
 
     }
 }
@@ -243,11 +259,16 @@ private fun Directories(userid: String?, navController: NavHostController) {
 
         DirectoryCard("Watchlist", navController = navController, route = "otherUserLists/$userid")
         Spacer(modifier = Modifier.height(8.dp))
-        //}
+
+        DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
+        Spacer(modifier = Modifier.height(8.dp))
+
         DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
+        DirectoryCard("Following", navController = navController, route = "home")
+        Spacer(modifier = Modifier.height(8.dp))
+
 
     }
 
