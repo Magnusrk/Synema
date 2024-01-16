@@ -48,6 +48,7 @@ import com.example.synema.view.components.MovieClip
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TitleFont
 import com.example.synema.view.components.TopBar
+import com.example.synema.viewmodel.FeedViewModel
 import com.example.synema.viewmodel.FollowersViewModel
 import com.example.synema.viewmodel.ProfileViewModel
 import com.example.synema.viewmodel.media.MediaDetailsViewModel
@@ -58,7 +59,7 @@ import java.util.Date
 @Composable
 fun Feed(navController: NavHostController, profileState: MutableState<ProfileModel>) {
 
-    val vm: ProfileViewModel = viewModel()
+    val vm: FeedViewModel = viewModel()
     vm.init(profileState.value)
 
     SynemaTheme {
@@ -76,10 +77,14 @@ fun Feed(navController: NavHostController, profileState: MutableState<ProfileMod
                     onChange = {
                     },
                 )
+
                 MainContainer(hasBottomNav = true, scrollAble = true) {
-                    if (!vm.reviewList.isEmpty()) {
-                        UserReviewSection(vm.reviewList)
+                    LoadingWrapper(vm.isLoading) {
+                        if (!vm.reviewList.isEmpty()) {
+                            UserReviewSection(vm.reviewList)
+                        }
                     }
+
                 }
                 BottomBar(navController = navController)
             }

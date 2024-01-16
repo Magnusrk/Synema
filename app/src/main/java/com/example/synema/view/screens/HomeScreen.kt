@@ -347,11 +347,14 @@ private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier
             modifier = Modifier
                 .padding(8.dp)
         )
+        if(movieList.size > 0 ){
+
         LazyRow(modifier = modifier) {
             items(key = {
                 movList[it % movList.size].id
+
             }, count = Int.MAX_VALUE) { index ->
-                    val item = movList[index % movList.size]
+                val item = movList[index % movList.size]
                 MovieCard(
                     movie = item,
                     modifier = Modifier.padding(8.dp),
@@ -359,6 +362,12 @@ private fun MovieList(movieList: List<MovieModel>, modifier: Modifier = Modifier
                 )
             }
         }
+
+
+        } else{
+            Text("Couldn't find any matching movies", color= Color.White, fontSize = 12.sp)
+        }
+
     }
 }
 

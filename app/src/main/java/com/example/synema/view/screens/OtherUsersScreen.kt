@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -100,15 +101,25 @@ fun OtherUsers(navController: NavHostController, profileState: MutableState<Prof
 @Composable
 private fun UsersList(vm : SearchUsersViewModel) {
         LoadingWrapper(vm.isLoading) {
-            LazyColumn{
-                items(vm.usersList.size) { index ->//change this to userList
-                    UserCard(
-                        user = vm.usersList[index],
-                        modifier = Modifier.padding(8.dp),
-                        vm.getNav()
+            if(vm.usersList.size > 0 ){
+                LazyColumn{
+                    items(vm.usersList.size) { index ->//change this to userList
+                        UserCard(
+                            user = vm.usersList[index],
+                            modifier = Modifier.padding(8.dp),
+                            vm.getNav()
+                        )
+                    }
+                }
+            } else{
+                Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
+                    Text("Use the top bar to search for users!", color=Color.White,
+                        fontSize = 15.sp
                     )
                 }
+
             }
+
 
         }
 
@@ -129,7 +140,7 @@ fun UserCard(user: ProfileModel, modifier: Modifier = Modifier, navController : 
                 .width(500.dp)
                 .height(50.dp)
                 .background(Color(0xFF322236).copy(alpha = 0.3F))
-                .clickable { navController.navigate("ouprofiles/"+user.id) }
+                .clickable { navController.navigate("ouprofiles/" + user.id) }
 
 
         ){

@@ -59,16 +59,14 @@ fun FollowingScreen(userid: String?, navController: NavHostController, profileSt
             GradientBox {
                 Column {
                     TopBar(
-                        "",
+                        "Following",
                         Alignment.CenterStart,
                         20.sp,
                         backArrow = true,
                         transparent = true,
                         search = false,
-                        textInput = true,
+                        textInput = false,
                         navController = navController,
-                        onChange = {
-                        },
                     )
                     MainContainer(hasBottomNav = true, scrollAble = false) {
                         followingList(vm)

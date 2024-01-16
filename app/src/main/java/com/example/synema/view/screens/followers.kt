@@ -58,13 +58,12 @@ fun followers(userid: String?, navController: NavHostController, profileState: M
             GradientBox {
                 Column {
                     TopBar(
-                        "",
+                        "Followers",
                         Alignment.CenterStart,
                         20.sp,
                         backArrow = true,
                         transparent = true,
                         search = false,
-                        textInput = true,
                         navController = navController,
                         onChange = {
                         },

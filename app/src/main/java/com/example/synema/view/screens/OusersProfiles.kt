@@ -57,7 +57,7 @@ import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
-import com.example.synema.viewmodel.OUsersViewModel
+import com.example.synema.viewmodel.OtherUserProfileViewModel
 import com.example.synema.viewmodel.ProfileViewModel
 
 
@@ -68,62 +68,32 @@ fun OUprofiles(
     navController: NavHostController,
     profileState: MutableState<ProfileModel>
 ) {
-    val dataSource = DependencyProvider.getInstance().getUserSource();
 
-    var user: ProfileModel by remember {
-        mutableStateOf(
-            ProfileModel(
-                "",
-                "",
-                "",
-                "Loading...",
-                "Loading...",
-                "",
-            )
-        )
-    }
+    val vm : OtherUserProfileViewModel = viewModel()
 
-    val vm : ProfileViewModel = viewModel()
-
-    dataSource.userById(userid.toString(), profileState.value.token) {
-        it.getResult()?.let { profileModel ->
-            user = it.getResult()!!
-            vm.init(user)
-        }
+    if (userid != null) {
+        vm.init(userid)
     }
 
 
-
-    val source = DependencyProvider.getInstance().getMovieSource();
-    var reviewList: List<ReviewModel> by remember {
-        mutableStateOf(listOf())
-    }
-
-    source.getOtherUserReviews(userid.toString(), profileState.value.token) {
-        if (it.successful()) {
-            it.getResult()?.let { reviewModel ->
-                reviewList = reviewModel
-            }
-        }
-    }
 
     val context = AppContext.getInstance();
     GradientBox() {
 
         Column {
             TopBar(
-                title = "My Reviews",
+                title = "",
                 alignment = Alignment.Center,
                 backArrow = true,
                 navController = navController,
 
                 )
             MainContainer(hasBottomNav = true) {
-                followButton(navController = navController,userid)
-                ProfileNameHeader(user.name)
-                ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
-                PersonalDescription(user.bio)
+                followButton(vm,userid)
+                ProfileNameHeader(vm.user.value.name)
+                ProfilePicture1(vm.user.value.profilePicture)
+                FollowersReviewsStatus(vm.followerCount.value, vm.reviewList.size)
+                PersonalDescription(vm.user.value.bio)
                 Directories(userid, context.getNav())
 
             }
@@ -165,8 +135,7 @@ private fun ProfilePicture1(profilePicture: String) {
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-private fun followButton(navController: NavHostController, userid: String?) {
-    val vm : OUsersViewModel = viewModel()
+private fun followButton(vm: OtherUserProfileViewModel, userid: String?) {
     val dataSource = DependencyProvider.getInstance().getUserSource();
 
     Row(
@@ -184,7 +153,9 @@ private fun followButton(navController: NavHostController, userid: String?) {
                         AppContext.getInstance().getProfileState().value.token
                     ) {
                         it.getResult()
-                        vm.followerList.add(AppContext.profileState.value.id)
+                        if (userid != null) {
+                            vm.init(userid)
+                        }
                     }
 
                 }, shape = RoundedCornerShape(10.dp),
@@ -206,6 +177,9 @@ private fun followButton(navController: NavHostController, userid: String?) {
                     ) {
                         it.getResult()
                         vm.followerList.remove(AppContext.profileState.value.id)
+                        if (userid != null) {
+                            vm.init(userid)
+                        }
 
                     }
                 }, shape = RoundedCornerShape(10.dp),
