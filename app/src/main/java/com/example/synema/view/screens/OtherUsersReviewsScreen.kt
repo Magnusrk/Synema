@@ -167,16 +167,22 @@ private fun InnerReviewContainer(review: ReviewModel, navController: NavHostCont
         modifier = Modifier.padding(10.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            ClickableText(
-                text = AnnotatedString(movie.title),
-                style = TextStyle(
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    textDecoration = TextDecoration.Underline
-                ),
-                onClick = {
-                    navController.navigate("mediaDetails/" + movie.id)
-                })
+            Box(
+                modifier = Modifier.fillMaxWidth(0.65f)
+            ) {
+                ClickableText(
+                    text = AnnotatedString(movie.title),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = TextStyle(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline,
+                    ),
+                    onClick = {
+                        navController.navigate("mediaDetails/" + movie.id)
+                    })
+            }
             myRatingStars(review.rating * 2)
         }
 
