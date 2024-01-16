@@ -80,11 +80,17 @@ fun OUprofiles(
             )
         )
     }
+
+    val vm : ProfileViewModel = viewModel()
+
     dataSource.userById(userid.toString(), profileState.value.token) {
         it.getResult()?.let { profileModel ->
             user = it.getResult()!!
+            vm.init(user)
         }
     }
+
+
 
     val source = DependencyProvider.getInstance().getMovieSource();
     var reviewList: List<ReviewModel> by remember {
@@ -103,11 +109,18 @@ fun OUprofiles(
     GradientBox() {
 
         Column {
-            TopBar(title = "Other User", Alignment.Center)
+            TopBar(
+                title = "My Reviews",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
+
+                )
             MainContainer(hasBottomNav = true) {
-                ProfileNameHeader(user.name, navController)
+                followButton(navController = navController,userid)
+                ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription(user.bio)
                 Directories(userid, context.getNav())
 
@@ -149,28 +162,38 @@ private fun ProfilePicture1(profilePicture: String) {
 }
 
 @Composable
-private fun ProfileNameHeader(name: String, navController: NavHostController) {
+private fun followButton(navController: NavHostController, userid: String?) {
+    val dataSource = DependencyProvider.getInstance().getUserSource();
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(30.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.End
     ) {
-        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
-
         Button(
-            onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10.dp),
+            onClick = { dataSource.followUser(userid.toString(),AppContext.getInstance().getProfileState().value.id,AppContext.getInstance().getProfileState().value.token){
+                it.getResult()
+            }
+                      }, shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF543B5B),
                 contentColor = Color.White
-
             )
-
-
         ) {
             Text(text = "Follow")
         }
+    }
+}
 
+
+@Composable
+private fun ProfileNameHeader(name: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center)
+    {
+        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -257,10 +280,10 @@ private fun Directories(userid: String?, navController: NavHostController) {
         DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Followers", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "followers/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Following", navController = navController, route = "home")
+        DirectoryCard("Following", navController = navController, route = "following/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
 
