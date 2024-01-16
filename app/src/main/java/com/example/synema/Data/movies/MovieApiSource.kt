@@ -6,6 +6,7 @@ import com.example.synema.controller.MovieAPI
 import com.example.synema.model.ActorModel
 import com.example.synema.model.ApiResponse
 import com.example.synema.model.CreditsModel
+import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
@@ -69,6 +70,30 @@ class MovieApiSource : MovieDataSource {
             }
 
             override fun onFailure(call: Call<List<CreditsModel>>, t: Throwable) {
+                callback(ApiResponse(null, true, t.message!!));
+            }
+
+        })
+    }
+
+    override fun loadImages(id: String,token: String, callback: (ApiResponse<List<ImagesModel>>) -> Unit){
+        val api = retrofit.create(MovieAPI::class.java)
+        val call: Call<List<ImagesModel>> = api.getImagesById(id)
+
+        call.enqueue(object : Callback<List<ImagesModel>> {
+            override fun onResponse(
+                call: Call<List<ImagesModel>>,
+                response: Response<List<ImagesModel>>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Main", "success!" + response.body().toString())
+                    callback(ApiResponse(response.body()!!))
+                } else {
+                    callback(ApiResponse(null, true, "Couldn't load credits"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<ImagesModel>>, t: Throwable) {
                 callback(ApiResponse(null, true, t.message!!));
             }
 

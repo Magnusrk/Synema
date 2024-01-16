@@ -1,6 +1,7 @@
 package com.example.synema.view.screens
 
 import GradientBox
+import android.widget.Button
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -76,7 +77,7 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         navController.popBackStack()
                     })
 
-                    OpaqueButton("Save", onClick = {
+                   OpaqueButton("Save", onClick = {
                         // Update the original profileState with the edited fields when saving changes
                         /*
                         profileState.value = profileState.value.copy(

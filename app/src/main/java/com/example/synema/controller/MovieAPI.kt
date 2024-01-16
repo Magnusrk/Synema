@@ -2,6 +2,7 @@ package com.example.synema.controller
 
 import com.example.synema.model.ActorModel
 import com.example.synema.model.CreditsModel
+import com.example.synema.model.ImagesModel
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ReviewModel
 import retrofit2.Call
@@ -23,6 +24,10 @@ public interface MovieAPI {
 
     @GET("movie/{id}/credits")
     abstract fun getCreditsById(@Path("id") id: String): Call<List<CreditsModel>>
+
+    @GET("movie/{id}/images")
+    abstract fun getImagesById(@Path("id") id: String): Call<List<ImagesModel>>
+
 
     @GET("actor/{id}")
     abstract fun getActorDetails(@Path("id") id: String): Call<ActorModel>

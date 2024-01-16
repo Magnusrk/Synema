@@ -3,8 +3,10 @@ package com.example.synema.view.screens
 import GradientBox
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -50,6 +53,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -115,6 +119,7 @@ fun MediaDetails(
                     InteractionPane(vm)
                     ActorList(vm)
                     DescriptionSection(vm.movie.value.description)
+                    ImageRoll(vm)
                     SimilarMoviesSection(vm)
                     if(!vm.reviewList.isEmpty()){
                         UserReviewSection(vm)
@@ -377,8 +382,6 @@ private fun UserReviewCard(vm: MediaDetailsViewModel, review: ReviewModel) {
         }
 
     }
-
-
 }
 
 @Composable
@@ -396,21 +399,13 @@ private fun InnerReviewContainer(vm: MediaDetailsViewModel, review: ReviewModel)
                 text = AnnotatedString("@" + review.username),
                 style = TextStyle(
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
                 ),
                 onClick = {
                     vm.getNav().navigate("ouprofiles/"+review.userid)
                 })
-            /*
-            Text(
-                modifier = Modifier.height(30.dp),
-                text = "@" + review.username,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                overflow = TextOverflow.Ellipsis
-            )
 
-             */
             ReviewStars(review.rating * 2)
         }
 
@@ -534,14 +529,43 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
     }
 }
 @Composable
-private fun SimilarMoviesSection(vm: MediaDetailsViewModel){
+private fun ImageRoll(vm: MediaDetailsViewModel){
+    if (!vm.imagesList.isEmpty()) {
+        Text(
+            "Media",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 10.dp, start = 20.dp),
+            color = Color.White
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(color = Color(0xFFB6842D))
+        )
+        LazyRow(
+            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
+        ) {
+            items(vm.imagesList) { image ->
+                AsyncImage(
+                    model = image.file_path,
+                    contentDescription = null,
+                    modifier = Modifier.size(300.dp),
+                    contentScale = ContentScale.FillHeight
+                )
+            }
+        }
+    }
+}
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(color = Color(0xFFB6842D))
-    )
+@Composable
+private fun SimilarMoviesSection(vm: MediaDetailsViewModel){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(color = Color(0xFFB6842D))
+        )
     MovieList(movieList = vm.similarMovies, header = "Movies similar to " + vm.movie.value.title , navController = vm.getNav())
 
 }
