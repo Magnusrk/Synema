@@ -2,12 +2,11 @@ package com.example.synema.view.screens
 
 import GradientBox
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +23,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,9 +33,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
 import com.example.synema.model.ProfileModel
@@ -48,7 +48,6 @@ import com.example.synema.view.components.TopBar
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
     val dataSource = DependencyProvider.getInstance().getUserSource()
-
     var updateName by remember { mutableStateOf(profileState.value.name) }
     var updateBio by remember { mutableStateOf(profileState.value.bio) }
     var updatePic by remember { mutableStateOf(profileState.value.profilePicture) }
@@ -57,9 +56,9 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                ProfilePicture(profileState.value) { selectedImageUri ->
-                    updatePic = selectedImageUri.toString()
-                }
+
+                EditProfilePicture(profileState.value, navController)
+                AvatarList(navController, profileState = profileState)
 
                 Row(
                     modifier = Modifier
@@ -70,13 +69,11 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                     OpaqueButton("Cancel", onClick = {
                         updateName = profileState.value.name
                         updateBio = profileState.value.bio
-                        updatePic = profileState.value.profilePicture
-
+                        // Don't update the picture here to retain the current picture
                         navController.popBackStack()
                     })
 
                     OpaqueButton("Save", onClick = {
-                        // Update the original profileState with the edited fields when saving changes
                         profileState.value = profileState.value.copy(
                             name = updateName,
                             bio = updateBio,
@@ -85,15 +82,18 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
 
                         profileState.value.bio = updateBio
                         dataSource.editbio(profileState.value.id, updateBio, profileState.value.token) {
-                            // Callback function after editing bio
                         }
 
-                        profileState.value.profilePicture = updatePic
-                        dataSource.editProfilePicture(profileState.value.id, updatePic, profileState.value.token) {
-                            // Callback function after editing profile picture
-                        }
+                       /* if (updatePic != profileState.value.profilePicture) {
+                            profileState.value.profilePicture = updatePic
+                            dataSource.editProfilePicture(
+                                profileState.value.id,
+                                updatePic,
+                                profileState.value.token
+                            ) {
+                            }
+                        }*/
 
-                        // Navigate back to the profile screen
                         navController.popBackStack()
                     })
                 }
@@ -147,13 +147,14 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         }
     }
 }
-
 @Composable
-fun ProfilePicture(
+fun EditProfilePicture(
     currentUser: ProfileModel,
-    imageUrl: String = "https://postimg.cc/4nzy4Qwy",
-    onImageSelected: (Uri) -> Unit = {}
-) {
+    navController: NavHostController
+)
+{
+    var updatePic by rememberSaveable { mutableStateOf(currentUser.profilePicture) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -168,33 +169,38 @@ fun ProfilePicture(
                 .clip(CircleShape)
                 .border(2.dp, Color.Black, CircleShape)
                 .clickable {
-                    if (imageUrl.isNotEmpty()) {
-                        onImageSelected(Uri.parse(imageUrl))
-                    }
+                    navController.navigate("avatars")
                 }
         ) {
-            if (imageUrl.isNotEmpty()) {
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                AsyncImage(
-                    model = currentUser.profilePicture,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (updatePic.isNotEmpty()) {
+                    AsyncImage(
+                        model = updatePic,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.profile_picture_placeholder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
     }
 }
+
+
 
 /*
 /*@Composable
@@ -230,3 +236,7 @@ private fun ProfilePicture(currentUser: ProfileModel) {
     }
 }
 */
+
+
+
+ */
