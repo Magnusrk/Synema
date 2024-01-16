@@ -80,11 +80,17 @@ fun OUprofiles(
             )
         )
     }
+
+    val vm : ProfileViewModel = viewModel()
+
     dataSource.userById(userid.toString(), profileState.value.token) {
         it.getResult()?.let { profileModel ->
             user = it.getResult()!!
+            vm.init(user)
         }
     }
+
+
 
     val source = DependencyProvider.getInstance().getMovieSource();
     var reviewList: List<ReviewModel> by remember {
@@ -114,7 +120,7 @@ fun OUprofiles(
                 followButton(navController = navController)
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription(user.bio)
                 Directories(userid, context.getNav())
 
@@ -269,10 +275,10 @@ private fun Directories(userid: String?, navController: NavHostController) {
         DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Followers", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "followers/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Following", navController = navController, route = "home")
+        DirectoryCard("Following", navController = navController, route = "following/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
 

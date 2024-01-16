@@ -51,6 +51,7 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.ProfileViewModel
+import com.example.synema.viewmodel.media.MediaDetailsViewModel
 import okhttp3.internal.userAgent
 
 
@@ -63,6 +64,10 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     var reviewList : List<ReviewModel> by remember {
         mutableStateOf(listOf())
     }
+
+    val vm : ProfileViewModel = viewModel()
+    vm.init(profileState.value)
+
 
     source.getOwnReviews(profileState.value.token){
         if (it.successful()) {
@@ -79,7 +84,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture(profileState.value)
-                FollowersReviewsStatus(76, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription()
                 Directories(context.getNav())
 
@@ -189,18 +194,6 @@ private fun PersonalDescription() {
 
 }
 
-
-/*fun DescriptionSection(desc : String){
-    Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
-
-}
-*/
-
 @Composable
 private fun MovieDisplay(){
     Row(
@@ -280,10 +273,12 @@ private fun Directories(navController: NavHostController) {
         DirectoryCard("Reviews", navController = navController, route = "myreviews")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Followers", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "followers/"+AppContext.getInstance().getProfileState().value.id,
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Following", navController = navController, route = "home")
+        DirectoryCard("Following", navController = navController, route = "following/"+AppContext.getInstance().getProfileState().value.id,
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
 
