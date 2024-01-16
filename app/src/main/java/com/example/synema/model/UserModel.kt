@@ -10,6 +10,8 @@ data class ProfileModel(
     var bio: String,
     var token : String = "none",
     var profilePicture: String,
+    var followers: List<String> = listOf(),
+    var following: List<String> = listOf()
 )
 
 data class UserModel(

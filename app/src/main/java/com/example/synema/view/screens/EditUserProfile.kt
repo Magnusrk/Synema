@@ -1,6 +1,7 @@
 package com.example.synema.view.screens
 
 import GradientBox
+import android.widget.Button
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -56,9 +57,10 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-
+                //ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
                 EditProfilePicture(profileState.value, navController)
                 AvatarList(navController, profileState = profileState)
+
 
                 Row(
                     modifier = Modifier
@@ -69,35 +71,38 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                     OpaqueButton("Cancel", onClick = {
                         updateName = profileState.value.name
                         updateBio = profileState.value.bio
-                        // Don't update the picture here to retain the current picture
+                        updatePic = profileState.value.profilePicture
+
                         navController.popBackStack()
                     })
 
-                    OpaqueButton("Save", onClick = {
+                   OpaqueButton("Save", onClick = {
+                        // Update the original profileState with the edited fields when saving changes
+                        /*
                         profileState.value = profileState.value.copy(
                             name = updateName,
                             bio = updateBio,
                             profilePicture = updatePic
                         )
 
-                        profileState.value.bio = updateBio
-                        dataSource.editbio(profileState.value.id, updateBio, profileState.value.token) {
+                         */
+                        profileState.value.bio=updateBio
+                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
+                            navController.popBackStack()
                         }
-
                        /* if (updatePic != profileState.value.profilePicture) {
-                            profileState.value.profilePicture = updatePic
-                            dataSource.editProfilePicture(
-                                profileState.value.id,
-                                updatePic,
-                                profileState.value.token
-                            ) {
-                            }
-                        }*/
+                                                  profileState.value.profilePicture = updatePic
+                                                  dataSource.editProfilePicture(
+                                                      profileState.value.id,
+                                                      updatePic,
+                                                      profileState.value.token
+                                                  ) {
+                                                  }
+                                              }*/
+                       navController.popBackStack()
 
-                        navController.popBackStack()
-                    })
+                   })
                 }
-
                 // Text field for editing name
                 TextField(
                     value = updateName,
@@ -114,6 +119,7 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         disabledLabelColor = Color.White,
                         errorLabelColor = Color.White,
                         unfocusedLabelColor = Color.White
+                        //disabledTextColor = Color.LightGray
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -143,10 +149,12 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         .padding(16.dp)
                 )
             }
-            BottomBar(navController = navController)
+            BottomBar(navController = navController )
         }
     }
 }
+
+
 @Composable
 fun EditProfilePicture(
     currentUser: ProfileModel,
@@ -202,7 +210,7 @@ fun EditProfilePicture(
 
 
 
-/*
+
 /*@Composable
 private fun ProfilePicture(currentUser: ProfileModel) {
 
@@ -234,9 +242,4 @@ private fun ProfilePicture(currentUser: ProfileModel) {
             )
         }
     }
-}
-*/
-
-
-
- */
+}*/

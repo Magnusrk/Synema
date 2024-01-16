@@ -53,6 +53,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -381,8 +382,6 @@ private fun UserReviewCard(vm: MediaDetailsViewModel, review: ReviewModel) {
         }
 
     }
-
-
 }
 
 @Composable
@@ -400,21 +399,13 @@ private fun InnerReviewContainer(vm: MediaDetailsViewModel, review: ReviewModel)
                 text = AnnotatedString("@" + review.username),
                 style = TextStyle(
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
                 ),
                 onClick = {
                     vm.getNav().navigate("ouprofiles/"+review.userid)
                 })
-            /*
-            Text(
-                modifier = Modifier.height(30.dp),
-                text = "@" + review.username,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                overflow = TextOverflow.Ellipsis
-            )
 
-             */
             ReviewStars(review.rating * 2)
         }
 

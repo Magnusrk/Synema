@@ -100,7 +100,7 @@ fun TopBar(
                     color = Color.White,
                     modifier = Modifier
                         .align(alignment)
-                        .padding(20.dp),
+                        .padding(top = 5.dp, start = 45.dp, end = 45.dp),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )

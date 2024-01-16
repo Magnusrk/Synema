@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -75,7 +76,7 @@ fun TrendTopBar(
                         .background(Color.Black.copy(alpha = 0.6f))
                         .align(Alignment.BottomStart)
                 ) {
-                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 15.dp, end = 15.dp))
+                    Text(text = movie.title, color = Color.White, modifier = Modifier.padding(start = 15.dp, end = 15.dp).fillMaxWidth(0.8f),overflow = TextOverflow.Ellipsis)
                 }
             }
 

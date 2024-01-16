@@ -70,12 +70,11 @@ public interface UserAPI {
     @GET("/user/{userid}/followers")
     fun getFollowers(
         @Path("userid") id: String,
-        @Body profileModel: ProfileModel,
-        @Header("authorization") token : String): Call<ProfileModel>
+        @Header("authorization") token : String): Call<List<String>>
     @GET("/user/{userid}/following")
     fun getFollowing(
         @Path("userid") id: String,
-        @Header("authorization") token : String): Call<ProfileModel>
+        @Header("authorization") token : String): Call<List<String>>
 
     @POST("/user/{currentUserId}/follow/{userid}")
     fun followUser(

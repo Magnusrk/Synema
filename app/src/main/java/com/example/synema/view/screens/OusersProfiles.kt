@@ -58,7 +58,11 @@ import com.example.synema.viewmodel.ProfileViewModel
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun OUprofiles(userid: String?,navController : NavHostController, profileState: MutableState<ProfileModel>) {
+fun OUprofiles(
+    userid: String?,
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>
+) {
     val dataSource = DependencyProvider.getInstance().getUserSource();
 
     var user: ProfileModel by remember {
@@ -73,31 +77,31 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
             )
         )
     }
-    dataSource.userById(userid.toString(),profileState.value.token) {
+    dataSource.userById(userid.toString(), profileState.value.token) {
         it.getResult()?.let { profileModel ->
-            user= it.getResult()!!
+            user = it.getResult()!!
         }
     }
 
     val source = DependencyProvider.getInstance().getMovieSource();
-    var reviewList : List<ReviewModel> by remember {
+    var reviewList: List<ReviewModel> by remember {
         mutableStateOf(listOf())
     }
 
-    source.getOtherUserReviews(userid.toString(), profileState.value.token){
+    source.getOtherUserReviews(userid.toString(), profileState.value.token) {
         if (it.successful()) {
-            it.getResult()?.let {reviewModel ->
+            it.getResult()?.let { reviewModel ->
                 reviewList = reviewModel
             }
         }
     }
 
     val context = AppContext.getInstance();
-    GradientBox(){
+    GradientBox() {
 
         Column {
             TopBar(title = "Other User", Alignment.Center)
-            MainContainer(hasBottomNav = true){
+            MainContainer(hasBottomNav = true) {
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(7522, reviewList.size)
@@ -112,34 +116,45 @@ fun OUprofiles(userid: String?,navController : NavHostController, profileState: 
 }
 
 @Composable
-private fun FollowersReviewsStatus(followers : Int, reviews : Int){
-    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-        .padding(30.dp)
-        .fillMaxWidth()){
+private fun FollowersReviewsStatus(followers: Int, reviews: Int) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+            .padding(30.dp)
+            .fillMaxWidth()
+    ) {
         Text("$followers followers", color = Color.White)
         Text("$reviews reviews", color = Color.White)
     }
 }
-@Composable
-private fun ProfilePicture1(profilePicture: String){
 
-    Row (modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp), horizontalArrangement = Arrangement.Center){
+@Composable
+private fun ProfilePicture1(profilePicture: String) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp), horizontalArrangement = Arrangement.Center
+    ) {
         AsyncImage(
-        model =profilePicture , contentDescription = null, modifier = Modifier
-            .size(145.dp)
-            .clip(CircleShape)
-            .border(2.dp, Color.Black, CircleShape),
-        contentScale = ContentScale.Crop
-    )
+            model = profilePicture, contentDescription = null, modifier = Modifier
+                .size(145.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Black, CircleShape),
+            contentScale = ContentScale.Crop
+        )
     }
 }
 
 @Composable
-private fun ProfileNameHeader(name : String){
-    Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-        Text(text =name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+private fun ProfileNameHeader(name: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+
     }
 }
 
@@ -175,7 +190,7 @@ private fun PersonalDescription(bio: String) {
 
 
 @Composable
-private fun DirectoryCard(text : String, navController: NavHostController, route: String = "") {
+private fun DirectoryCard(text: String, navController: NavHostController, route: String = "") {
 
     Box(
         modifier = Modifier
@@ -184,7 +199,6 @@ private fun DirectoryCard(text : String, navController: NavHostController, route
             .background(Color(0xFFB15FA8).copy(alpha = 0.3F), shape = RoundedCornerShape(10.dp))
             .padding(2.dp)
             .clickable { navController.navigate(route) }
-
 
 
     ) {
