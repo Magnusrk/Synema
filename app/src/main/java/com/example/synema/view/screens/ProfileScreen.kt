@@ -280,10 +280,12 @@ private fun Directories(navController: NavHostController) {
         DirectoryCard("Reviews", navController = navController, route = "myreviews")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Followers", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "followers/"+AppContext.getInstance().getProfileState().value.id,
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Following", navController = navController, route = "home")
+        DirectoryCard("Following", navController = navController, route = "following/"+AppContext.getInstance().getProfileState().value.id,
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
 

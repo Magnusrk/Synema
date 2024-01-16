@@ -257,10 +257,10 @@ private fun Directories(userid: String?, navController: NavHostController) {
         DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Followers", navController = navController, route = "home")
+        DirectoryCard("Followers", navController = navController, route = "followers/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Following", navController = navController, route = "home")
+        DirectoryCard("Following", navController = navController, route = "following/"+ userid)
         Spacer(modifier = Modifier.height(8.dp))
 
 
