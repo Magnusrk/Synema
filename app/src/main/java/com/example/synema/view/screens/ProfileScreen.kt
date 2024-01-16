@@ -51,6 +51,7 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.ProfileViewModel
+import okhttp3.internal.userAgent
 
 
 @Composable
