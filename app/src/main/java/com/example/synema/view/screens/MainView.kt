@@ -25,6 +25,8 @@ fun MainView() {
         composable("watchlists") { WatchList() }
         composable("myreviews") {MyReviews(navController, profileState)}
         composable("socials") {OtherUsers(navController, profileState) }
+        composable("avatars") { AvatarList(navController, profileState) }
+
         composable("otherUserLists/{user_id}",
             arguments = listOf(navArgument("user_id") { type = NavType.StringType })
         )
