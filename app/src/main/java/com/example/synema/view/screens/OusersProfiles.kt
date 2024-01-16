@@ -117,7 +117,7 @@ fun OUprofiles(
 
                 )
             MainContainer(hasBottomNav = true) {
-                followButton(navController = navController)
+                followButton(navController = navController,userid)
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
                 FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
@@ -162,7 +162,9 @@ private fun ProfilePicture1(profilePicture: String) {
 }
 
 @Composable
-private fun followButton(navController: NavHostController) {
+private fun followButton(navController: NavHostController, userid: String?) {
+    val dataSource = DependencyProvider.getInstance().getUserSource();
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -170,7 +172,10 @@ private fun followButton(navController: NavHostController) {
         horizontalArrangement = Arrangement.End
     ) {
         Button(
-            onClick = { navController.navigate("watchlists") }, shape = RoundedCornerShape(10.dp),
+            onClick = { dataSource.followUser(userid.toString(),AppContext.getInstance().getProfileState().value.id,AppContext.getInstance().getProfileState().value.token){
+                it.getResult()
+            }
+                      }, shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF543B5B),
                 contentColor = Color.White
