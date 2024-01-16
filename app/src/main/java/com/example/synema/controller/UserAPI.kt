@@ -81,5 +81,11 @@ public interface UserAPI {
         @Path("userid") id: String,
         @Path("currentUserId") currentUserId: String,
         @Header("authorization") token : String): Call<ProfileModel>
+
+    @POST("/user/{currentUserId}/unfollow/{userid}")
+    fun unfollowUser(
+        @Path("userid") id: String,
+        @Path("currentUserId") currentUserId: String,
+        @Header("authorization") token : String): Call<ProfileModel>
 }
 

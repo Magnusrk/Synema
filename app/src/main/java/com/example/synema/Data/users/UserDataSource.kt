@@ -34,5 +34,6 @@ interface UserDataSource {
     fun getFollowing(userid:String,token: String,callback: (ApiResponse<List<String>>) -> Unit)
 
     fun followUser(userid: String,currentUserId: String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun unfollowUser(userid: String,currentUserId: String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
 
 }
