@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -57,55 +59,59 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
                 //EditProfilePicture(profileState.value, navController)
                 //AvatarList(navController, profileState = profileState)
-
+                ProfilePicture(
+                    currentUser = ProfileModel(
+                        name = updateName,
+                        bio = updateBio,
+                        profilePicture = updatePic
+                    )
+                )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    OpaqueButton("Cancel", onClick = {
-                        updateName = profileState.value.name
-                        updateBio = profileState.value.bio
-                        updatePic = profileState.value.profilePicture
-
-                        navController.popBackStack()
-                    })
-
-                   OpaqueButton("Save", onClick = {
-                        /*
-                        profileState.value = profileState.value.copy(
-                            name = updateName,
-                            bio = updateBio,
-                            profilePicture = updatePic
-                        )
-
-                         */
-                        profileState.value.bio=updateBio
-                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
+                    Button(
+                        onClick = {
+                            updateName = profileState.value.name
+                            updateBio = profileState.value.bio
+                            updatePic = profileState.value.profilePicture
                             navController.popBackStack()
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF941F1F)),
+                    ) {
+                        Text(text = "Cancel")
+                    }
 
-                       profileState.value.name=updateName
-                       dataSource.editusername(profileState.value.id,updateName,profileState.value.token){
+                    Button(
+                        onClick = {
+                            profileState.value.bio = updateBio
+                            dataSource.editbio(
+                                profileState.value.id,
+                                updateBio,
+                                profileState.value.token
+                            ) {
+                                navController.popBackStack()
+                            }
+                            profileState.value.name = updateName
+                            dataSource.editusername(
+                                profileState.value.id,
+                                updateName,
+                                profileState.value.token
+                            ) {
 
-                       }
-                       /* if (updatePic != profileState.value.profilePicture) {
-                                                  profileState.value.profilePicture = updatePic
-                                                  dataSource.editProfilePicture(
-                                                      profileState.value.id,
-                                                      updatePic,
-                                                      profileState.value.token
-                                                  ) {
-                                                  }
-                                              }*/
-                       navController.popBackStack()
+                            }
+                            navController.popBackStack()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF74306D)),
+                    ) {
+                        Text(text = "Save")
+                    }
 
-                   })
                 }
                 // Text field for editing name
                 TextField(
@@ -153,12 +159,51 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         .padding(16.dp)
                 )
             }
-            BottomBar(navController = navController )
+            BottomBar(navController = navController)
+        }
+    }
+
+}
+
+/*
+    @Composable
+    fun ProfilePicture(currentUser: ProfileModel) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp), horizontalArrangement = Arrangement.Center
+        ) {
+            println(currentUser.name)
+            println(currentUser.profilePicture)
+            if (false) {
+                Image(
+                    painter = painterResource(R.drawable.profile_picture_placeholder),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(145.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                println(currentUser.bio)
+                AsyncImage(
+                    model = currentUser.profilePicture,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(145.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
 
-/*
+
+
 @Composable
 fun EditProfilePicture(
     currentUser: ProfileModel,
@@ -215,36 +260,3 @@ fun EditProfilePicture(
 
 
 */
-@Composable
-private fun ProfilePicture(currentUser: ProfileModel) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp), horizontalArrangement = Arrangement.Center
-    ) {
-        println(currentUser.name)
-        println(currentUser.profilePicture)
-        if (false) {
-            Image(
-                painter = painterResource(R.drawable.profile_picture_placeholder),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            println(currentUser.bio)
-            AsyncImage(
-                model = currentUser.profilePicture, contentDescription = null, modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-}
-
