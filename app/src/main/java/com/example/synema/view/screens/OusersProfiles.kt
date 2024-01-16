@@ -80,11 +80,17 @@ fun OUprofiles(
             )
         )
     }
+
+    val vm : ProfileViewModel = viewModel()
+
     dataSource.userById(userid.toString(), profileState.value.token) {
         it.getResult()?.let { profileModel ->
             user = it.getResult()!!
+            vm.init(user)
         }
     }
+
+
 
     val source = DependencyProvider.getInstance().getMovieSource();
     var reviewList: List<ReviewModel> by remember {
@@ -107,7 +113,7 @@ fun OUprofiles(
             MainContainer(hasBottomNav = true) {
                 ProfileNameHeader(user.name, navController)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription(user.bio)
                 Directories(userid, context.getNav())
 
