@@ -44,6 +44,9 @@ public interface MovieAPI {
     @GET("movies/discover")
     abstract fun discoverMovies(@Query("genres") genres: String): Call<List<MovieModel>>
 
+    @GET("movies/discover/filter")
+    abstract fun filterMovies(@Query("genres") genres: String, @Query("min_rating") min_rating: Number): Call<List<MovieModel>>
+
     @GET("/movies/new")
     abstract fun newMovies(): Call<List<MovieModel>>
 

@@ -165,6 +165,14 @@ class MockMovieDataSource : MovieDataSource {
         ))
     }
 
+    override fun loadFilterMovies(
+        genres: String,
+        min_rating: Number,
+        callback: (ApiResponse<List<MovieModel>>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun loadNewMovies(callback: (ApiResponse<List<MovieModel>>) -> Unit) {
         callback(ApiResponse(
             loadMovies()
