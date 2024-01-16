@@ -51,6 +51,7 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.ProfileViewModel
+import okhttp3.internal.userAgent
 
 
 @Composable
@@ -275,11 +276,17 @@ private fun Directories(navController: NavHostController) {
 
         DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))
-        //}
+
+        DirectoryCard("Reviews", navController = navController, route = "myreviews")
+        Spacer(modifier = Modifier.height(8.dp))
+
         DirectoryCard("Followers", navController = navController, route = "home")
         Spacer(modifier = Modifier.height(8.dp))
 
-        DirectoryCard("Reviews", navController = navController, route = "myreviews")
+        DirectoryCard("Following", navController = navController, route = "home")
+        Spacer(modifier = Modifier.height(8.dp))
+
+
 
     }
 
