@@ -71,8 +71,10 @@ class FeedViewModel : ViewModel() {
             reviewList.sortBy {
 
                 LocalDateTime.parse(it.date, dateTimeFormatter).toInstant(ZoneOffset.UTC).epochSecond
+            }.let {
+                reviewList.reverse()
             }
-            reviewList.reverse()
+
         } catch(e : Error ) {
             context.getNav().navigate("home")
         }
