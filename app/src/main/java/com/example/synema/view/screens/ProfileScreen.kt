@@ -105,7 +105,7 @@ private fun FollowersReviewsStatus(followers : Int, reviews : Int){
     }
 }
 @Composable
-private fun ProfilePicture(currentUser: ProfileModel) {
+fun ProfilePicture(currentUser: ProfileModel) {
 
     Row(
         modifier = Modifier
