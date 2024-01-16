@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +36,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,16 +57,20 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
 
 @Composable
-fun OtherUsersReviews(userID : String?, navController: NavHostController, profileState: MutableState<ProfileModel>) {
+fun OtherUsersReviews(
+    userID: String?,
+    navController: NavHostController,
+    profileState: MutableState<ProfileModel>
+) {
 
     val source = DependencyProvider.getInstance().getMovieSource();
-    var reviewList : List<ReviewModel> by remember {
+    var reviewList: List<ReviewModel> by remember {
         mutableStateOf(listOf())
     }
 
-    source.getOtherUserReviews(userID.toString(),profileState.value.token){
+    source.getOtherUserReviews(userID.toString(), profileState.value.token) {
         if (it.successful()) {
-            it.getResult()?.let {reviewModel ->
+            it.getResult()?.let { reviewModel ->
                 reviewList = reviewModel
             }
         }
@@ -78,7 +86,7 @@ fun OtherUsersReviews(userID : String?, navController: NavHostController, profil
 
                 )
             MainContainer(hasBottomNav = true) {
-                UsersReviewSection(reviewList)
+                UsersReviewSection(reviewList, navController)
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -99,36 +107,39 @@ fun OtherUsersReviews(userID : String?, navController: NavHostController, profil
 }
 
 @Composable
-private fun UserReviewCard(review : ReviewModel){
-    Box(modifier= Modifier
-        .fillMaxWidth()
-        .defaultMinSize(70.dp)
-        .padding(horizontal = 15.dp, vertical = 10.dp)
+private fun UserReviewCard(review: ReviewModel, navController: NavHostController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(70.dp)
+            .padding(horizontal = 15.dp, vertical = 10.dp)
     )
     {
-        Box(modifier= Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
 
-        ){
-            InnerReviewContainer(review)
+        ) {
+            InnerReviewContainer(review, navController)
         }
 
     }
 
 }
+
 @Composable
-fun UsersReviewSection(reviewList: List<ReviewModel>){
-    Column(){
-        reviewList.forEach(){review -> UserReviewCard(review)}
+fun UsersReviewSection(reviewList: List<ReviewModel>, navController: NavHostController) {
+    Column() {
+        reviewList.forEach() { review -> UserReviewCard(review, navController) }
     }
 
 }
 
 @Composable
-private fun InnerReviewContainer(review : ReviewModel){
+private fun InnerReviewContainer(review: ReviewModel, navController: NavHostController) {
     val source = DependencyProvider.getInstance().getMovieSource();
-    var movie : MovieModel by remember {
+    var movie: MovieModel by remember {
         mutableStateOf(
             MovieModel(
                 0,
@@ -143,11 +154,11 @@ private fun InnerReviewContainer(review : ReviewModel){
         )
     }
     if (review.movieid != null) {
-        source.loadMovie(review.movieid){
+        source.loadMovie(review.movieid) {
             movie = it.getResult()!!
         }
     }
-    var expanded by remember { mutableStateOf (false) }
+    var expanded by remember { mutableStateOf(false) }
     var moreText by remember {
         mutableStateOf("More")
     }
@@ -155,9 +166,18 @@ private fun InnerReviewContainer(review : ReviewModel){
     Column(
         modifier = Modifier.padding(10.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
-            Text(modifier = Modifier.height(30.dp).width(200.dp), text=movie.title, fontWeight = FontWeight.Bold, color = Color.White, overflow = TextOverflow.Ellipsis)
-            myRatingStars(review.rating*2)
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            ClickableText(
+                text = AnnotatedString(movie.title),
+                style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
+                ),
+                onClick = {
+                    navController.navigate("mediaDetails/" + movie.id)
+                })
+            myRatingStars(review.rating * 2)
         }
 
         if (expanded) {
@@ -166,7 +186,7 @@ private fun InnerReviewContainer(review : ReviewModel){
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis,
             )
-        } else{
+        } else {
             Text(
                 review.reviewText,
                 color = Color.White,
@@ -174,16 +194,22 @@ private fun InnerReviewContainer(review : ReviewModel){
                 maxLines = 3
             )
         }
-        Column (horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxWidth()){
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             if (review.reviewText.length > 30) {
                 OpaqueButton(
                     label = moreText,
-                    onClick = { expanded = !expanded;
-                        if (expanded){
+                    onClick = {
+                        expanded = !expanded;
+                        if (expanded) {
                             moreText = "Less"
                         } else {
                             moreText = "More"
-                        }},
+                        }
+                    },
                     Modifier.defaultMinSize(minHeight = 5.dp)
                 )
             }
@@ -195,12 +221,17 @@ private fun InnerReviewContainer(review : ReviewModel){
 
 
 @Composable
-private fun myRatingStars(rating : Number){
-    Row ( horizontalArrangement = Arrangement.SpaceEvenly){
-        for( n  in 1..5){
-            if(rating.toFloat()/2 >= n.toFloat()){
-                InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp, tint= Color(0xFF4399FF))
-            } else{
+private fun myRatingStars(rating: Number) {
+    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+        for (n in 1..5) {
+            if (rating.toFloat() / 2 >= n.toFloat()) {
+                InlineIcon(
+                    resourceID = R.drawable.icon_star,
+                    size = 20.dp,
+                    spacing = 2.dp,
+                    tint = Color(0xFF4399FF)
+                )
+            } else {
                 InlineIcon(resourceID = R.drawable.icon_star, size = 20.dp, spacing = 2.dp)
             }
         }
