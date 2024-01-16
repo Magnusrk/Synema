@@ -2,22 +2,22 @@ package com.example.synema.view.screens
 
 import GradientBox
 import android.widget.Button
+import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -26,18 +26,17 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.synema.Data.DependencyProvider
@@ -47,12 +46,11 @@ import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.TopBar
-import com.example.synema.viewmodel.ProfileViewModel
+
 
 @Composable
 fun EditProfile(navController: NavHostController, profileState: MutableState<ProfileModel>) {
-    val dataSource = DependencyProvider.getInstance().getUserSource();
-
+    val dataSource = DependencyProvider.getInstance().getUserSource()
     var updateName by remember { mutableStateOf(profileState.value.name) }
     var updateBio by remember { mutableStateOf(profileState.value.bio) }
     var updatePic by remember { mutableStateOf(profileState.value.profilePicture) }
@@ -61,39 +59,59 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
         Column {
             TopBar(title = "Edit Profile", Alignment.Center)
             MainContainer() {
-                ProfilePicture(ProfileModel(name = updateName, bio = updateBio, profilePicture = updatePic))
+                //EditProfilePicture(profileState.value, navController)
+                //AvatarList(navController, profileState = profileState)
+                ProfilePicture(
+                    currentUser = ProfileModel(
+                        name = updateName,
+                        bio = updateBio,
+                        profilePicture = updatePic
+                    )
+                )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    OpaqueButton("Cancel", onClick = {
-                        updateName = profileState.value.name
-                        updateBio = profileState.value.bio
-                        updatePic = profileState.value.profilePicture
-
-                        navController.popBackStack()
-                    })
-
-                   OpaqueButton("Save", onClick = {
-                        // Update the original profileState with the edited fields when saving changes
-                        /*
-                        profileState.value = profileState.value.copy(
-                            name = updateName,
-                            bio = updateBio,
-                            profilePicture = updatePic
-                        )
-
-                         */
-                        profileState.value.bio=updateBio
-                        dataSource.editbio(profileState.value.id,updateBio,profileState.value.token){
+                    Button(
+                        onClick = {
+                            updateName = profileState.value.name
+                            updateBio = profileState.value.bio
+                            updatePic = profileState.value.profilePicture
                             navController.popBackStack()
-                        }
-                        // Navigate back to the profile screen
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF941F1F)),
+                    ) {
+                        Text(text = "Cancel")
+                    }
 
-                    })
+                    Button(
+                        onClick = {
+                            profileState.value.bio = updateBio
+                            dataSource.editbio(
+                                profileState.value.id,
+                                updateBio,
+                                profileState.value.token
+                            ) {
+                                navController.popBackStack()
+                            }
+                            profileState.value.name = updateName
+                            dataSource.editusername(
+                                profileState.value.id,
+                                updateName,
+                                profileState.value.token
+                            ) {
+
+                            }
+                            navController.popBackStack()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF74306D)),
+                    ) {
+                        Text(text = "Save")
+                    }
+
                 }
                 // Text field for editing name
                 TextField(
@@ -141,41 +159,104 @@ fun EditProfile(navController: NavHostController, profileState: MutableState<Pro
                         .padding(16.dp)
                 )
             }
-            BottomBar(navController = navController )
+            BottomBar(navController = navController)
+        }
+    }
+
+}
+
+/*
+    @Composable
+    fun ProfilePicture(currentUser: ProfileModel) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp), horizontalArrangement = Arrangement.Center
+        ) {
+            println(currentUser.name)
+            println(currentUser.profilePicture)
+            if (false) {
+                Image(
+                    painter = painterResource(R.drawable.profile_picture_placeholder),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(145.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                println(currentUser.bio)
+                AsyncImage(
+                    model = currentUser.profilePicture,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(145.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Black, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
 
 
+
 @Composable
-private fun ProfilePicture(currentUser: ProfileModel) {
+fun EditProfilePicture(
+    currentUser: ProfileModel,
+    navController: NavHostController
+)
+{
+    var updatePic by rememberSaveable { mutableStateOf(currentUser.profilePicture) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp), horizontalArrangement = Arrangement.Center
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
-        println(currentUser.name)
-        println(currentUser.profilePicture)
-        if (false) {
-            Image(
-                painter = painterResource(R.drawable.profile_picture_placeholder),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            println(currentUser.bio)
-            AsyncImage(
-                model = currentUser.profilePicture, contentDescription = null, modifier = Modifier
-                    .size(145.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape),
-                contentScale = ContentScale.Crop
-            )
+        Card(
+            shape = CircleShape,
+            modifier = Modifier
+                .padding(8.dp)
+                .size(145.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Black, CircleShape)
+                .clickable {
+                    //navController.navigate("avatars")
+                }
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (updatePic.isNotEmpty()) {
+                    AsyncImage(
+                        model = updatePic,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.profile_picture_placeholder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
         }
     }
 }
+
+
+
+*/

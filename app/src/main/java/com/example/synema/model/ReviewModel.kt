@@ -10,4 +10,5 @@ data class ReviewModel(
     val movieid : String,
     val username: String,
     val userid: String,
+    var date: String
 )

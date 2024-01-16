@@ -55,9 +55,15 @@ public interface UserAPI {
     fun user_by_id(
         @Path("id") username: String,
         @Header("authorization") token : String): Call<ProfileModel>
-    @POST("/user/editbio/{id}")
+    @POST("/user/editusername/{userid}")
+    fun editusername(
+    @Path("userid") id: String,
+    @Body profileModel: ProfileModel,
+    @Header("authorization") token : String): Call<Boolean>
+
+    @POST("/user/editbio/{userid}")
     fun editbio(
-    @Path("id") id: String,
+    @Path("userid") id: String,
     @Body profileModel: ProfileModel,
     @Header("authorization") token : String): Call<Boolean>
 
@@ -70,15 +76,20 @@ public interface UserAPI {
     @GET("/user/{userid}/followers")
     fun getFollowers(
         @Path("userid") id: String,
-        @Body profileModel: ProfileModel,
-        @Header("authorization") token : String): Call<ProfileModel>
+        @Header("authorization") token : String): Call<List<String>>
     @GET("/user/{userid}/following")
     fun getFollowing(
         @Path("userid") id: String,
-        @Header("authorization") token : String): Call<ProfileModel>
+        @Header("authorization") token : String): Call<List<String>>
 
     @POST("/user/{currentUserId}/follow/{userid}")
     fun followUser(
+        @Path("userid") id: String,
+        @Path("currentUserId") currentUserId: String,
+        @Header("authorization") token : String): Call<ProfileModel>
+
+    @POST("/user/{currentUserId}/unfollow/{userid}")
+    fun unfollowUser(
         @Path("userid") id: String,
         @Path("currentUserId") currentUserId: String,
         @Header("authorization") token : String): Call<ProfileModel>

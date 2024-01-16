@@ -384,7 +384,7 @@ class MovieApiSource : MovieDataSource {
 
         val createReviewCall: Call<String> = api.createReviewForMovie(
             movieId,
-            ReviewModel(review, rating, movieId, profileModel.name, profileModel.id),
+            ReviewModel(review, rating, movieId, profileModel.name, profileModel.id, ""),
             token
         )
 

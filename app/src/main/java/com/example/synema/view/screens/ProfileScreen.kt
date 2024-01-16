@@ -51,6 +51,8 @@ import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
 import com.example.synema.viewmodel.ProfileViewModel
+import com.example.synema.viewmodel.media.MediaDetailsViewModel
+import okhttp3.internal.userAgent
 
 
 @Composable
@@ -62,6 +64,10 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     var reviewList : List<ReviewModel> by remember {
         mutableStateOf(listOf())
     }
+
+    val vm : ProfileViewModel = viewModel()
+    vm.init(profileState.value)
+
 
     source.getOwnReviews(profileState.value.token){
         if (it.successful()) {
@@ -78,7 +84,7 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
                 EditProfileButton()
                 ProfileNameHeader(name = context.getProfileState().value.name)
                 ProfilePicture(profileState.value)
-                FollowersReviewsStatus(76, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size, navController)
                 PersonalDescription()
                 Directories(context.getNav())
 
@@ -89,17 +95,40 @@ fun Profile(navController : NavHostController, profileState: MutableState<Profil
     }
 }
 
-@Composable
-private fun FollowersReviewsStatus(followers : Int, reviews : Int){
+/*@Composable
+private fun FollowersReviewsStatus(followers : Int, reviews : Int, navController: NavHostController){
     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
         .padding(30.dp)
-        .fillMaxWidth()){
+        .fillMaxWidth()
+        .clickable {
+            navController.navigate("myreviews")
+        }){
         Text("$followers followers", color = Color.White)
         Text("$reviews reviews", color = Color.White)
     }
-}
+}*/
 @Composable
-private fun ProfilePicture(currentUser: ProfileModel) {
+private fun FollowersReviewsStatus(followers: Int, reviews: Int, navController: NavHostController) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(30.dp)
+            .fillMaxWidth()
+    ) {
+        OpaqueButton("$followers followers", onClick = {
+            navController.navigate("followers/${AppContext.getInstance().getProfileState().value.id}")
+        })
+
+        OpaqueButton("$reviews reviews", onClick = {
+            navController.navigate("myreviews")
+        })
+    }
+}
+
+
+
+@Composable
+fun ProfilePicture(currentUser: ProfileModel) {
 
     Row(
         modifier = Modifier
@@ -188,18 +217,6 @@ private fun PersonalDescription() {
 
 }
 
-
-/*fun DescriptionSection(desc : String){
-    Text("Description", fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom =10.dp, start=20.dp))
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(1.dp)
-        .background(color = Color.Black))
-    Text(desc, modifier = Modifier.padding(top = 3.dp, bottom =10.dp, start=20.dp))
-
-}
-*/
-
 @Composable
 private fun MovieDisplay(){
     Row(
@@ -275,11 +292,19 @@ private fun Directories(navController: NavHostController) {
 
         DirectoryCard("Watchlist", navController = navController, route = "watchlists")
         Spacer(modifier = Modifier.height(8.dp))
-        //}
-        DirectoryCard("Followers", navController = navController, route = "home")
-        Spacer(modifier = Modifier.height(8.dp))
 
         DirectoryCard("Reviews", navController = navController, route = "myreviews")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DirectoryCard("Followers", navController = navController, route = "followers/"+AppContext.getInstance().getProfileState().value.id,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DirectoryCard("Following", navController = navController, route = "following/"+AppContext.getInstance().getProfileState().value.id,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+
 
     }
 

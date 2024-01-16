@@ -25,6 +25,9 @@ fun MainView() {
         composable("watchlists") { WatchList() }
         composable("myreviews") {MyReviews(navController, profileState)}
         composable("socials") {OtherUsers(navController, profileState) }
+        composable("feed") { Feed(navController = navController, profileState = profileState) }
+        composable("avatars") { AvatarList(navController, profileState) }
+
         composable("otherUserLists/{user_id}",
             arguments = listOf(navArgument("user_id") { type = NavType.StringType })
         )
@@ -99,6 +102,20 @@ fun MainView() {
                 navController,
                 profileState,
                 backStackEntry.arguments?.getString("movieID")
+            )
+        }
+        composable("followers/{user_id}",arguments = listOf(navArgument("user_id") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            followers(
+                backStackEntry.arguments?.getString("user_id"),navController,profileState
+            )
+        }
+        composable("following/{user_id}",arguments = listOf(navArgument("user_id") { type = NavType.StringType })
+        )
+        { backStackEntry ->
+            FollowingScreen(
+                backStackEntry.arguments?.getString("user_id"),navController,profileState
             )
         }
     }

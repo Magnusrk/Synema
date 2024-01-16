@@ -3,6 +3,7 @@ package com.example.synema.view.screens
 import GradientBox
 import MoviePosterFrame
 import android.annotation.SuppressLint
+import android.text.style.BackgroundColorSpan
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -48,11 +51,13 @@ import com.example.synema.controller.AppContext
 import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
+import com.example.synema.model.WatchlistModel
 import com.example.synema.view.components.BottomBar
 import com.example.synema.view.components.MainContainer
 import com.example.synema.view.components.OpaqueButton
 import com.example.synema.view.components.SynemaLogo
 import com.example.synema.view.components.TopBar
+import com.example.synema.viewmodel.OUsersViewModel
 import com.example.synema.viewmodel.ProfileViewModel
 
 
@@ -77,11 +82,17 @@ fun OUprofiles(
             )
         )
     }
+
+    val vm : ProfileViewModel = viewModel()
+
     dataSource.userById(userid.toString(), profileState.value.token) {
         it.getResult()?.let { profileModel ->
             user = it.getResult()!!
+            vm.init(user)
         }
     }
+
+
 
     val source = DependencyProvider.getInstance().getMovieSource();
     var reviewList: List<ReviewModel> by remember {
@@ -100,11 +111,18 @@ fun OUprofiles(
     GradientBox() {
 
         Column {
-            TopBar(title = "Other User", Alignment.Center)
+            TopBar(
+                title = "My Reviews",
+                alignment = Alignment.Center,
+                backArrow = true,
+                navController = navController,
+
+                )
             MainContainer(hasBottomNav = true) {
+                followButton(navController = navController,userid)
                 ProfileNameHeader(user.name)
                 ProfilePicture1(user.profilePicture)
-                FollowersReviewsStatus(7522, reviewList.size)
+                FollowersReviewsStatus(vm.followerCount.value, reviewList.size)
                 PersonalDescription(user.bio)
                 Directories(userid, context.getNav())
 
@@ -145,16 +163,71 @@ private fun ProfilePicture1(profilePicture: String) {
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-private fun ProfileNameHeader(name: String) {
+private fun followButton(navController: NavHostController, userid: String?) {
+    val vm : OUsersViewModel = viewModel()
+    val dataSource = DependencyProvider.getInstance().getUserSource();
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
-        horizontalArrangement = Arrangement.Start
+            .padding(30.dp),
+        horizontalArrangement = Arrangement.End
     ) {
-        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        if (!vm.followerList.contains(AppContext.profileState.value.id)) {
+            Button(
+                onClick = {
+                    dataSource.followUser(
+                        userid.toString(),
+                        AppContext.getInstance().getProfileState().value.id,
+                        AppContext.getInstance().getProfileState().value.token
+                    ) {
+                        it.getResult()
+                        vm.followerList.add(AppContext.profileState.value.id)
+                    }
 
+                }, shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF543B5B),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Follow")
+            }
+
+        } else{
+            Button(
+                onClick = {
+                    dataSource.unfollowUser(
+                        userid.toString(),
+                        AppContext.getInstance().getProfileState().value.id,
+                        AppContext.getInstance().getProfileState().value.token
+                    ) {
+                        it.getResult()
+                        vm.followerList.remove(AppContext.profileState.value.id)
+
+                    }
+                }, shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF543B5B),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Unfollow")
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ProfileNameHeader(name: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center)
+    {
+        Text(text = name, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -237,11 +310,16 @@ private fun Directories(userid: String?, navController: NavHostController) {
 
         DirectoryCard("Watchlist", navController = navController, route = "otherUserLists/$userid")
         Spacer(modifier = Modifier.height(8.dp))
-        //}
-        DirectoryCard("Followers", navController = navController, route = "home")
-        Spacer(modifier = Modifier.height(8.dp))
 
         DirectoryCard("Reviews", navController = navController, route = "otherUserReviews/$userid")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DirectoryCard("Followers", navController = navController, route = "followers/"+ userid)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DirectoryCard("Following", navController = navController, route = "following/"+ userid)
+        Spacer(modifier = Modifier.height(8.dp))
+
 
     }
 

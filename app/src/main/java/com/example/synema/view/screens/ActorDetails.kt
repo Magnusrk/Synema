@@ -256,6 +256,7 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis,
+                minLines = 2,
                 maxLines = 2,
                 lineHeight = 12.sp,
                 textAlign = TextAlign.Center

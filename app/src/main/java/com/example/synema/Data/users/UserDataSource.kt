@@ -27,12 +27,14 @@ interface UserDataSource {
     )
 
     fun userById(id: String, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun editusername(id: String, name: String, token: String, callback: (ApiResponse<Boolean>) -> Unit)
     fun editbio(id: String,bio: String, token: String, callback: (ApiResponse<Boolean>) -> Unit)
-    fun editProfilePicture(id: String,profileModel: ProfileModel, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun editProfilePicture(id: String,profilePicture:String, token: String, callback: (ApiResponse<ProfileModel>) -> Unit)
 
-    fun getFollowers(userid:String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
-    fun getFollowing(userid:String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun getFollowers(userid:String,token: String,callback: (ApiResponse<List<String>>) -> Unit)
+    fun getFollowing(userid:String,token: String,callback: (ApiResponse<List<String>>) -> Unit)
 
     fun followUser(userid: String,currentUserId: String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
+    fun unfollowUser(userid: String,currentUserId: String,token: String,callback: (ApiResponse<ProfileModel>) -> Unit)
 
 }

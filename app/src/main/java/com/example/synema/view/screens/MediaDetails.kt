@@ -342,7 +342,7 @@ private fun DescriptionSection(desc: String) {
 }
 
 @Composable
-fun UserReviewSection(vm: MediaDetailsViewModel) {
+private fun UserReviewSection(vm: MediaDetailsViewModel) {
 
     Text(
         "User reviews",

@@ -1,16 +1,8 @@
 package com.example.synema.Data.users
 
-import com.example.synema.R
-import com.example.synema.controller.UserAPI
 import com.example.synema.model.ApiResponse
-import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
-import com.example.synema.model.ReviewModel
 import com.example.synema.model.UserModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
@@ -68,6 +60,15 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun editusername(
+        id: String,
+        name: String,
+        token: String,
+        callback: (ApiResponse<Boolean>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun editbio(
         id: String,
         bio: String,
@@ -77,20 +78,21 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
-
     override fun editProfilePicture(
         id: String,
-        profileModel: ProfileModel,
+        profilePicture: String,
         token: String,
         callback: (ApiResponse<ProfileModel>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
 
+
+
     override fun getFollowers(
         userid: String,
         token: String,
-        callback: (ApiResponse<ProfileModel>) -> Unit
+        callback: (ApiResponse<List<String>>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
@@ -98,10 +100,13 @@ class MockUserDataSource() : UserDataSource {
     override fun getFollowing(
         userid: String,
         token: String,
-        callback: (ApiResponse<ProfileModel>) -> Unit
+        callback: (ApiResponse<List<String>>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
+
+
+
 
     override fun followUser(
         userid: String,
@@ -112,7 +117,14 @@ class MockUserDataSource() : UserDataSource {
         TODO("Not yet implemented")
     }
 
-
+    override fun unfollowUser(
+        userid: String,
+        currentUserId: String,
+        token: String,
+        callback: (ApiResponse<ProfileModel>) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
 }
 
 
