@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.synema.Data.DataStore.DataStoreManager
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.controller.AppContext
@@ -37,6 +38,9 @@ class FeedViewModel : ViewModel() {
     val movieSource = DependencyProvider.getInstance().getMovieSource()
 
     val isLoading = mutableStateOf(true)
+
+    private val nav = AppContext.getInstance().getNav()
+
 
 
 
@@ -69,10 +73,9 @@ class FeedViewModel : ViewModel() {
         //reviewList.sortWith(Comparator.comparing { a -> LocalDate.parse(a.date, dateTimeFormatter).toEpochDay().seconds.absoluteValue })
         try {
             reviewList.sortBy {
-
-                LocalDateTime.parse(it.date, dateTimeFormatter).toInstant(ZoneOffset.UTC).epochSecond
+                -LocalDateTime.parse(it.date, dateTimeFormatter).toInstant(ZoneOffset.UTC).epochSecond
             }.let {
-                reviewList.reverse()
+                //reviewList.reverse()
             }
 
         } catch(e : Error ) {
@@ -93,6 +96,11 @@ class FeedViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+
+    fun getNav() : NavHostController {
+        return nav
     }
 
 }

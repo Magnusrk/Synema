@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Text
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.synema.Data.DependencyProvider
 import com.example.synema.R
+import com.example.synema.model.MovieModel
 import com.example.synema.model.ProfileModel
 import com.example.synema.model.ReviewModel
 import com.example.synema.ui.theme.SynemaTheme
@@ -81,7 +85,7 @@ fun Feed(navController: NavHostController, profileState: MutableState<ProfileMod
                 MainContainer(hasBottomNav = true, scrollAble = true) {
                     LoadingWrapper(vm.isLoading) {
                         if (!vm.reviewList.isEmpty()) {
-                            UserReviewSection(vm.reviewList)
+                            UserReviewSection(vm)
                         }
                     }
 
@@ -93,7 +97,7 @@ fun Feed(navController: NavHostController, profileState: MutableState<ProfileMod
 }
 
 @Composable
-private fun UserReviewSection(reviewList: List<ReviewModel>) {
+private fun UserReviewSection(vm: FeedViewModel) {
 
     Text(
         "User reviews",
@@ -109,13 +113,13 @@ private fun UserReviewSection(reviewList: List<ReviewModel>) {
     )
 
     Column() {
-        reviewList.forEach() { review -> UserReviewCard(review) }
+        vm.reviewList.forEach() { review -> UserReviewCard(review, vm) }
     }
 
 }
 
 @Composable
-private fun UserReviewCard(review: ReviewModel) {
+private fun UserReviewCard(review: ReviewModel, vm: FeedViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,17 +133,40 @@ private fun UserReviewCard(review: ReviewModel) {
                 .background(color = Color(0xFF430B3D), shape = RoundedCornerShape(10.dp))
 
         ) {
-            InnerReviewContainer(review)
+            InnerReviewContainer(review, vm)
         }
 
     }
 }
 
 @Composable
-private fun InnerReviewContainer(review: ReviewModel) {
+private fun InnerReviewContainer(review: ReviewModel, vm: FeedViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var moreText by remember {
         mutableStateOf("More")
+    }
+
+
+    val source = DependencyProvider.getInstance().getMovieSource();
+    var movie: MovieModel by remember {
+        mutableStateOf(
+            MovieModel(
+                0,
+                "",
+                "",
+                "Loading...",
+                "Loading...",
+                0,
+                "",
+                ""
+            )
+        )
+    }
+
+    if (review.movieid != null) {
+        source.loadMovie(review.movieid) {
+            movie = it.getResult()!!
+        }
     }
 
     Column(
@@ -150,15 +177,32 @@ private fun InnerReviewContainer(review: ReviewModel) {
                 text = AnnotatedString("@" + review.username),
                 style = TextStyle(
                     color = Color.White,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline
                 ),
                 onClick = {
-                    //vm.getNav().navigate("ouprofiles/" + review.userid)
+                    vm.getNav().navigate("ouprofiles/" + review.userid)
                 })
 
             ReviewStars(review.rating * 2)
         }
+
+        ClickableText(
+            text = AnnotatedString(movie.title),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline,
+            ),
+            onClick = {
+                vm.getNav().navigate("mediaDetails/" + review.movieid)
+            })
+        
+        Spacer(modifier = Modifier.size(5.dp))
+
 
         if (expanded) {
 
@@ -167,12 +211,27 @@ private fun InnerReviewContainer(review: ReviewModel) {
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis,
             )
+            Spacer(modifier = Modifier.size(5.dp))
+            Text(text = review.date,
+                color = Color.White,
+                style = TextStyle(
+                    fontStyle = FontStyle.Italic
+                )
+            )
+
         } else {
             Text(
                 review.reviewText,
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 3
+            )
+            Spacer(modifier = Modifier.size(5.dp))
+            Text(text = review.date,
+                color = Color.White,
+                style = TextStyle(
+                    fontStyle = FontStyle.Italic
+                )
             )
         }
         Column(
