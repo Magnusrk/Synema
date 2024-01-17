@@ -177,7 +177,7 @@ private fun InnerReviewContainer(review: ReviewModel, vm: FeedViewModel) {
                 text = AnnotatedString("@" + review.username),
                 style = TextStyle(
                     color = Color.White,
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline
                 ),
@@ -205,7 +205,6 @@ private fun InnerReviewContainer(review: ReviewModel, vm: FeedViewModel) {
 
 
         if (expanded) {
-
             Text(
                 review.reviewText,
                 color = Color.White,
