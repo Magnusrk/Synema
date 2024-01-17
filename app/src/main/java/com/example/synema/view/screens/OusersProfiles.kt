@@ -82,7 +82,7 @@ fun OUprofiles(
 
         Column {
             TopBar(
-                title = "",
+                title = "Synema",
                 alignment = Alignment.Center,
                 backArrow = true,
                 navController = navController,
