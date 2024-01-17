@@ -9,6 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
@@ -530,6 +532,7 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
 
     }
 }
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ImageRoll(vm: MediaDetailsViewModel){
     if (!vm.imagesList.isEmpty()) {
@@ -545,20 +548,27 @@ private fun ImageRoll(vm: MediaDetailsViewModel){
                 .height(1.dp)
                 .background(color = Color(0xFFB6842D))
         )
-        LazyRow(
-            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
-        ) {
-            items(vm.imagesList) { image ->
-                AsyncImage(
-                    model = image.file_path,
-                    contentDescription = null,
-                    modifier = Modifier.size(300.dp),
-                    contentScale = ContentScale.FillHeight
-                )
+            var state = rememberLazyListState()
+            LazyRow(
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .fillMaxWidth().defaultMinSize(minHeight = 200.dp),
+                state = state,
+                flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
+            ) {
+                items(vm.imagesList) { image ->
+                    AsyncImage(
+                        model = image.file_path,
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.width(325.dp)
+                    )
+                }
             }
         }
+
     }
-}
+
 
 @Composable
 private fun SimilarMoviesSection(vm: MediaDetailsViewModel){
