@@ -115,7 +115,8 @@ private fun FollowersReviewsStatus(followers: Int, reviews: Int, navController: 
             .padding(30.dp)
             .fillMaxWidth()
     ) {
-0        OpaqueButton("$followers followers", onClick = {
+0
+        OpaqueButton("$followers followers", onClick = {
             navController.navigate("followers/${AppContext.getInstance().getProfileState().value.id}")
         })
 
