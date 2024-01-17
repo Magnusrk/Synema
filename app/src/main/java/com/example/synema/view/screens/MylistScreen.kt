@@ -87,7 +87,8 @@ private fun ListDetails(vm : MyListViewModel, watchlistID: String?){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color(0xFF191825)),
+                .background(color = Color(0xFF191825))
+                .clickable { vm.clickMovie(movie1.id) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

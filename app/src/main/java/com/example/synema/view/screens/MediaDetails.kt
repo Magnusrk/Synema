@@ -186,7 +186,7 @@ fun SaveButton(vm : MediaDetailsViewModel) {
         )
         Button(
             onClick = { vm.saveMovie() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB15FA8)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
