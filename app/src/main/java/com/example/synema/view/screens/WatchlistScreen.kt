@@ -393,7 +393,12 @@ private fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp),
+            .padding(vertical = 5.dp)
+            .clickable(onClick = {
+                vm
+                    .getNav()
+                    .navigate("watchlists/" + watchlist.watchlist_id)
+            }),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
 
@@ -422,6 +427,7 @@ private fun watchlistCard(watchlist: WatchlistModel, vm: WatchlistViewModel) {
             modifier = Modifier
                 .size(150.dp, 98.dp)
                 .padding(10.dp)
+
         )
 
         Image(

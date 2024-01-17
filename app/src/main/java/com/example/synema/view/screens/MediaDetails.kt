@@ -186,7 +186,7 @@ fun SaveButton(vm : MediaDetailsViewModel) {
         )
         Button(
             onClick = { vm.saveMovie() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF243988)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB15FA8)),
             shape = RoundedCornerShape(20),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
@@ -226,18 +226,7 @@ fun RatingPanel(
             RatingStars(vm.movie.value.rating)
         }
 
-        Button(
-            onClick = { vm.reviewMovie() },
-            shape = RoundedCornerShape(20),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
-            contentPadding = PaddingValues(horizontal = 15.dp)
-        ) {
-            Row {
-                Text("Review", modifier = Modifier.padding(top = 4.dp))
-                InlineIcon(resourceID = R.drawable.edit_playlist)
-            }
 
-        }
 
 
         Button(
@@ -257,6 +246,19 @@ fun RatingPanel(
             }
             val solution: Double = avg.toDouble()
             Text("User ratings: " + solution.toString() + "/5")
+        }
+
+        Button(
+            onClick = { vm.reviewMovie() },
+            shape = RoundedCornerShape(20),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF430B3D)),
+            contentPadding = PaddingValues(horizontal = 15.dp)
+        ) {
+            Row {
+                Text("Review", modifier = Modifier.padding(top = 4.dp))
+                InlineIcon(resourceID = R.drawable.edit_playlist)
+            }
+
         }
 
     }
