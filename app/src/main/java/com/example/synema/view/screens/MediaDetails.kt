@@ -272,7 +272,6 @@ fun RatingPanel(
 private fun RatingStars(rating: Number) {
 
     val starImage = ImageBitmap.imageResource(id = R.drawable.stars6)
-    //val bigStarImage = ImageBitmap.imageResource(id = R.drawable.stars_big)
 
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
 
@@ -487,7 +486,6 @@ fun ActorCard(actor: CreditsModel, modifier: Modifier = Modifier, navController 
         color = Color(0xFF430B3D)
     ) {
         Column (
-            //verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(95.dp)
         ){
@@ -579,7 +577,6 @@ private fun SimilarMoviesSection(vm: MediaDetailsViewModel){
                 .background(color = Color(0xFFB6842D))
         )
     MovieList(movieList = vm.similarMovies, header = "Movies similar to " + vm.movie.value.title , navController = vm.getNav())
-
 }
 
 
@@ -652,5 +649,3 @@ private fun MovieCard(movie: MovieModel, modifier: Modifier = Modifier, navContr
 
     }
 }
-
-

@@ -49,7 +49,6 @@ fun TrendTopBar(
         modifier = Modifier
             .fillMaxWidth() // set the width to the maximum available space
             .height(272.dp), // Adjust the height as needed
-        // .background(Color.Transparent) // You can set a transparent background
         state = state,
         flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
 
