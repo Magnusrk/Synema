@@ -64,8 +64,6 @@ import com.example.synema.viewmodel.SearchViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieList(vm : SearchViewModel) {
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -98,7 +98,6 @@ fun Feed(navController: NavHostController, profileState: MutableState<ProfileMod
 
 @Composable
 private fun UserReviewSection(vm: FeedViewModel) {
-
     Text(
         "User reviews",
         fontWeight = FontWeight.Bold,
