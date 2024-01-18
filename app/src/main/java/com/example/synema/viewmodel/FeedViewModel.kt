@@ -70,12 +70,10 @@ class FeedViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun sortReviews(){
         val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
-        //reviewList.sortWith(Comparator.comparing { a -> LocalDate.parse(a.date, dateTimeFormatter).toEpochDay().seconds.absoluteValue })
         try {
             reviewList.sortBy {
                 -LocalDateTime.parse(it.date, dateTimeFormatter).toInstant(ZoneOffset.UTC).epochSecond
             }
-
         } catch(e : Error ) {
             context.getNav().navigate("home")
         }
