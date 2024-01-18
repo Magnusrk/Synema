@@ -65,7 +65,19 @@ class LoginViewModel : ViewModel() {
         }
     }
 
+    private fun overrideLogin(c : Context){
+        email.value = "shape";
+        password.value = "123"
+        login(c)
+
+    }
+
     fun checkUserLoggedIn(c : Context){
+
+        //Override login so it logs in automatically. For easier showcase of project.
+        overrideLogin(c)
+        return
+
         viewModelScope.launch {
             DataStoreManager(c).getFromDataStore().collect{
                 profile -> if(profile.token == ""){
