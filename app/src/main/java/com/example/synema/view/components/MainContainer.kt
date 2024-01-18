@@ -11,17 +11,29 @@ import androidx.compose.ui.unit.dp
 import com.example.synema.view.utils.Size
 
 @Composable
-fun MainContainer(hasBottomNav : Boolean = false, content : @Composable () -> Unit = {} ){
+fun MainContainer(
+    hasBottomNav: Boolean = false,
+    hasTopNav: Boolean = true,
+    scrollAble: Boolean = true,
+    content: @Composable () -> Unit = {}
+) {
     val size = Size();
-    var containerHeight =size.height();
-    if (hasBottomNav) containerHeight -= 80;
-    Column(
-        modifier = Modifier
+    var containerHeight = size.height();
+    if (hasBottomNav) containerHeight -= (55);
+    if (hasTopNav) containerHeight -= 100;
+    var mod = Modifier.height(10.dp)
+
+    if (scrollAble) {
+        mod = Modifier
             .height(containerHeight.dp)
             .verticalScroll(rememberScrollState())
+    } else {
+        mod = Modifier.height(containerHeight.dp)
+    }
 
+    Column(
+        modifier = mod
     ) {
-        //TopBar("My Watchlist", Alignment.Center, 30.sp, true, false)
         content.invoke()
     }
 }

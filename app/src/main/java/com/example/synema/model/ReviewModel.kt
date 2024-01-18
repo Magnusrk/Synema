@@ -5,8 +5,10 @@ import androidx.annotation.StringRes
 
 
 data class ReviewModel(
-    val owner : ProfileModel,
     val reviewText : String,
     val rating : Int,
-    val movie : MovieModel
+    val movieid : String,
+    val username: String,
+    val userid: String,
+    var date: String
 )
